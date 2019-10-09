@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TOT.Data\TOT.Data.csproj" />
+    <ProjectReference Include="..\TOT.EntitiesDTO\TOT.EntitiesDTO.csproj" />
+  </ItemGroup>
+
+</Project>
