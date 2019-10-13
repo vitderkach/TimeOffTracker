@@ -16,4 +16,8 @@
     <ProjectReference Include="..\TOT.Interfaces\TOT.Interfaces.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\" />
+  </ItemGroup>
+
 </Project>

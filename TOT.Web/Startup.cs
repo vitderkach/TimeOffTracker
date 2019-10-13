@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TOT.Data;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace TOT.Web
 {
@@ -58,7 +60,10 @@ namespace TOT.Web
             }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot"))
+            });
             app.UseCookiePolicy();
 
             app.UseAuthentication();
