@@ -7,6 +7,6 @@ namespace TOT.Entities
 {
     public class ApplicationUser : IdentityUser
     {
-        public int bbbbbb1 { get; set; }
+
     }
 }

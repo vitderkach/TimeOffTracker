@@ -37,7 +37,7 @@ namespace TOT.Web
             services.ConfigureDatabase(Configuration);
             services.RegisterRepositoriesAndServices();
             services.AddAutoMapper();
-            services.AddIdentity();
+            services.AddCustomIdentity();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

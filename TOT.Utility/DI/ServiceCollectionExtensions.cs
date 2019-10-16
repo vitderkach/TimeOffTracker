@@ -24,7 +24,7 @@ namespace TOT.Utility.DI
         {
             services.AddSingleton<Interfaces.IMapper, TOTAutoMapper>();
         }
-        public static void AddIdentity(this IServiceCollection services)
+        public static void AddCustomIdentity(this IServiceCollection services)
         {
             services.AddIdentity<ApplicationUser, IdentityRole>(opts =>
             {
