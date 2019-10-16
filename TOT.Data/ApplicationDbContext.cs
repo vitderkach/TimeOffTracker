@@ -14,6 +14,7 @@ namespace TOT.Data
         {
 
         }
+        public DbSet<VacationRequest> VacationRequests { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
