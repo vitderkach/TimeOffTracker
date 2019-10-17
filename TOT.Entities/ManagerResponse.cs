@@ -11,12 +11,12 @@ namespace TOT.Entities
         public string Notes { get; set; }
         public DateTime DateResponse { get; set; }
 
-        public int? VacationRequestId { get; set; }
+        public int VacationRequestId { get; set; }
         [ForeignKey("VacationRequestId")]
-        public virtual VacationRequest VacationRequest { get; set; }
+        public  VacationRequest VacationRequest { get; set; }
                                                               
-        public int? ManagerId { get; set; }
+        public int ManagerId { get; set; }
         [ForeignKey("ManagerId")]
-        public virtual ApplicationUser Manager { get; set; }
+        public ApplicationUser Manager { get; set; }
     }
 }

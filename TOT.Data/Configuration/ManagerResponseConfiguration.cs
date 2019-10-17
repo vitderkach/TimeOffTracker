@@ -15,6 +15,6 @@ namespace TOT.Data.Configuration
             builder.HasOne(p => p.VacationRequest)
                 .WithMany(p => p.ManagersResponses);
     */    
-    }
+        }
     }
 }

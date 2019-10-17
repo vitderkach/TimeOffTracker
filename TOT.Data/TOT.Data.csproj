@@ -39,6 +39,8 @@
     <Compile Remove="Migrations\20191017154329_CreateInit.Designer.cs" />
     <Compile Remove="Migrations\20191017155218_CreateInit.cs" />
     <Compile Remove="Migrations\20191017155218_CreateInit.Designer.cs" />
+    <Compile Remove="Migrations\20191017163356_configureRelations.cs" />
+    <Compile Remove="Migrations\20191017163356_configureRelations.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

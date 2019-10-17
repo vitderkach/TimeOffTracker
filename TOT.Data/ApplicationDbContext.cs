@@ -28,7 +28,7 @@ namespace TOT.Data
             builder.ApplyConfiguration(new ApplicationUserConfiguration());
             builder.ApplyConfiguration(new ManagerResponseConfiguration());
             builder.ApplyConfiguration(new UserInformationConfiguration());
-
+            
             base.OnModelCreating(builder);
         }
     }

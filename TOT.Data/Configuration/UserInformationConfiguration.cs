@@ -11,10 +11,14 @@ namespace TOT.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<UserInformation> builder)
         {
-           /* builder.HasKey(v => v.UserInformationId);
-            builder.HasOne(o => o.User)
-                .WithOne(p => p.UserInformation);
-    */    
-    }
+            /* builder.HasKey(v => v.UserInformationId);
+             builder.HasOne(o => o.User)
+                 .WithOne(p => p.UserInformation);
+     */
+            builder.HasOne(p => p.User)
+                .WithOne(p => p.UserInformation)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+        }
     }
 }
