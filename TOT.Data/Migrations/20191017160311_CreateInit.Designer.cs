@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TOT.Data;
 
 namespace TOT.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191017160311_CreateInit")]
+    partial class CreateInit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -180,6 +182,8 @@ namespace TOT.Data.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("UserInformationId");
+
                     b.ToTable("AspNetUsers");
                 });
 
@@ -191,11 +195,11 @@ namespace TOT.Data.Migrations
 
                     b.Property<DateTime>("DateResponse");
 
-                    b.Property<int>("ManagerId");
+                    b.Property<int?>("ManagerId");
 
                     b.Property<string>("Notes");
 
-                    b.Property<int>("VacationRequestId");
+                    b.Property<int?>("VacationRequestId");
 
                     b.HasKey("Id");
 
@@ -212,7 +216,7 @@ namespace TOT.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ApplicationUserId");
+                    b.Property<int?>("ApplicationUserId");
 
                     b.Property<string>("FirstName");
 
@@ -220,8 +224,7 @@ namespace TOT.Data.Migrations
 
                     b.HasKey("UserInformationId");
 
-                    b.HasIndex("ApplicationUserId")
-                        .IsUnique();
+                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("UserInformations");
                 });
@@ -296,25 +299,30 @@ namespace TOT.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("TOT.Entities.ApplicationUser", b =>
+                {
+                    b.HasOne("TOT.Entities.UserInformation", "UserInformation")
+                        .WithMany()
+                        .HasForeignKey("UserInformationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("TOT.Entities.ManagerResponse", b =>
                 {
                     b.HasOne("TOT.Entities.ApplicationUser", "Manager")
                         .WithMany()
-                        .HasForeignKey("ManagerId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ManagerId");
 
                     b.HasOne("TOT.Entities.VacationRequest", "VacationRequest")
                         .WithMany("ManagersResponses")
-                        .HasForeignKey("VacationRequestId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("VacationRequestId");
                 });
 
             modelBuilder.Entity("TOT.Entities.UserInformation", b =>
                 {
                     b.HasOne("TOT.Entities.ApplicationUser", "User")
-                        .WithOne("UserInformation")
-                        .HasForeignKey("TOT.Entities.UserInformation", "ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId");
                 });
 
             modelBuilder.Entity("TOT.Entities.VacationRequest", b =>
