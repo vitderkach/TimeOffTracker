@@ -10,7 +10,7 @@ using TOT.Data;
 namespace TOT.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191016213452_CreateInit")]
+    [Migration("20191017160311_CreateInit")]
     partial class CreateInit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,10 +21,11 @@ namespace TOT.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
                 {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
@@ -45,7 +46,7 @@ namespace TOT.Data.Migrations
                     b.ToTable("AspNetRoles");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -55,8 +56,7 @@ namespace TOT.Data.Migrations
 
                     b.Property<string>("ClaimValue");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired();
+                    b.Property<int>("RoleId");
 
                     b.HasKey("Id");
 
@@ -65,7 +65,7 @@ namespace TOT.Data.Migrations
                     b.ToTable("AspNetRoleClaims");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -75,8 +75,7 @@ namespace TOT.Data.Migrations
 
                     b.Property<string>("ClaimValue");
 
-                    b.Property<string>("UserId")
-                        .IsRequired();
+                    b.Property<int>("UserId");
 
                     b.HasKey("Id");
 
@@ -85,7 +84,7 @@ namespace TOT.Data.Migrations
                     b.ToTable("AspNetUserClaims");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
                     b.Property<string>("LoginProvider");
 
@@ -93,8 +92,7 @@ namespace TOT.Data.Migrations
 
                     b.Property<string>("ProviderDisplayName");
 
-                    b.Property<string>("UserId")
-                        .IsRequired();
+                    b.Property<int>("UserId");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -103,11 +101,11 @@ namespace TOT.Data.Migrations
                     b.ToTable("AspNetUserLogins");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
                 {
-                    b.Property<string>("UserId");
+                    b.Property<int>("UserId");
 
-                    b.Property<string>("RoleId");
+                    b.Property<int>("RoleId");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -116,9 +114,9 @@ namespace TOT.Data.Migrations
                     b.ToTable("AspNetUserRoles");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
-                    b.Property<string>("UserId");
+                    b.Property<int>("UserId");
 
                     b.Property<string>("LoginProvider");
 
@@ -133,8 +131,9 @@ namespace TOT.Data.Migrations
 
             modelBuilder.Entity("TOT.Entities.ApplicationUser", b =>
                 {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("AccessFailedCount");
 
@@ -162,9 +161,13 @@ namespace TOT.Data.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed");
 
+                    b.Property<DateTime>("RegistrationDate");
+
                     b.Property<string>("SecurityStamp");
 
                     b.Property<bool>("TwoFactorEnabled");
+
+                    b.Property<int>("UserInformationId");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
@@ -179,29 +182,87 @@ namespace TOT.Data.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("UserInformationId");
+
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("TOT.Entities.VacationRequest", b =>
+            modelBuilder.Entity("TOT.Entities.ManagerResponse", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime>("DateResponse");
+
+                    b.Property<int?>("ManagerId");
+
+                    b.Property<string>("Notes");
+
+                    b.Property<int?>("VacationRequestId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ManagerId");
+
+                    b.HasIndex("VacationRequestId");
+
+                    b.ToTable("ManagerResponses");
+                });
+
+            modelBuilder.Entity("TOT.Entities.UserInformation", b =>
+                {
+                    b.Property<int>("UserInformationId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("ApplicationUserId");
+
+                    b.Property<string>("FirstName");
+
+                    b.Property<string>("LastName");
+
+                    b.HasKey("UserInformationId");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("UserInformations");
+                });
+
+            modelBuilder.Entity("TOT.Entities.VacationRequest", b =>
+                {
+                    b.Property<int>("VacationRequestId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ApplicationUserId");
+
+                    b.Property<DateTime>("CreationDate");
+
+                    b.Property<DateTime>("EndDate");
+
+                    b.Property<string>("Notes");
+
+                    b.Property<DateTime>("StartDate");
+
+                    b.Property<int>("VacationType");
+
+                    b.HasKey("VacationRequestId");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("VacationRequests");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>")
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
                     b.HasOne("TOT.Entities.ApplicationUser")
                         .WithMany()
@@ -209,7 +270,7 @@ namespace TOT.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
                     b.HasOne("TOT.Entities.ApplicationUser")
                         .WithMany()
@@ -217,9 +278,9 @@ namespace TOT.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>")
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -230,12 +291,46 @@ namespace TOT.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
                     b.HasOne("TOT.Entities.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("TOT.Entities.ApplicationUser", b =>
+                {
+                    b.HasOne("TOT.Entities.UserInformation", "UserInformation")
+                        .WithMany()
+                        .HasForeignKey("UserInformationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("TOT.Entities.ManagerResponse", b =>
+                {
+                    b.HasOne("TOT.Entities.ApplicationUser", "Manager")
+                        .WithMany()
+                        .HasForeignKey("ManagerId");
+
+                    b.HasOne("TOT.Entities.VacationRequest", "VacationRequest")
+                        .WithMany("ManagersResponses")
+                        .HasForeignKey("VacationRequestId");
+                });
+
+            modelBuilder.Entity("TOT.Entities.UserInformation", b =>
+                {
+                    b.HasOne("TOT.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId");
+                });
+
+            modelBuilder.Entity("TOT.Entities.VacationRequest", b =>
+                {
+                    b.HasOne("TOT.Entities.ApplicationUser", "User")
+                        .WithMany("VacationRequests")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618
         }

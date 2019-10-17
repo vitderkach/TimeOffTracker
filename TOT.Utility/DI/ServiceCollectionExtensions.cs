@@ -26,7 +26,7 @@ namespace TOT.Utility.DI
         }
         public static void AddCustomIdentity(this IServiceCollection services)
         {
-            services.AddIdentity<ApplicationUser, IdentityRole>(opts =>
+            services.AddIdentity<ApplicationUser, IdentityRole<int>>(opts =>
             {
                 //opts.
             })

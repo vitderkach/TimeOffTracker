@@ -15,6 +15,30 @@
     <Compile Remove="Migrations\20191016210953_test4.Designer.cs" />
     <Compile Remove="Migrations\20191016213720_test.cs" />
     <Compile Remove="Migrations\20191016213720_test.Designer.cs" />
+    <Compile Remove="Migrations\20191017141135_test.cs" />
+    <Compile Remove="Migrations\20191017141135_test.Designer.cs" />
+    <Compile Remove="Migrations\20191017141446_test1.cs" />
+    <Compile Remove="Migrations\20191017141446_test1.Designer.cs" />
+    <Compile Remove="Migrations\20191017141623_test2.cs" />
+    <Compile Remove="Migrations\20191017141623_test2.Designer.cs" />
+    <Compile Remove="Migrations\20191017143449_test1.cs" />
+    <Compile Remove="Migrations\20191017143449_test1.Designer.cs" />
+    <Compile Remove="Migrations\20191017143917_test3.cs" />
+    <Compile Remove="Migrations\20191017143917_test3.Designer.cs" />
+    <Compile Remove="Migrations\20191017144424_test.cs" />
+    <Compile Remove="Migrations\20191017144424_test.Designer.cs" />
+    <Compile Remove="Migrations\20191017145541_CreateInit.cs" />
+    <Compile Remove="Migrations\20191017145541_CreateInit.Designer.cs" />
+    <Compile Remove="Migrations\20191017152306_test.cs" />
+    <Compile Remove="Migrations\20191017152306_test.Designer.cs" />
+    <Compile Remove="Migrations\20191017152650_CreateInit.cs" />
+    <Compile Remove="Migrations\20191017152650_CreateInit.Designer.cs" />
+    <Compile Remove="Migrations\20191017153743_CreateInit.cs" />
+    <Compile Remove="Migrations\20191017153743_CreateInit.Designer.cs" />
+    <Compile Remove="Migrations\20191017154329_CreateInit.cs" />
+    <Compile Remove="Migrations\20191017154329_CreateInit.Designer.cs" />
+    <Compile Remove="Migrations\20191017155218_CreateInit.cs" />
+    <Compile Remove="Migrations\20191017155218_CreateInit.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
