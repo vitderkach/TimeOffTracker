@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+
 
 namespace TOT.Entities
 {
@@ -13,12 +12,13 @@ namespace TOT.Entities
         public DateTime CreationDate { get; set; }
         public TimeOffType VacationType { get; set; }
         public string Notes { get; set; }
+
         public ICollection<ManagerResponse> ManagersResponses { get; set; }
 
         public int ApplicationUserId { get; set; }
-        [ForeignKey("ApplicationUserId")]
         public ApplicationUser User { get; set; }
     }
+
     public enum TimeOffType
     {
         SickLeave = 1,
