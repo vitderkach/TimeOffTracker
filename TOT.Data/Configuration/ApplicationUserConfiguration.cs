@@ -8,11 +8,8 @@ namespace TOT.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<ApplicationUser> entity)
         {
-            entity.ToTable("ApplicationUser");
             entity.Property(p => p.Id)
                 .HasColumnName("ApplicationUserID");
-
-            entity.HasKey(p => p.Id).HasName("PK_ApplicationUser");
 
             entity.Property(e => e.Email)
                 .HasColumnType("varchar(100)")
@@ -30,10 +27,15 @@ namespace TOT.Data.Configuration
             entity.HasOne(i => i.UserInformation)
                 .WithOne(u => u.User)
                 .HasForeignKey<UserInformation>(a => a.ApplicationUserId)
+                .HasConstraintName("FK_AppUser_UserInfo")
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.Property(n => n.UserName)
-                .HasDefaultValue("SkipUserName")
+                .HasColumnType("nvarchar(70)")
+                .IsRequired(false);
+
+            entity.Property(no => no.NormalizedUserName)
+                .HasColumnType("nvarchar(70)")
                 .IsRequired(false);
 
             entity.Ignore(v => v.AccessFailedCount);
@@ -41,12 +43,10 @@ namespace TOT.Data.Configuration
             entity.Ignore(v => v.EmailConfirmed);
             entity.Ignore(v => v.LockoutEnabled);
             entity.Ignore(v => v.LockoutEnd);
-            entity.Ignore(v => v.NormalizedUserName);
             entity.Ignore(v => v.PhoneNumber);
             entity.Ignore(v => v.PhoneNumberConfirmed);
             entity.Ignore(v => v.SecurityStamp);
             entity.Ignore(v => v.TwoFactorEnabled);
-            entity.Ignore(v => v.UserName);
         }
     }
 }

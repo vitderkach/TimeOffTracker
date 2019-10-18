@@ -40,7 +40,8 @@ namespace TOT.Data.Configuration
             entity.HasOne(u => u.User)
                 .WithMany(r => r.VacationRequests)
                 .HasForeignKey(fk => fk.ApplicationUserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasConstraintName("FK_AppUser_Requests")
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
