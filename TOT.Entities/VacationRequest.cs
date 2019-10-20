@@ -15,7 +15,7 @@ namespace TOT.Entities
 
         public ICollection<ManagerResponse> ManagersResponses { get; set; }
 
-        public int ApplicationUserId { get; set; }
+        public int UserId { get; set; }
         public ApplicationUser User { get; set; }
     }
 

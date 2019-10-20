@@ -19,17 +19,17 @@ namespace TOT.Data.Configuration
             entity.Property(n => n.Notes)
                 .HasColumnType("nvarchar(200)");
 
-            entity.HasOne(r => r.VacationRequest)
-                .WithMany(mr => mr.ManagersResponses)
-                .HasForeignKey(fk => fk.VacationRequestId)
-                .HasConstraintName("FK_Request_Responses")
-                .OnDelete(DeleteBehavior.Cascade);
-
             entity.HasOne(m => m.Manager)
                 .WithMany(mr => mr.ManagerResponses)
                 .HasForeignKey(fk => fk.ManagerId)
                 .HasConstraintName("FK_Manager_Responses")
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict); 
+
+            entity.HasOne(r => r.VacationRequest)
+                 .WithMany(mr => mr.ManagersResponses)
+                 .HasForeignKey(fk => fk.VacationRequestId)
+                 .HasConstraintName("FK_Request_Responses")
+                 .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

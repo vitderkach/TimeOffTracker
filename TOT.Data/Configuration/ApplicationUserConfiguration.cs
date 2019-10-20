@@ -9,12 +9,11 @@ namespace TOT.Data.Configuration
         public void Configure(EntityTypeBuilder<ApplicationUser> entity)
         {
             entity.Property(p => p.Id)
-                .HasColumnName("ApplicationUserID");
+                .HasColumnName("ApplicationUserId");
 
             entity.Property(e => e.Email)
                 .HasColumnType("varchar(100)")
                 .IsRequired();
-            entity.HasAlternateKey(u => u.Email);
 
             entity.Property(em => em.NormalizedEmail)
                 .HasColumnType("varchar(100)");
@@ -22,13 +21,6 @@ namespace TOT.Data.Configuration
             entity.Property(d => d.RegistrationDate)
                .HasColumnType("datetime")
                .HasDefaultValueSql("GETDATE()");
-            entity.HasIndex(r => r.RegistrationDate);
-
-            entity.HasOne(i => i.UserInformation)
-                .WithOne(u => u.User)
-                .HasForeignKey<UserInformation>(a => a.ApplicationUserId)
-                .HasConstraintName("FK_AppUser_UserInfo")
-                .OnDelete(DeleteBehavior.Cascade);
 
             entity.Property(n => n.UserName)
                 .HasColumnType("nvarchar(70)")
@@ -37,6 +29,11 @@ namespace TOT.Data.Configuration
             entity.Property(no => no.NormalizedUserName)
                 .HasColumnType("nvarchar(70)")
                 .IsRequired(false);
+
+            entity.HasOne(i => i.UserInformation)
+                .WithOne(u => u.User)
+                .HasForeignKey<UserInformation>(a => a.ApplicationUserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             entity.Ignore(v => v.AccessFailedCount);
             entity.Ignore(v => v.ConcurrencyStamp);
