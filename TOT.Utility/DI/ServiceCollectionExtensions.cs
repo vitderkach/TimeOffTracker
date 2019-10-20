@@ -3,8 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TOT.Business.Services;
 using TOT.Data;
+using TOT.Data.Repositories;
+using TOT.Data.UnitOfWork;
 using TOT.Entities;
+using TOT.Interfaces;
+using TOT.Interfaces.Repositories;
+using TOT.Interfaces.Services;
 using TOT.Utility.AutoMapper;
 
 namespace TOT.Utility.DI
@@ -18,7 +24,11 @@ namespace TOT.Utility.DI
         }
         public static void RegisterRepositoriesAndServices(this IServiceCollection services)
         {
+            services.AddTransient<IRepository<UserInformation>, UserInformationRepository>();
 
+            services.AddTransient<IUserInformationService, UserInformationService>();
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
         public static void AddAutoMapper(this IServiceCollection services)
         {

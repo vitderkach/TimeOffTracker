@@ -35,7 +35,7 @@ namespace TOT.Data.Configuration
                 .HasForeignKey<UserInformation>(a => a.ApplicationUserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            entity.Ignore(v => v.AccessFailedCount);
+            /*entity.Ignore(v => v.AccessFailedCount);
             entity.Ignore(v => v.ConcurrencyStamp);
             entity.Ignore(v => v.EmailConfirmed);
             entity.Ignore(v => v.LockoutEnabled);
@@ -43,7 +43,7 @@ namespace TOT.Data.Configuration
             entity.Ignore(v => v.PhoneNumber);
             entity.Ignore(v => v.PhoneNumberConfirmed);
             entity.Ignore(v => v.SecurityStamp);
-            entity.Ignore(v => v.TwoFactorEnabled);
+            entity.Ignore(v => v.TwoFactorEnabled);*/
         }
     }
 }

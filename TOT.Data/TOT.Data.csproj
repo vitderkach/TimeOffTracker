@@ -63,8 +63,4 @@
     <ProjectReference Include="..\TOT.Interfaces\TOT.Interfaces.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Repositories\" />
-  </ItemGroup>
-
 </Project>

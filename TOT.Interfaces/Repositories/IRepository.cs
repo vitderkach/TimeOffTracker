@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TOT.Interfaces.Repositories
 {
-    interface IRepository<T> : IDisposable where T : class
+    public interface IRepository<T> : IDisposable where T : class
     {
         IEnumerable<T> GetAll();
         T Get(int id);
