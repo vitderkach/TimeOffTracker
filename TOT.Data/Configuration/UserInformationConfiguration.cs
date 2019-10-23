@@ -19,6 +19,11 @@ namespace TOT.Data.Configuration
                 .IsRequired();
 
             entity.HasIndex(fn => new { fn.FirstName, fn.LastName });
+
+            entity.HasOne(u => u.User)
+                .WithOne(i => i.UserInformation)
+                .HasForeignKey<ApplicationUser>(ui => ui.UserInformationId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
