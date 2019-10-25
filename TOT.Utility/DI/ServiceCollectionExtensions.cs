@@ -28,7 +28,10 @@ namespace TOT.Utility.DI
         {
             services.AddIdentity<ApplicationUser, IdentityRole<int>>(opts =>
             {
-                //opts.
+                opts.Password.RequireDigit = false;
+                opts.Password.RequiredLength = 4;
+                opts.Password.RequireNonAlphanumeric = false;
+                opts.Password.RequireUppercase = false;
             })
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();

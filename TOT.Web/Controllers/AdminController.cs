@@ -15,14 +15,16 @@ namespace TOT.Web.Controllers
     {
         private UserManager<ApplicationUser> userManager;
         private RoleManager<IdentityRole<int>> roleManager;
-        private IUserInfoService userInfoService;
+        // private IUserInfoService userInfoService;
+        private readonly string defaultPassword = "user";
 
+        // IUserInfoService service
         public AdminController(RoleManager<IdentityRole<int>> roleMgr,
-            UserManager<ApplicationUser> userMgr, IUserInfoService service)
+            UserManager<ApplicationUser> userMgr)
         {
             roleManager = roleMgr;
             userManager = userMgr;
-            userInfoService = service;
+           // userInfoService = service;
         }
 
         private void AddErrorsFromResult(IdentityResult result)
@@ -45,17 +47,17 @@ namespace TOT.Web.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Create(AddUserViewModel model)
-        {
+        {  
             if (ModelState.IsValid)
             {
                 ApplicationUser user = new ApplicationUser()
                 {
-                    UserName = model.Name,
+                    UserName = model.Login,
                     Email = model.Email,
-                    UserInformationId = model.UserProfile
+                    UserInformationId = model.UserInfoId
                 };
 
-                IdentityResult result = await userManager.CreateAsync(user, model.Password);
+                IdentityResult result = await userManager.CreateAsync(user, defaultPassword);
 
                 if (result.Succeeded)
                 {
@@ -69,7 +71,7 @@ namespace TOT.Web.Controllers
             return View(model);
         }
 
-        public IActionResult CreateInfo()
+     /*   public IActionResult CreateInfo()
         {
             return View();
         }
@@ -96,6 +98,56 @@ namespace TOT.Web.Controllers
                 }
             }
             return View(model);
+        } */
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            ApplicationUser user = await userManager.FindByIdAsync(id.ToString());
+
+            if (user != null)
+            {
+                IdentityResult result = await userManager.DeleteAsync(user);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    AddErrorsFromResult(result);
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("", "User not found");
+            }
+            return View("Index", userManager.Users);
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            ApplicationUser user = await userManager.FindByIdAsync(id.ToString());
+
+            if (user != null)
+            {
+                var userRoles = await userManager.GetRolesAsync(user);
+                var allRoles = roleManager.Roles.ToList();
+
+                return View(new ChangeUserRoleViewModel
+                {
+                    UserId = user.Id,
+                    Name = user.UserName,
+                    RoleNames = userRoles,
+                    AllRoles = allRoles
+                });
+            }
+            else
+            {
+                ModelState.AddModelError("", "User not found");
+            }
+
+            return View("Index");
         }
     }
 }
