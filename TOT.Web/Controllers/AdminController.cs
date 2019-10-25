@@ -75,35 +75,6 @@ namespace TOT.Web.Controllers
             return View(model);
         }
 
-     /*   public IActionResult CreateInfo()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult CreateInfo(AddUserInfoViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                UserInformationDTO userInfoDTO = new UserInformationDTO()
-                {
-                    FirstName = model.FirstName,
-                    LastName = model.LastName                    
-                };
-
-                if (userInfoDTO != null)
-                {
-                    userInfoService.SaveUserInfo(userInfoDTO);
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    throw new NullReferenceException("userInfoDTO = null");
-                }
-            }
-            return View(model);
-        } */
-
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
@@ -179,5 +150,35 @@ namespace TOT.Web.Controllers
 
             return NotFound();
         }
+
+
+        /*   public IActionResult CreateInfo()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult CreateInfo(AddUserInfoViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                UserInformationDTO userInfoDTO = new UserInformationDTO()
+                {
+                    FirstName = model.FirstName,
+                    LastName = model.LastName                    
+                };
+
+                if (userInfoDTO != null)
+                {
+                    userInfoService.SaveUserInfo(userInfoDTO);
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    throw new NullReferenceException("userInfoDTO = null");
+                }
+            }
+            return View(model);
+        } */
     }
 }

@@ -1,14 +1,14 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @model TOT.Web.Models.ChangeUserRoleViewModel
 
-<h2> Change role for @Model.Name</h2>
+<h2> Change @Model.Name role</h2>
 
 <form asp-action="Edit" method="post">
     <input type="hidden" name="id" value="@Model.UserId" />
     <div class="form-group">
         @foreach (IdentityRole<int> role in Model.AllRoles)
         {
-            <input type="checkbox" name="roles" value="@role.Name"
+            <input type="radio" name="roles" value="@role.Name"
                    @(Model.RoleName.Contains(role.Name) ? "checked=\"checked\"" : "") />@role.Name <br />
             }
     </div>

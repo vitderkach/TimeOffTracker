@@ -10,9 +10,6 @@ namespace TOT.Web.Models
         [Required]
         public string Email { get; set; }
 
-      /*  [Required]
-        public string Password { get; set; } */
-
         [Required]
         public int UserInfoId { get; set; }
 
