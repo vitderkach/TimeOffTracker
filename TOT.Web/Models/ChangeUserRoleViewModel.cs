@@ -9,12 +9,12 @@ namespace TOT.Web.Models
         public int UserId { get; set; }
         public string Name { get; set; }
         public List<IdentityRole<int>> AllRoles { get; set; }
-        public IList<string> RoleNames { get; set; }
+        public IList<string> RoleName { get; set; }
 
         public ChangeUserRoleViewModel()
         {
             AllRoles = new List<IdentityRole<int>>();
-            RoleNames = new List<string>();
+            RoleName = new List<string>();
         }
     }
 }

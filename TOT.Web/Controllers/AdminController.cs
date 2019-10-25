@@ -42,25 +42,29 @@ namespace TOT.Web.Controllers
 
         public IActionResult Create()
         {
+            ViewData["roles"] = roleManager.Roles.ToList();
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(AddUserViewModel model)
-        {  
+        {
+            var role = roleManager.FindByIdAsync(model.RoleId.ToString()).Result;
+
             if (ModelState.IsValid)
             {
                 ApplicationUser user = new ApplicationUser()
                 {
                     UserName = model.Login,
                     Email = model.Email,
-                    UserInformationId = model.UserInfoId
+                    UserInformationId = model.UserInfoId,                    
                 };
 
                 IdentityResult result = await userManager.CreateAsync(user, defaultPassword);
 
                 if (result.Succeeded)
-                {
+                {                   
+                    await userManager.AddToRoleAsync(user, role.Name);
                     return RedirectToAction("Index");
                 }
                 else
@@ -138,7 +142,7 @@ namespace TOT.Web.Controllers
                 {
                     UserId = user.Id,
                     Name = user.UserName,
-                    RoleNames = userRoles,
+                    RoleName = userRoles,
                     AllRoles = allRoles
                 });
             }
@@ -147,7 +151,33 @@ namespace TOT.Web.Controllers
                 ModelState.AddModelError("", "User not found");
             }
 
-            return View("Index");
+            return NotFound();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, List<string> roles)
+        {
+            var user = userManager.FindByIdAsync(id.ToString()).Result;
+
+            if (user != null)
+            {
+                var userRoles = await userManager.GetRolesAsync(user);
+                var allRoles = roleManager.Roles.ToList();
+
+                var addedRoles = roles.Except(userRoles);
+                var removedRoles = userRoles.Except(roles);
+
+                await userManager.RemoveFromRolesAsync(user, removedRoles);
+                await userManager.AddToRolesAsync(user, addedRoles);
+
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                ModelState.AddModelError("", "User not found");
+            }
+
+            return NotFound();
         }
     }
 }

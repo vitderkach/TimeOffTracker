@@ -15,5 +15,8 @@ namespace TOT.Web.Models
 
         [Required]
         public int UserInfoId { get; set; }
+
+        [Required]
+        public int RoleId { get; set; }
     }
 }
