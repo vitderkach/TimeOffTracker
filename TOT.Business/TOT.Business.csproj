@@ -6,6 +6,9 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\TOT.Data\TOT.Data.csproj" />
   </ItemGroup>
 

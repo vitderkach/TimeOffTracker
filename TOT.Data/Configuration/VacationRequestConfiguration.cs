@@ -9,7 +9,7 @@ namespace TOT.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<VacationRequest> entity)
         {
-            entity.HasKey(r => r.Id)
+            entity.HasKey(r => r.VacationRequestId)
                 .HasName("PK_VacationRequest");
 
             entity.Property(s => s.StartDate)

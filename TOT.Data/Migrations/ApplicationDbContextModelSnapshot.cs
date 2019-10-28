@@ -134,8 +134,6 @@ namespace TOT.Data.Migrations
                         .HasColumnName("ApplicationUserId")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AccessFailedCount");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
@@ -144,8 +142,6 @@ namespace TOT.Data.Migrations
                         .HasColumnType("varchar(100)")
                         .HasMaxLength(256);
 
-                    b.Property<bool>("EmailConfirmed");
-                    
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
@@ -160,21 +156,12 @@ namespace TOT.Data.Migrations
 
                     b.Property<string>("PasswordHash");
 
-                    b.Property<string>("PhoneNumber");
-
-                    b.Property<bool>("PhoneNumberConfirmed");
-
-                    b.Property<DateTime>("RegistrationDate")
-
+                    b.Property<DateTime?>("RegistrationDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("SecurityStamp");
-
-                    b.Property<string>("SecurityStamp");
-
-                    b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<int>("UserInformationId");
 
@@ -233,7 +220,7 @@ namespace TOT.Data.Migrations
 
             modelBuilder.Entity("TOT.Entities.UserInformation", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("UserInformationId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -245,7 +232,7 @@ namespace TOT.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(70)");
 
-                    b.HasKey("Id")
+                    b.HasKey("UserInformationId")
                         .HasName("PK_UserInformation");
 
                     b.HasIndex("FirstName", "LastName");
@@ -255,7 +242,7 @@ namespace TOT.Data.Migrations
 
             modelBuilder.Entity("TOT.Entities.VacationRequest", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("VacationRequestId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -279,7 +266,7 @@ namespace TOT.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(30)");
 
-                    b.HasKey("Id")
+                    b.HasKey("VacationRequestId")
                         .HasName("PK_VacationRequest");
 
                     b.HasIndex("CreationDate");

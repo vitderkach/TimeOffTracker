@@ -8,7 +8,7 @@ namespace TOT.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<UserInformation> entity)
         {
-            entity.HasKey(pk => pk.Id).HasName("PK_UserInformation");
+            entity.HasKey(pk => pk.UserInformationId).HasName("PK_UserInformation");
 
             entity.Property(n => n.FirstName)
                 .HasColumnType("nvarchar(70)")

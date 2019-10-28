@@ -8,6 +8,7 @@ namespace TOT.Entities
     {
         public DateTime? RegistrationDate { get; set; }
 
+
         public int UserInformationId { get; set; }
         public UserInformation UserInformation { get; set; }
         public ICollection<VacationRequest> VacationRequests { get; set; }
