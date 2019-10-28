@@ -13,12 +13,14 @@ namespace TOT.Data
         {
             //Database.EnsureDeleted();
         }
+
         #region DbSets
-        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        // public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<UserInformation> UserInformations { get; set; }
         public DbSet<VacationRequest> VacationRequests { get; set; }
         public DbSet<ManagerResponse> ManagerResponses { get; set; }
         #endregion
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new VacationRequestConfiguration());

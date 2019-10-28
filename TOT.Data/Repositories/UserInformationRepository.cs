@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,7 +19,6 @@ namespace TOT.Data.Repositories
             db.Add(item);
             db.SaveChanges();
         }
-
         public void Delete(int id)
         {
             UserInformation userInfo = db.UserInformations.Find(id);
@@ -83,5 +82,5 @@ namespace TOT.Data.Repositories
             // GC.SuppressFinalize(this);
         }
         #endregion
-    }
+    }      
 }
