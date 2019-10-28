@@ -11,10 +11,9 @@ namespace TOT.Web.Controllers
 {
     public class HomeController : Controller
     {
-        IUserInformationService _userInfoService;
-        public HomeController(IUserInformationService userInfoService)
+        public HomeController()
         {
-            _userInfoService = userInfoService;
+
         }
         public IActionResult Index()
         {
@@ -23,11 +22,6 @@ namespace TOT.Web.Controllers
         public IActionResult List()
         {
             return View();
-        }
-        public IActionResult Get()
-        {
-            var userInfo = _userInfoService.getUserInformation(1);
-            return View(userInfo);
         }
         public IActionResult About()
         {

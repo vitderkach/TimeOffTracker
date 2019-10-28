@@ -12,9 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TOT.Data;
-using TOT.Utility.DI;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using TOT.Web.Areas.Identity.Services;
+using TOT.Utility.DI;
 
 namespace TOT.Web
 {
@@ -41,9 +40,6 @@ namespace TOT.Web
             services.AddAutoMapper();
             services.AddCustomIdentity();
 
-            services.AddTransient<IEmailSender, EmailSender>();
-            services.Configure<AuthMessageSenderOptions>(Configuration);
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
@@ -60,7 +56,6 @@ namespace TOT.Web
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

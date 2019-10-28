@@ -5,8 +5,8 @@ using TOT.Dto;
 
 namespace TOT.Interfaces.Services
 {
-    public interface IUserInformationService
+    public interface IVacationService
     {
-        UserInformationDto getUserInformation(int id);
+        void ApplyForVacation(VacationRequestDto vacationDto);
     }
 }

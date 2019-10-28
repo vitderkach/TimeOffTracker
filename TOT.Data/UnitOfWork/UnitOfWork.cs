@@ -10,16 +10,26 @@ namespace TOT.Data.UnitOfWork
 {
     public class UnitOfWork: IUnitOfWork
     {
-        ApplicationDbContext db;
-        IRepository<UserInformation> _userInformationRepostitory;
-        public UnitOfWork(ApplicationDbContext context, IRepository<UserInformation> userInformationRepository)
+        readonly ApplicationDbContext db;
+        readonly IRepository<UserInformation> _userInformationRepostitory;
+        readonly IRepository<VacationRequest> _vacationRequestRepository;
+
+        public UnitOfWork(ApplicationDbContext context, 
+            IRepository<UserInformation> userInformationRepository, 
+            IRepository<VacationRequest> vacationRequestRepository)
         {
-            db = new ApplicationDbContext();
+            db = context;
             _userInformationRepostitory = userInformationRepository;
+            _vacationRequestRepository = vacationRequestRepository;
         }
         public IRepository<UserInformation> UserInformationRepostitory
         {
             get { return _userInformationRepostitory; }
+        }
+
+        public IRepository<VacationRequest> VacationRequestRepository
+        {
+            get { return _vacationRequestRepository; }
         }
     }
 }
