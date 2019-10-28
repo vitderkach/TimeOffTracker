@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using TOT.Dto;
+using TOT.Entities;
 
 namespace TOT.Utility.AutoMapper
 {
@@ -9,8 +11,11 @@ namespace TOT.Utility.AutoMapper
     {
         public DomainTo()
         {
-            //CreateMap<VacationRequest, VacationRequestDto>()
-            //    .ForMember();
+            CreateMap<VacationRequest, VacationRequestDto>();
+            CreateMap<ApplicationUser, ApplicationUserDto>();
+            CreateMap<UserInformation, UserInformationDto>();
+            CreateMap<ManagerResponse, ManagerResponseDto>();
+
         }
     }
 }

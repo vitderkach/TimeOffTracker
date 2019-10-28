@@ -17,10 +17,10 @@ namespace TOT.Business.Services
             _mapper = mapper;
             _uow = uow;
         }
-        public UserInformationDTO getUserInformation(int id)
+        public UserInformationDto getUserInformation(int id)
         {
             var userInfo = _uow.UserInformationRepostitory.Get(id);
-            return _mapper.Map<UserInformation, UserInformationDTO>(userInfo);
+            return _mapper.Map<UserInformation, UserInformationDto>(userInfo);
         }
     }
 }
