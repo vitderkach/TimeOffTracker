@@ -1,24 +1,29 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using TOT.Entities;
 
 namespace TOT.Data.Configuration
 {
     class UserInformationConfiguration : IEntityTypeConfiguration<UserInformation>
     {
-        public void Configure(EntityTypeBuilder<UserInformation> builder)
+        public void Configure(EntityTypeBuilder<UserInformation> entity)
         {
-            /* builder.HasKey(v => v.UserInformationId);
-             builder.HasOne(o => o.User)
-                 .WithOne(p => p.UserInformation);
-     */
-            builder.HasOne(p => p.User)
-                .WithOne(p => p.UserInformation)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
+            entity.HasKey(pk => pk.UserInformationId).HasName("PK_UserInformation");
+
+            entity.Property(n => n.FirstName)
+                .HasColumnType("nvarchar(70)")
+                .IsRequired();
+
+            entity.Property(l => l.LastName)
+                .HasColumnType("nvarchar(70)")
+                .IsRequired();
+
+            entity.HasIndex(fn => new { fn.FirstName, fn.LastName });
+
+            entity.HasOne(u => u.User)
+                .WithOne(i => i.UserInformation)
+                .HasForeignKey<ApplicationUser>(ui => ui.UserInformationId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

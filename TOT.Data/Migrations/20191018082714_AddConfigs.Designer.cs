@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TOT.Data;
 
 namespace TOT.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191018082714_AddConfigs")]
+    partial class AddConfigs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -131,7 +133,7 @@ namespace TOT.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("ApplicationUserId")
+                        .HasColumnName("ApplicationUserID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ConcurrencyStamp")
@@ -142,37 +144,28 @@ namespace TOT.Data.Migrations
                         .HasColumnType("varchar(100)")
                         .HasMaxLength(256);
 
-                    b.Property<bool>("LockoutEnabled");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd");
-
                     b.Property<string>("NormalizedEmail")
                         .HasColumnType("varchar(100)")
                         .HasMaxLength(256);
 
                     b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("nvarchar(70)")
                         .HasMaxLength(256);
 
                     b.Property<string>("PasswordHash");
 
-                    b.Property<DateTime?>("RegistrationDate")
+                    b.Property<DateTime>("RegistrationDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<string>("SecurityStamp");
-
-                    b.Property<int>("UserInformationId");
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("nvarchar(70)")
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Email")
-                        .IsUnique();
+                    b.HasAlternateKey("Email");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -182,8 +175,7 @@ namespace TOT.Data.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("UserInformationId")
-                        .IsUnique();
+                    b.HasIndex("RegistrationDate");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -224,6 +216,8 @@ namespace TOT.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("ApplicationUserId");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(70)");
@@ -235,6 +229,9 @@ namespace TOT.Data.Migrations
                     b.HasKey("UserInformationId")
                         .HasName("PK_UserInformation");
 
+                    b.HasIndex("ApplicationUserId")
+                        .IsUnique();
+
                     b.HasIndex("FirstName", "LastName");
 
                     b.ToTable("UserInformations");
@@ -245,6 +242,8 @@ namespace TOT.Data.Migrations
                     b.Property<int>("VacationRequestId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ApplicationUserId");
 
                     b.Property<DateTime>("CreationDate")
                         .ValueGeneratedOnAdd()
@@ -260,8 +259,6 @@ namespace TOT.Data.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("date");
 
-                    b.Property<int>("UserId");
-
                     b.Property<string>("VacationType")
                         .IsRequired()
                         .HasColumnType("nvarchar(30)");
@@ -269,13 +266,13 @@ namespace TOT.Data.Migrations
                     b.HasKey("VacationRequestId")
                         .HasName("PK_VacationRequest");
 
+                    b.HasIndex("ApplicationUserId");
+
                     b.HasIndex("CreationDate");
 
                     b.HasIndex("EndDate");
 
                     b.HasIndex("StartDate");
-
-                    b.HasIndex("UserId");
 
                     b.HasIndex("VacationType");
 
@@ -327,34 +324,35 @@ namespace TOT.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("TOT.Entities.ApplicationUser", b =>
-                {
-                    b.HasOne("TOT.Entities.UserInformation", "UserInformation")
-                        .WithOne("User")
-                        .HasForeignKey("TOT.Entities.ApplicationUser", "UserInformationId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("TOT.Entities.ManagerResponse", b =>
                 {
                     b.HasOne("TOT.Entities.ApplicationUser", "Manager")
                         .WithMany("ManagerResponses")
                         .HasForeignKey("ManagerId")
                         .HasConstraintName("FK_Manager_Responses")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("TOT.Entities.VacationRequest", "VacationRequest")
                         .WithMany("ManagersResponses")
                         .HasForeignKey("VacationRequestId")
                         .HasConstraintName("FK_Request_Responses")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("TOT.Entities.UserInformation", b =>
+                {
+                    b.HasOne("TOT.Entities.ApplicationUser", "User")
+                        .WithOne("UserInformation")
+                        .HasForeignKey("TOT.Entities.UserInformation", "ApplicationUserId")
+                        .HasConstraintName("FK_AppUser_UserInfo")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("TOT.Entities.VacationRequest", b =>
                 {
                     b.HasOne("TOT.Entities.ApplicationUser", "User")
                         .WithMany("VacationRequests")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("ApplicationUserId")
                         .HasConstraintName("FK_AppUser_Requests")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
