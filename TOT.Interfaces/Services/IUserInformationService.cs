@@ -7,6 +7,6 @@ namespace TOT.Interfaces.Services
 {
     public interface IUserInformationService
     {
-        UserInformationDto getUserInformation(int id);
+        UserInformationDTO getUserInformation(int id);
     }
 }

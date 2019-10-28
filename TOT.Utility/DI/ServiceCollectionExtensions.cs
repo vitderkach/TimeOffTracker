@@ -25,10 +25,8 @@ namespace TOT.Utility.DI
         public static void RegisterRepositoriesAndServices(this IServiceCollection services)
         {
             services.AddTransient<IRepository<UserInformation>, UserInformationRepository>();
-            services.AddTransient<IRepository<VacationRequest>, VacationRequestRepository>();
 
             services.AddTransient<IUserInformationService, UserInformationService>();
-            services.AddTransient<IVacationService, VacationService>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
@@ -40,13 +38,10 @@ namespace TOT.Utility.DI
         {
             services.AddIdentity<ApplicationUser, IdentityRole<int>>(opts =>
             {
-                opts.Password.RequireDigit = false;
-                opts.Password.RequiredLength = 4;
-                opts.Password.RequireNonAlphanumeric = false;
-                opts.Password.RequireUppercase = false;
+                //opts.
             })
-             .AddEntityFrameworkStores<ApplicationDbContext>()
-             .AddDefaultTokenProviders();
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
         }
     }
 }
