@@ -15,8 +15,8 @@ namespace TOT.Data.UnitOfWork
         readonly IRepository<UserInformation> _userInformationRepostitory;
         readonly IRepository<VacationRequest> _vacationRequestRepository;
 
-        public UnitOfWork(ApplicationDbContext context, 
-            IRepository<UserInformation> userInformationRepository, 
+        public UnitOfWork(ApplicationDbContext context,
+            IRepository<UserInformation> userInformationRepository,
             IRepository<VacationRequest> vacationRequestRepository)
         {
             db = context;
@@ -30,7 +30,11 @@ namespace TOT.Data.UnitOfWork
 
         public IRepository<VacationRequest> VacationRequestRepository
         {
-            get { return _vacationRequestRepository; 
+            get { return _vacationRequestRepository; }
+        }
+        public void Save()
+        {
+            db.SaveChanges();
         }
     }
 }

@@ -145,7 +145,7 @@ namespace TOT.Data.Migrations
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
-                    
+
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
@@ -164,17 +164,12 @@ namespace TOT.Data.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed");
 
-                    b.Property<DateTime>("RegistrationDate")
-
+                    b.Property<DateTime?>("RegistrationDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("SecurityStamp");
-
-                    b.Property<string>("SecurityStamp");
-
-                    b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<int>("UserInformationId");
 
@@ -233,7 +228,7 @@ namespace TOT.Data.Migrations
 
             modelBuilder.Entity("TOT.Entities.UserInformation", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("UserInformationId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -245,7 +240,7 @@ namespace TOT.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(70)");
 
-                    b.HasKey("Id")
+                    b.HasKey("UserInformationId")
                         .HasName("PK_UserInformation");
 
                     b.HasIndex("FirstName", "LastName");
@@ -345,7 +340,7 @@ namespace TOT.Data.Migrations
                     b.HasOne("TOT.Entities.UserInformation", "UserInformation")
                         .WithOne("User")
                         .HasForeignKey("TOT.Entities.ApplicationUser", "UserInformationId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("TOT.Entities.ManagerResponse", b =>

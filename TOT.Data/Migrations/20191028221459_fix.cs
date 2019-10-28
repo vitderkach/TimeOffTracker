@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TOT.Data.Migrations
 {
-    public partial class configApplicationUser : Migration
+    public partial class fix : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -18,6 +18,15 @@ namespace TOT.Data.Migrations
             migrationBuilder.DropColumn(
                 name: "ApplicationUserId",
                 table: "UserInformations");
+
+            migrationBuilder.DropColumn(
+                name: "TwoFactorEnabled",
+                table: "AspNetUsers");
+
+            migrationBuilder.RenameColumn(
+                name: "Id",
+                table: "UserInformations",
+                newName: "UserInformationId");
 
             migrationBuilder.AlterColumn<string>(
                 name: "UserName",
@@ -51,22 +60,6 @@ namespace TOT.Data.Migrations
                 oldMaxLength: 256,
                 oldNullable: true);
 
-            migrationBuilder.AddColumn<bool>(
-                name: "LockoutEnabled",
-                table: "AspNetUsers",
-                nullable: false,
-                defaultValue: false);
-
-            migrationBuilder.AddColumn<DateTimeOffset>(
-                name: "LockoutEnd",
-                table: "AspNetUsers",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "SecurityStamp",
-                table: "AspNetUsers",
-                nullable: true);
-
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_Email",
                 table: "AspNetUsers",
@@ -85,7 +78,7 @@ namespace TOT.Data.Migrations
                 column: "UserInformationId",
                 principalTable: "UserInformations",
                 principalColumn: "UserInformationId",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -102,17 +95,10 @@ namespace TOT.Data.Migrations
                 name: "IX_AspNetUsers_UserInformationId",
                 table: "AspNetUsers");
 
-            migrationBuilder.DropColumn(
-                name: "LockoutEnabled",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "LockoutEnd",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "SecurityStamp",
-                table: "AspNetUsers");
+            migrationBuilder.RenameColumn(
+                name: "UserInformationId",
+                table: "UserInformations",
+                newName: "Id");
 
             migrationBuilder.AddColumn<int>(
                 name: "ApplicationUserId",
@@ -152,6 +138,12 @@ namespace TOT.Data.Migrations
                 oldType: "nvarchar(50)",
                 oldMaxLength: 256,
                 oldNullable: true);
+
+            migrationBuilder.AddColumn<bool>(
+                name: "TwoFactorEnabled",
+                table: "AspNetUsers",
+                nullable: false,
+                defaultValue: false);
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserInformations_ApplicationUserId",

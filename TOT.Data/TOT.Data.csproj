@@ -47,6 +47,12 @@
     <Compile Remove="Migrations\20191018075927_AddConfigs.Designer.cs" />
     <Compile Remove="Migrations\20191018080241_AddConfigs.cs" />
     <Compile Remove="Migrations\20191018080241_AddConfigs.Designer.cs" />
+    <Compile Remove="Migrations\20191023142019_configApplicationUser.cs" />
+    <Compile Remove="Migrations\20191023142019_configApplicationUser.Designer.cs" />
+    <Compile Remove="Migrations\20191028215759_lockoutenabled.cs" />
+    <Compile Remove="Migrations\20191028215759_lockoutenabled.Designer.cs" />
+    <Compile Remove="Migrations\20191028215939_remove.cs" />
+    <Compile Remove="Migrations\20191028215939_remove.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

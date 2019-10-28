@@ -10,8 +10,8 @@ using TOT.Data;
 namespace TOT.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191023142019_configApplicationUser")]
-    partial class configApplicationUser
+    [Migration("20191028221459_fix")]
+    partial class fix
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -136,6 +136,8 @@ namespace TOT.Data.Migrations
                         .HasColumnName("ApplicationUserId")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AccessFailedCount");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
@@ -143,6 +145,8 @@ namespace TOT.Data.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(100)")
                         .HasMaxLength(256);
+
+                    b.Property<bool>("EmailConfirmed");
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -157,6 +161,10 @@ namespace TOT.Data.Migrations
                         .HasMaxLength(256);
 
                     b.Property<string>("PasswordHash");
+
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<bool>("PhoneNumberConfirmed");
 
                     b.Property<DateTime?>("RegistrationDate")
                         .ValueGeneratedOnAdd()
@@ -244,7 +252,7 @@ namespace TOT.Data.Migrations
 
             modelBuilder.Entity("TOT.Entities.VacationRequest", b =>
                 {
-                    b.Property<int>("VacationRequestId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -268,7 +276,7 @@ namespace TOT.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(30)");
 
-                    b.HasKey("VacationRequestId")
+                    b.HasKey("Id")
                         .HasName("PK_VacationRequest");
 
                     b.HasIndex("CreationDate");
@@ -334,7 +342,7 @@ namespace TOT.Data.Migrations
                     b.HasOne("TOT.Entities.UserInformation", "UserInformation")
                         .WithOne("User")
                         .HasForeignKey("TOT.Entities.ApplicationUser", "UserInformationId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("TOT.Entities.ManagerResponse", b =>
