@@ -1,26 +1,64 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using TOT.Dto;
-using TOT.Entities;
 using TOT.Interfaces;
 using TOT.Interfaces.Services;
+using AutoMapper;
+using TOT.Entities;
 
 namespace TOT.Business.Services
 {
-    public class UserInformationService : IUserInformationService
+    public class UserInformationService : IUserInfoService
     {
-        IUnitOfWork _uow;
-        IMapper _mapper;
-        public UserInformationService(IMapper mapper, IUnitOfWork uow)
+        private IUnitOfWork Database { get; set; }
+
+        public UserInformationService(IUnitOfWork uow)
         {
-            _mapper = mapper;
-            _uow = uow;
+            Database = uow;
         }
-        public UserInformationDto getUserInformation(int id)
+
+        public void Dispose()
         {
-            var userInfo = _uow.UserInformationRepostitory.Get(id);
-            return _mapper.Map<UserInformation, UserInformationDto>(userInfo);
+            throw new NotImplementedException("Dispose() method not implemented");
+        }
+
+        public UserInformationDTO GetUserInfo(int? id)
+        {
+            if (id == null)
+                throw new NullReferenceException("id = null");
+
+            var userInfo = Database.UserProfiles.Get(id.Value);
+
+            if (userInfo == null)
+                throw new NullReferenceException("userInfo not found");
+
+            return new UserInformationDTO
+            {
+                Id = userInfo.UserInformationId,
+                FirstName = userInfo.FirstName,
+                LastName = userInfo.LastName
+            };
+        }
+
+        public IEnumerable<UserInformationDTO> GetUsersInfo()
+        {
+            var mapper = new MapperConfiguration(cfg =>
+                cfg.CreateMap<UserInformation, UserInformationDTO>()).CreateMapper();
+
+            return mapper.Map<IEnumerable<UserInformation>, 
+                List<UserInformationDTO>>(Database.UserProfiles.GetAll());
+        }
+
+        public void SaveUserInfo(UserInformationDTO userInfoDTO)
+        {
+            UserInformation userInfo = new UserInformation()
+            {
+                FirstName = userInfoDTO.FirstName,
+                LastName = userInfoDTO.LastName
+            };
+
+            Database.UserProfiles.Create(userInfo);
+            Database.Save();
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TOT.Utility.AutoMapper
 {
-    public class DTOTo: Profile
+    public class ViewModelTo: Profile
     {
     }
 }

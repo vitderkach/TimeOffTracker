@@ -1,6 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
 ﻿using Microsoft.EntityFrameworkCore;
 using TOT.Data.Repositories;
 using TOT.Entities;
@@ -11,26 +8,27 @@ namespace TOT.Data.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
-        readonly ApplicationDbContext db;
-        readonly IRepository<UserInformation> _userInformationRepostitory;
-        readonly IRepository<VacationRequest> _vacationRequestRepository;
+        private ApplicationDbContext context;
+        private UserInformationRepository userInfoRepository;
 
-        public UnitOfWork(ApplicationDbContext context, 
-            IRepository<UserInformation> userInformationRepository, 
-            IRepository<VacationRequest> vacationRequestRepository)
+        public UnitOfWork(DbContextOptions<ApplicationDbContext> options)
         {
-            db = context;
-            _userInformationRepostitory = userInformationRepository;
-            _vacationRequestRepository = vacationRequestRepository;
-        }
-        public IRepository<UserInformation> UserInformationRepostitory
-        {
-            get { return _userInformationRepostitory; }
+            this.context = new ApplicationDbContext(options);
         }
 
-        public IRepository<VacationRequest> VacationRequestRepository
+        public IRepository<UserInformation> UserProfiles
         {
-            get { return _vacationRequestRepository; 
+            get
+            {
+                if (userInfoRepository == null)
+                    userInfoRepository = new UserInformationRepository(context);
+                return userInfoRepository;
+            }
+        }
+
+        public void Save()
+        {
+            context.SaveChanges();
         }
     }
 }
