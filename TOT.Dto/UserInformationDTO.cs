@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace TOT.Dto
 {
-    public class UserInformationDTO
+    public class UserInformationDto
     {
-        public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public int UserInformationId { get; set; }
     }
 }

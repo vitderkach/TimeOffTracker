@@ -16,18 +16,17 @@ namespace TOT.Utility.AutoMapper
             {
                 cfg.AddProfile<DomainTo>();
                 cfg.AddProfile<DTOTo>();
-                cfg.AddProfile<ViewModelTo>();
             }) ;
             mapper = config.CreateMapper();
         }
         public TDestination Map<TSource, TDestination>(TSource source)
         {
-            throw new NotImplementedException();
+            return mapper.Map<TSource, TDestination>(source);
         }
 
         public TDestination Map<TSource, TDestination>(TSource source, TDestination destination)
         {
-            throw new NotImplementedException();
+            return mapper.Map<TSource, TDestination>(source, destination);
         }
     }
 }

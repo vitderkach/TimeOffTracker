@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,46 +7,50 @@ using TOT.Interfaces.Repositories;
 
 namespace TOT.Data.Repositories
 {
-    public class UserInformationRepository : IRepository<UserInformation>
+    public class VacationRequestRepository : IRepository<VacationRequest>
     {
         ApplicationDbContext db;
-        public UserInformationRepository(ApplicationDbContext db)
+        public VacationRequestRepository(ApplicationDbContext db)
         {
             this.db = db;
         }
-        public void Create(UserInformation item)
+
+        public void Create(VacationRequest item)
         {
-            db.Add(item);
+            db.VacationRequests.Add(item);
             db.SaveChanges();
         }
+
         public void Delete(int id)
         {
-            UserInformation userInfo = db.UserInformations.Find(id);
-            if (userInfo != null)
-            {
-                db.Remove(userInfo);
+            var vacation = db.VacationRequests
+                .Find(id);
+            if(vacation!=null)
+            { 
+                db.VacationRequests.Remove(vacation);
                 db.SaveChanges();
             }
         }
 
-        public UserInformation Get(int id)
+        public VacationRequest Get(int id)
         {
-            return db.UserInformations
+            var vacation = db.VacationRequests
                 .Find(id);
+            return vacation;
         }
 
-        public IEnumerable<UserInformation> GetAll()
+        public IEnumerable<VacationRequest> GetAll()
         {
-            return db.UserInformations
-                .Include(u => u.User);
+            return db.VacationRequests
+                .Include(v => v.ManagersResponses)
+                .Include(v => v.User);
         }
 
-        public void Update(UserInformation item)
+        public void Update(VacationRequest item)
         {
             db.Entry(item).State = EntityState.Modified;
             db.SaveChanges();
         }
-
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 
@@ -82,5 +86,5 @@ namespace TOT.Data.Repositories
             // GC.SuppressFinalize(this);
         }
         #endregion
-    }      
+    }
 }

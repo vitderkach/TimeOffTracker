@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
+using TOT.Entities;
 
-
-namespace TOT.Entities
+namespace TOT.Dto
 {
-    public class VacationRequest
+    public class VacationRequestDto
     {
         public int Id { get; set; }
         public DateTime StartDate { get; set; }
@@ -13,17 +14,8 @@ namespace TOT.Entities
         public TimeOffType VacationType { get; set; }
         public string Notes { get; set; }
 
-        public ICollection<ManagerResponse> ManagersResponses { get; set; }
+        public ICollection<ManagerResponseDto> ManagersResponses { get; set; }
 
         public int UserId { get; set; }
-        public ApplicationUser User { get; set; }
-    }
-
-    public enum TimeOffType
-    {
-        SickLeave = 1,
-        StudyLeave = 2,
-        UnpaidVacation = 3,
-        Vacation = 4
     }
 }
