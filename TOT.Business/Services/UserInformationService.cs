@@ -19,6 +19,7 @@ namespace TOT.Business.Services
         }
         public UserInformationDto getUserInformation(int id)
         {
+
             var userInfo = _uow.UserInformationRepostitory.Get(id);
             return _mapper.Map<UserInformation, UserInformationDto>(userInfo);
         }

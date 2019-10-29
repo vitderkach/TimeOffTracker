@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TOT.Business.Services;
 using TOT.Dto;
+using TOT.Entities;
 using TOT.Interfaces;
 using TOT.Interfaces.Services;
 
@@ -13,12 +15,18 @@ namespace TOT.Web.Controllers
 {
     public class VacationController : Controller
     {
+        private UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
         private readonly IVacationService _vacationService;
-        public VacationController(IVacationService vacationService, IMapper mapper)
+        private readonly IUserService _userService;
+
+        public VacationController(IVacationService vacationService, IMapper mapper
+            , UserManager<ApplicationUser> userManager,
+            IUserService _userService)
         {
             _vacationService = vacationService;
             _mapper = mapper;
+            _userManager = userManager;
         }
         // GET: Vacation
         public ActionResult Index()
@@ -29,18 +37,24 @@ namespace TOT.Web.Controllers
         // GET: Vacation/Details/5
         public ActionResult Details(int id)
         {
+
             return View();
         }
         [HttpGet]
-        public ActionResult Apply()
+        public ActionResult Apply() 
         {
+            var managers = _userService.GetAllByRole("Employee");
+            ViewBag.Managers = managers;
             return View();
         }
         [HttpPost]
-        public ActionResult Apply(VacationRequestDto vacationRequestDto)
+        public async Task<ActionResult> Apply(VacationRequestDto vacationRequestDto)
         {
             if(ModelState.IsValid)
             {
+                var user = await _userManager.GetUserAsync(HttpContext.User);
+                vacationRequestDto.UserId = user.Id;
+                
                 _vacationService.ApplyForVacation(vacationRequestDto);
             }
             return View();

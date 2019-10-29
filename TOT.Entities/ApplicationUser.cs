@@ -7,7 +7,6 @@ namespace TOT.Entities
     public class ApplicationUser : IdentityUser<int>
     {
         public DateTime? RegistrationDate { get; set; }
-
         public int UserInformationId { get; set; }
         public UserInformation UserInformation { get; set; }
         public ICollection<VacationRequest> VacationRequests { get; set; }
