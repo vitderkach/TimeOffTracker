@@ -75,8 +75,8 @@ namespace TOT.Web.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
+                Microsoft.AspNetCore.Identity.SignInResult result = null;   
                 ApplicationUser appUser = await _userManager.FindByEmailAsync(Input.Email);
-                Microsoft.AspNetCore.Identity.SignInResult result = null;
 
                 if (appUser != null)
                 {
@@ -85,6 +85,11 @@ namespace TOT.Web.Areas.Identity.Pages.Account
                     // This doesn't count login failures towards account lockout
                     // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                     result = await _signInManager.PasswordSignInAsync(appUser, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "User with specified E-mail not found");
+                    return Page();
                 }
 
                 if (result.Succeeded)
