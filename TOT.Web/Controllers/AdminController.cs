@@ -8,9 +8,11 @@ using TOT.Interfaces.Services;
 using TOT.Entities;
 using TOT.Web.Models;
 using TOT.Dto;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TOT.Web.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class AdminController : Controller
     {
         private UserManager<ApplicationUser> userManager;
