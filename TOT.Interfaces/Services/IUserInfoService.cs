@@ -8,6 +8,7 @@ namespace TOT.Interfaces.Services
         UserInformationDTO GetUserInfo(int? id);
         IEnumerable<UserInformationDTO> GetUsersInfo();
         void SaveUserInfo(UserInformationDTO userInfoDTO);
+        void DeleteUserInfo(int? id);
         void Dispose();
     }
 }

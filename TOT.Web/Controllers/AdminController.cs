@@ -104,6 +104,7 @@ namespace TOT.Web.Controllers
 
                 if (result.Succeeded)
                 {
+                    userInfoService.DeleteUserInfo(user.UserInformationId);
                     return RedirectToAction("Index");
                 }
                 else
@@ -168,11 +169,5 @@ namespace TOT.Web.Controllers
 
             return NotFound();
         }
-
-
-        /*   public IActionResult CreateInfo()
-        {
-            return View();
-        } */
     }
 }
