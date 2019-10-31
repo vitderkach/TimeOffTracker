@@ -34,7 +34,7 @@ namespace TOT.Business.Services
 
             return new UserInformationDTO
             {
-                Id = userInfo.UserInformationId,
+                UserInformationId = userInfo.UserInformationId,
                 FirstName = userInfo.FirstName,
                 LastName = userInfo.LastName
             };
