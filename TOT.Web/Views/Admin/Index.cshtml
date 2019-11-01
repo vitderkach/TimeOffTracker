@@ -5,6 +5,10 @@
 
 <div class="text-danger" asp-validation-summary="ModelOnly"></div>
 
+<form>
+    <p><a class="btn btn-default" asp-action="Create">Add new user</a></p>
+</form>
+
 <div>
     <table class="table table-bordered">
         <tr>
@@ -63,9 +67,4 @@
         }
     </table>
 </div>
-
-<form>
-    <a class="btn btn-link" asp-action="CreateInfo">Add user data</a>
-    <a class="btn btn-link" asp-action="Create">Add new user</a>
-</form>
 

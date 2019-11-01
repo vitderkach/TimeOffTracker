@@ -134,8 +134,6 @@ namespace TOT.Data.Migrations
                         .HasColumnName("ApplicationUserId")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AccessFailedCount");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
@@ -159,10 +157,6 @@ namespace TOT.Data.Migrations
                         .HasMaxLength(256);
 
                     b.Property<string>("PasswordHash");
-
-                    b.Property<string>("PhoneNumber");
-
-                    b.Property<bool>("PhoneNumberConfirmed");
 
                     b.Property<DateTime?>("RegistrationDate")
                         .ValueGeneratedOnAdd()
@@ -274,7 +268,7 @@ namespace TOT.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(30)");
 
-                    b.HasKey("Id")
+                    b.HasKey("VacationRequestId")
                         .HasName("PK_VacationRequest");
 
                     b.HasIndex("CreationDate");

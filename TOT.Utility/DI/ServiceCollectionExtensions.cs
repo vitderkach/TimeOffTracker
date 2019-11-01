@@ -5,11 +5,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TOT.Business.Services;
 using TOT.Data;
-using TOT.Data.Repositories;
 using TOT.Data.UnitOfWork;
 using TOT.Entities;
 using TOT.Interfaces;
-using TOT.Interfaces.Repositories;
 using TOT.Interfaces.Services;
 using TOT.Utility.AutoMapper;
 
@@ -46,8 +44,8 @@ namespace TOT.Utility.DI
                 opts.Password.RequireNonAlphanumeric = false;
                 opts.Password.RequireUppercase = false;
             })
-             .AddEntityFrameworkStores<ApplicationDbContext>()
-             .AddDefaultTokenProviders();
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
         }
     }
 }

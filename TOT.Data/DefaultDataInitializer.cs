@@ -26,8 +26,7 @@ namespace TOT.Data
                 {
                     new UserInformation(){ FirstName = "Matthew", LastName = "Brown" },
                     new UserInformation(){ FirstName = "Joseph", LastName = "White" },
-                    new UserInformation(){ FirstName = "Nadia", LastName = "Campbell" },
-                    new UserInformation(){ FirstName = "Rebecca", LastName = "Davis" }
+                    new UserInformation(){ FirstName = "Nadia", LastName = "Campbell" }
                 };
 
                 context.UserInformations.AddRange(userInfo);

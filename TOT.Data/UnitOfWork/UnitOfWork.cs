@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using TOT.Data.Repositories;
 using TOT.Entities;
 using TOT.Interfaces;
@@ -9,7 +7,7 @@ using TOT.Interfaces.Repositories;
 
 namespace TOT.Data.UnitOfWork
 {
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork, IDisposable
     {
         readonly ApplicationDbContext db;
         readonly IRepository<UserInformation> _userInformationRepostitory;
@@ -19,16 +17,22 @@ namespace TOT.Data.UnitOfWork
             IRepository<UserInformation> userInformationRepository,
             IRepository<VacationRequest> vacationRequestRepository)
         {
-            db = context;
-            _userInformationRepostitory = userInformationRepository;
-            _vacationRequestRepository = vacationRequestRepository;
-        }
-        public IRepository<UserInformation> UserInformationRepostitory
-        {
-            get { return _userInformationRepostitory; }
+            context.SaveChanges();
         }
 
-        public IRepository<VacationRequest> VacationRequestRepository
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    context.Dispose();
+                }
+            }
+            this.disposed = true;
+        }
+
+        public void Dispose()
         {
             get { return _vacationRequestRepository; }
         }
