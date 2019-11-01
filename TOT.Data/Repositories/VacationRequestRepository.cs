@@ -1,50 +1,58 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using TOT.Data.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Text;
 using TOT.Entities;
-using TOT.Interfaces;
 using TOT.Interfaces.Repositories;
 
-namespace TOT.Data.UnitOfWork
+namespace TOT.Data.Repositories
 {
-    public class UnitOfWork : IUnitOfWork, IDisposable
+    public class VacationRequestRepository : IRepository<VacationRequest>
     {
-        readonly ApplicationDbContext db;
-        readonly IRepository<UserInformation> _userInformationRepostitory;
-        readonly IRepository<VacationRequest> _vacationRequestRepository;
-
-        public UnitOfWork(ApplicationDbContext context,
-            IRepository<UserInformation> userInformationRepository,
-            IRepository<VacationRequest> vacationRequestRepository)
+        ApplicationDbContext db;
+        public VacationRequestRepository(ApplicationDbContext db)
         {
-            _userInformationRepostitory = userInformationRepository;
-            _vacationRequestRepository = vacationRequestRepository;
-            db = context;
-            context.SaveChanges();
+            this.db = db;
         }
 
-        public void Save()
+        public void Create(VacationRequest item)
         {
+            db.VacationRequests.Add(item);
             db.SaveChanges();
         }
 
+        public void Delete(int id)
+        {
+            var vacation = db.VacationRequests
+                .Find(id);
+            if (vacation != null)
+            {
+                db.VacationRequests.Remove(vacation);
+                db.SaveChanges();
+            }
+        }
+
+        public VacationRequest Get(int id)
+        {
+            var vacation = db.VacationRequests
+                .Find(id);
+            return vacation;
+        }
+
+        public IEnumerable<VacationRequest> GetAll()
+        {
+            return db.VacationRequests
+                .Include(v => v.ManagersResponses)
+                .Include(v => v.User);
+        }
+
+        public void Update(VacationRequest item)
+        {
+            db.Entry(item).State = EntityState.Modified;
+            db.SaveChanges();
+        }
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
-
-        public IRepository<UserInformation> UserProfiles
-        {
-            get { return _userInformationRepostitory; }
-        }
-
-        public IRepository<VacationRequest> VacationRequestRepository
-        {
-            get { return _vacationRequestRepository; }
-        }
-
-        public IRepository<UserInformation> UserInformationRepository
-        {
-            get { return _userInformationRepostitory; }
-        }
 
         protected virtual void Dispose(bool disposing)
         {
@@ -63,7 +71,7 @@ namespace TOT.Data.UnitOfWork
         }
 
         // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~UnitOfWork()
+        // ~UserInformationRepository()
         // {
         //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
         //   Dispose(false);

@@ -8,7 +8,7 @@ namespace TOT.Dto
 {
     public class VacationRequestDto
     {
-        public int Id { get; set; }
+        public int VacationRequestDtoId { get; set; }
         [DataType(DataType.Date)]
         public DateTime StartDate { get; set; }
         [DataType(DataType.Date)]

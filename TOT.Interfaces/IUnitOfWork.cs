@@ -8,7 +8,8 @@ namespace TOT.Interfaces
 {
     public interface IUnitOfWork
     {
-        IRepository<UserInformation> UserProfiles { get; }
+        IRepository<VacationRequest> VacationRequestRepository { get; }
+        IRepository<UserInformation> UserInformationRepository { get; }
         void Save();
     }
 }

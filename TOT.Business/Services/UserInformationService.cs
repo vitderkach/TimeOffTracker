@@ -10,7 +10,7 @@ namespace TOT.Business.Services
 {
     public class UserInformationService : IUserInfoService
     {
-        private IUnitOfWork Database { get; set; }
+        private IUnitOfWork Database;
 
         public UserInformationService(IUnitOfWork uow)
         {
@@ -22,17 +22,17 @@ namespace TOT.Business.Services
             throw new NotImplementedException("Dispose() method not implemented");
         }
 
-        public UserInformationDTO GetUserInfo(int? id)
+        public UserInformationDto GetUserInfo(int? id)
         {
             if (id == null)
                 throw new NullReferenceException("id = null");
 
-            var userInfo = Database.UserProfiles.Get(id.Value);
+            var userInfo = Database.UserInformationRepository.Get(id.Value);
 
             if (userInfo == null)
                 throw new NullReferenceException("userInfo not found");
 
-            return new UserInformationDTO
+            return new UserInformationDto
             {
                 UserInformationId = userInfo.UserInformationId,
                 FirstName = userInfo.FirstName,
@@ -40,16 +40,16 @@ namespace TOT.Business.Services
             };
         }
 
-        public IEnumerable<UserInformationDTO> GetUsersInfo()
+        public IEnumerable<UserInformationDto> GetUsersInfo()
         {
             var mapper = new MapperConfiguration(cfg =>
-                cfg.CreateMap<UserInformation, UserInformationDTO>()).CreateMapper();
+                cfg.CreateMap<UserInformation, UserInformationDto>()).CreateMapper();
 
-            return mapper.Map<IEnumerable<UserInformation>, 
-                List<UserInformationDTO>>(Database.UserProfiles.GetAll());
+            return mapper.Map<IEnumerable<UserInformation>,
+                List<UserInformationDto>>(Database.UserInformationRepository.GetAll());
         }
 
-        public void SaveUserInfo(UserInformationDTO userInfoDTO)
+        public void SaveUserInfo(UserInformationDto userInfoDTO)
         {
             UserInformation userInfo = new UserInformation()
             {
@@ -57,7 +57,7 @@ namespace TOT.Business.Services
                 LastName = userInfoDTO.LastName
             };
 
-            Database.UserProfiles.Create(userInfo);
+            Database.UserInformationRepository.Create(userInfo);
             Database.Save();
         }
 
@@ -66,11 +66,11 @@ namespace TOT.Business.Services
             if (id == null)
                 throw new NullReferenceException("id = null");
 
-            var userInfo = Database.UserProfiles.Get(id.Value);
+            var userInfo = Database.UserInformationRepository.Get(id.Value);
 
             if (userInfo != null)
             {
-                Database.UserProfiles.Delete(userInfo.UserInformationId);
+                Database.UserInformationRepository.Delete(userInfo.UserInformationId);
                 Database.Save();
             }
         }

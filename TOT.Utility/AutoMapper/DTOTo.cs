@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using TOT.Dto;
+using TOT.Entities;
 
 namespace TOT.Utility.AutoMapper
 {

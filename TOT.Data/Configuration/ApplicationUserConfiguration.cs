@@ -30,11 +30,6 @@ namespace TOT.Data.Configuration
                .HasColumnType("datetime")
                .HasDefaultValueSql("GETUTCDATE()");
 
-            entity.Ignore(v => v.AccessFailedCount);
-            entity.Ignore(v => v.EmailConfirmed);
-            entity.Ignore(v => v.PhoneNumber);
-            entity.Ignore(v => v.PhoneNumberConfirmed);
-            entity.Ignore(v => v.TwoFactorEnabled);
         }
     }
 }

@@ -134,6 +134,8 @@ namespace TOT.Data.Migrations
                         .HasColumnName("ApplicationUserId")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AccessFailedCount");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
@@ -158,12 +160,18 @@ namespace TOT.Data.Migrations
 
                     b.Property<string>("PasswordHash");
 
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<bool>("PhoneNumberConfirmed");
+
                     b.Property<DateTime?>("RegistrationDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("SecurityStamp");
+
+                    b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<int>("UserInformationId");
 
@@ -244,7 +252,7 @@ namespace TOT.Data.Migrations
 
             modelBuilder.Entity("TOT.Entities.VacationRequest", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("VacationRequestId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 

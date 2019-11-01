@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,7 @@ using TOT.Interfaces.Services;
 
 namespace TOT.Web.Controllers
 {
+    [Authorize]
     public class VacationController : Controller
     {
         private UserManager<ApplicationUser> _userManager;
@@ -61,9 +63,9 @@ namespace TOT.Web.Controllers
             if(ModelState.IsValid)
             {
                 var user = await _userManager.GetUserAsync(HttpContext.User);
-                //vacationRequestDto.UserId = user.Id;
+                applyForRequestGetDto.UserId = user.Id;
 
-                applyForRequestGetDto.UserId = 1;
+                //applyForRequestGetDto.UserId = 1;
                 var vacationRequest = _mapper.Map<ApplyForRequestGetDto, VacationRequestDto>(applyForRequestGetDto);
 
                 _vacationService.ApplyForVacation(vacationRequest);

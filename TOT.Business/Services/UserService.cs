@@ -26,7 +26,7 @@ namespace TOT.Business.Services
         {
             var managers = _userManager.GetUsersInRoleAsync(role).Result;
             //todo ask what could i do better
-            var userInformation = _uow.UserInformationRepostitory.GetAll();
+            var userInformation = _uow.UserInformationRepository.GetAll();
             //manager.Information is null, so need to map
             for (int i = 0; i < managers.Count; i++)
             {

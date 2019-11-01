@@ -22,4 +22,13 @@
     <Folder Include="Areas\Identity\Services\" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <ProjectReference Include="..\TOT.Data\TOT.Data.csproj" />
+    <ProjectReference Include="..\TOT.Dto\TOT.Dto.csproj" />
+    <ProjectReference Include="..\TOT.Entities\TOT.Entities.csproj" />
+    <ProjectReference Include="..\TOT.Interfaces\TOT.Interfaces.csproj" />
+    <ProjectReference Include="..\TOT.Utility\TOT.Utility.csproj" />
+  </ItemGroup>
+
 </Project>

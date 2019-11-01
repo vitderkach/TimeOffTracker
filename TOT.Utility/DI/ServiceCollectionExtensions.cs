@@ -5,9 +5,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TOT.Business.Services;
 using TOT.Data;
+using TOT.Data.Repositories;
 using TOT.Data.UnitOfWork;
 using TOT.Entities;
 using TOT.Interfaces;
+using TOT.Interfaces.Repositories;
 using TOT.Interfaces.Services;
 using TOT.Utility.AutoMapper;
 
@@ -25,7 +27,7 @@ namespace TOT.Utility.DI
             services.AddTransient<IRepository<UserInformation>, UserInformationRepository>();
             services.AddTransient<IRepository<VacationRequest>, VacationRequestRepository>();
 
-            services.AddTransient<IUserInformationService, UserInformationService>();
+            services.AddTransient<IUserInfoService, UserInformationService>();
             services.AddTransient<IVacationService, VacationService>();
             services.AddTransient<IUserService, UserService>();
 
