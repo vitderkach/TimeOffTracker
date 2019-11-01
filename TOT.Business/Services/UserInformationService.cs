@@ -34,7 +34,7 @@ namespace TOT.Business.Services
 
             return new UserInformationDTO
             {
-                Id = userInfo.UserInformationId,
+                UserInformationId = userInfo.UserInformationId,
                 FirstName = userInfo.FirstName,
                 LastName = userInfo.LastName
             };
@@ -59,6 +59,20 @@ namespace TOT.Business.Services
 
             Database.UserProfiles.Create(userInfo);
             Database.Save();
+        }
+
+        public void DeleteUserInfo(int? id)
+        {
+            if (id == null)
+                throw new NullReferenceException("id = null");
+
+            var userInfo = Database.UserProfiles.Get(id.Value);
+
+            if (userInfo != null)
+            {
+                Database.UserProfiles.Delete(userInfo.UserInformationId);
+                Database.Save();
+            }
         }
     }
 }

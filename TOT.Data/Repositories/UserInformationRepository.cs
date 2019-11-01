@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using TOT.Entities;
 using TOT.Interfaces.Repositories;
 
@@ -52,7 +53,7 @@ namespace TOT.Data.Repositories
 
         public IEnumerable<UserInformation> GetAll()
         {
-            return context.UserInformations;
+            return context.UserInformations.ToList();
         }
 
         public void Update(UserInformation item)
