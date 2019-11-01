@@ -5,9 +5,9 @@ namespace TOT.Interfaces.Services
 {
     public interface IUserInfoService
     {
-        UserInformationDTO GetUserInfo(int? id);
-        IEnumerable<UserInformationDTO> GetUsersInfo();
-        void SaveUserInfo(UserInformationDTO userInfoDTO);
+        UserInformationDto GetUserInfo(int? id);
+        IEnumerable<UserInformationDto> GetUsersInfo();
+        void SaveUserInfo(UserInformationDto userInfoDTO);
         void DeleteUserInfo(int? id);
         void Dispose();
     }

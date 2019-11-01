@@ -23,7 +23,7 @@ namespace TOT.Data.Configuration
             entity.HasOne(u => u.User)
                 .WithOne(i => i.UserInformation)
                 .HasForeignKey<ApplicationUser>(ui => ui.UserInformationId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

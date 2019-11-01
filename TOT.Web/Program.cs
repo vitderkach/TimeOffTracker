@@ -37,7 +37,7 @@ namespace TOT.Web
                     /*  var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
                       logger.LogError(ex, "An error occurred while seeding the database."); */
 
-                    throw new NotImplementedException("An error occurred while seeding the database");
+                    throw new NotImplementedException("An error occurred while seeding the database" + ex.Message);
                 }
             }
             host.Run();

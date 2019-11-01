@@ -134,6 +134,8 @@ namespace TOT.Data.Migrations
                         .HasColumnName("ApplicationUserId")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AccessFailedCount");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
@@ -141,6 +143,8 @@ namespace TOT.Data.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(100)")
                         .HasMaxLength(256);
+
+                    b.Property<bool>("EmailConfirmed");
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -156,12 +160,18 @@ namespace TOT.Data.Migrations
 
                     b.Property<string>("PasswordHash");
 
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<bool>("PhoneNumberConfirmed");
+
                     b.Property<DateTime?>("RegistrationDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("SecurityStamp");
+
+                    b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<int>("UserInformationId");
 
@@ -332,7 +342,7 @@ namespace TOT.Data.Migrations
                     b.HasOne("TOT.Entities.UserInformation", "UserInformation")
                         .WithOne("User")
                         .HasForeignKey("TOT.Entities.ApplicationUser", "UserInformationId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("TOT.Entities.ManagerResponse", b =>

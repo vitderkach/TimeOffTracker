@@ -55,7 +55,7 @@ namespace TOT.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                UserInformationDTO userInfoDTO = new UserInformationDTO()
+                UserInformationDto userInfoDTO = new UserInformationDto()
                 {
                     FirstName = model.Name,
                     LastName = model.Surname

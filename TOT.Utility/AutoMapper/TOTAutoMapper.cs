@@ -22,12 +22,12 @@ namespace TOT.Utility.AutoMapper
         }
         public TDestination Map<TSource, TDestination>(TSource source)
         {
-            throw new NotImplementedException();
+            return mapper.Map<TSource, TDestination>(source);
         }
 
         public TDestination Map<TSource, TDestination>(TSource source, TDestination destination)
         {
-            throw new NotImplementedException();
+            return mapper.Map<TSource, TDestination>(source, destination);
         }
     }
 }

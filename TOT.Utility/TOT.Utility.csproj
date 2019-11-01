@@ -7,9 +7,6 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\TOT.Business\TOT.Business.csproj" />
     <ProjectReference Include="..\TOT.Data\TOT.Data.csproj" />
     <ProjectReference Include="..\TOT.Interfaces\TOT.Interfaces.csproj" />
