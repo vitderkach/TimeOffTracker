@@ -18,7 +18,7 @@ namespace TOT.Dto
         public DateTime StartDate { get; set; }
         [DataType(DataType.Date)]
         public DateTime EndDate { get; set; }
-        public int SelectedTimeOffType { get; set; }
+        public string SelectedTimeOffType { get; set; }
         public SelectList VacationTypes { 
             get
             {
@@ -38,7 +38,6 @@ namespace TOT.Dto
             } 
         }
         public string Notes { get; set; }
-        [Required]
         public int SelectedManager { get; set; }
         public SelectList MyManagers { get; set; }
         public ICollection<ManagerResponseDto> ManagersResponses { get; set; }

@@ -15,6 +15,16 @@ namespace TOT.Utility.AutoMapper
             CreateMap<ApplicationUserDto, ApplicationUser>();
             CreateMap<UserInformationDto, UserInformation>();
             CreateMap<ManagerResponseDto, ManagerResponse>();
+            CreateMap<ApplyForRequestGetDto, VacationRequestDto>()
+                .ForMember(dest => dest.VacationType, opt => opt.MapFrom(
+                    src => src.SelectedTimeOffType.ToEnum<TimeOffType>()));
+        }
+    }
+    public static class EnumExtensions
+    {
+        public static T ToEnum<T>(this string value)
+        {
+            return (T)Enum.Parse(typeof(T), value, true);
         }
     }
 }

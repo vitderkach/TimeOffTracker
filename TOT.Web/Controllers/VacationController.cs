@@ -52,21 +52,23 @@ namespace TOT.Web.Controllers
             ApplyForRequestGetDto apply = new ApplyForRequestGetDto();
             ViewBag.TimeOffTypes = apply.VacationTypes;
 
-            var dropdownlistManagers = new SelectList(selectListManagers, "LastName", "Id");
             ViewBag.Managers = selectListManagers;
             return View(); 
         }
         [HttpPost]
-        public async Task<ActionResult> Apply(VacationRequestDto vacationRequestDto)
+        public async Task<ActionResult> Apply(ApplyForRequestGetDto applyForRequestGetDto)
         {
             if(ModelState.IsValid)
             {
                 var user = await _userManager.GetUserAsync(HttpContext.User);
-                vacationRequestDto.UserId = user.Id;
-                
-                _vacationService.ApplyForVacation(vacationRequestDto);
+                //vacationRequestDto.UserId = user.Id;
+
+                applyForRequestGetDto.UserId = 1;
+                var vacationRequest = _mapper.Map<ApplyForRequestGetDto, VacationRequestDto>(applyForRequestGetDto);
+
+                _vacationService.ApplyForVacation(vacationRequest);
             }
-            return View();
+            return Redirect("Apply");
         }
 
         // POST: Vacation/Create
