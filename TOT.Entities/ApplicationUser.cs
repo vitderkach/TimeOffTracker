@@ -6,6 +6,7 @@ namespace TOT.Entities
 {
     public class ApplicationUser : IdentityUser<int>
     {
+        public override int Id { get; set; }
         public DateTime? RegistrationDate { get; set; }
         public int UserInformationId { get; set; }
         public UserInformation UserInformation { get; set; }

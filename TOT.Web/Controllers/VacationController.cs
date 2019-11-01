@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using TOT.Business.Services;
 using TOT.Dto;
 using TOT.Entities;
@@ -22,11 +23,12 @@ namespace TOT.Web.Controllers
 
         public VacationController(IVacationService vacationService, IMapper mapper
             , UserManager<ApplicationUser> userManager,
-            IUserService _userService)
+            IUserService userService)
         {
             _vacationService = vacationService;
             _mapper = mapper;
             _userManager = userManager;
+            _userService = userService;
         }
         // GET: Vacation
         public ActionResult Index()
@@ -44,8 +46,15 @@ namespace TOT.Web.Controllers
         public ActionResult Apply() 
         {
             var managers = _userService.GetAllByRole("Employee");
-            ViewBag.Managers = managers;
-            return View();
+
+            var selectListManagers = new SelectList(managers, "Id", "UserInformation.LastName");
+
+            ApplyForRequestGetDto apply = new ApplyForRequestGetDto();
+            ViewBag.TimeOffTypes = apply.VacationTypes;
+
+            var dropdownlistManagers = new SelectList(selectListManagers, "LastName", "Id");
+            ViewBag.Managers = selectListManagers;
+            return View(); 
         }
         [HttpPost]
         public async Task<ActionResult> Apply(VacationRequestDto vacationRequestDto)

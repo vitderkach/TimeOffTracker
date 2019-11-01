@@ -17,7 +17,7 @@ namespace TOT.Utility.DI
 {
     public static class ServiceCollectionExtensions
     {
-        public static void ConfigureDatabase(this IServiceCollection services, IConfiguration configuration)
+        public static void ConfigureDatabase(this IServiceCollection services, IConfiguration configuration) 
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
@@ -29,6 +29,7 @@ namespace TOT.Utility.DI
 
             services.AddTransient<IUserInformationService, UserInformationService>();
             services.AddTransient<IVacationService, VacationService>();
+            services.AddTransient<IUserService, UserService>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }

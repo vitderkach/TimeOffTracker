@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace TOT.Entities
@@ -21,9 +22,13 @@ namespace TOT.Entities
 
     public enum TimeOffType
     {
+        [Description("Sick Leave")]
         SickLeave = 1,
+        [Description("Study Leave")]
         StudyLeave = 2,
+        [Description("Unpaid vacation")]
         UnpaidVacation = 3,
+        [Description("Vacation")]
         Vacation = 4
     }
 }

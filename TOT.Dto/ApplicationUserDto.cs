@@ -6,6 +6,7 @@ namespace TOT.Dto
 {
     public class ApplicationUserDto
     {
+        public int Id { get; set; }
         public DateTime RegistrationDate { get; set; }
         public int UserInformationId { get; set; }
         public UserInformationDto UserInformation { get; set; }
