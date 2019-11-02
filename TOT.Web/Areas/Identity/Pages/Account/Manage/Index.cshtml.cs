@@ -28,7 +28,9 @@ namespace TOT.Web.Areas.Identity.Pages.Account.Manage
             _emailSender = emailSender;
         }
 
-        public string Username { get; set; }
+        public string Login { get; set; }
+
+        public string Role { get; set; }
 
         public bool IsEmailConfirmed { get; set; }
 
@@ -59,9 +61,11 @@ namespace TOT.Web.Areas.Identity.Pages.Account.Manage
 
             var userName = await _userManager.GetUserNameAsync(user);
             var email = await _userManager.GetEmailAsync(user);
+            var userRole = await _userManager.GetRolesAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
-            Username = userName;
+            Login = userName;
+            Role = userRole.FirstOrDefault();
 
             Input = new InputModel
             {
@@ -94,7 +98,7 @@ namespace TOT.Web.Areas.Identity.Pages.Account.Manage
                 if (!setEmailResult.Succeeded)
                 {
                     var userId = await _userManager.GetUserIdAsync(user);
-                    throw new InvalidOperationException($"Unexpected error occurred setting email for user with ID '{userId}'.");
+                    throw new InvalidOperationException($"Unexpected error occurred setting email for user '{user.UserName}'.");
                 }
             }
 
@@ -105,7 +109,7 @@ namespace TOT.Web.Areas.Identity.Pages.Account.Manage
                 if (!setPhoneResult.Succeeded)
                 {
                     var userId = await _userManager.GetUserIdAsync(user);
-                    throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{userId}'.");
+                    throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{user.UserName}'.");
                 }
             }
 
