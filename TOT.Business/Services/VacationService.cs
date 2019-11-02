@@ -23,7 +23,11 @@ namespace TOT.Business.Services
         public void ApplyForVacation(VacationRequestDto vacationRequestDto)
         {
             var vacation = _mapper.Map<VacationRequestDto, VacationRequest>(vacationRequestDto);
+            
+            vacation.ManagersResponses.Add(new ManagerResponse() { ManagerId = vacationRequestDto.SelectedManager });
             _uow.VacationRequestRepository.Create(vacation);
+
+            
 
         }
     }

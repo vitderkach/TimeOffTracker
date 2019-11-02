@@ -13,7 +13,7 @@ namespace TOT.Entities
         public DateTime CreationDate { get; set; }
         public TimeOffType VacationType { get; set; }
         public string Notes { get; set; }
-        
+
         public ICollection<ManagerResponse> ManagersResponses { get; set; }
 
         public int UserId { get; set; }
