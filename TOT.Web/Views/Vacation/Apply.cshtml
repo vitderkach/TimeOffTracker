@@ -30,12 +30,14 @@
                 <input asp-for="Notes" class="form-control" />
                 <span asp-validation-for="Notes" class="text-danger"></span>
             </div>
-            <div class="form-group container_selectedManagers">
-                @Html.DropDownListFor(m => m.SelectedManager, ViewBag.Managers as SelectList, new { @class = "form-control" })
-                <button class="btn btn-info add_form_field">+</button>
+            <div class="container_selectedManagers form-row">
+                @Html.DropDownListFor(m => m.SelectedManager, ViewBag.Managers as SelectList, new { @class = "form-control col-9" })
+                <div class="col">
+                    <button class="btn btn-info add_form_field form-control ">+</button>
+                </div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+            <div class="form-group mt-5">
+                <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -81,10 +83,10 @@
                         selectedManagerObject.push({ Id: id, name: text });
                         x++;
             
-                        $(wrapper).append('<div class="form-row">' +
-                        '<div class="col-6"><input type="text" class="form-control" disabled=true value=' + selectedManagerObject.find(obj => { return obj.Id === selectedManagerId }).name + ' name="mytext[]" /></div> ' +
-                        '<div class="col-6"><button class="btn-danger form-control delete">x</button></div> </div>');
-                        //add input box 
+                        $(wrapper).append('<div class="form-row mt-2">' +
+                        '<div class="col-9"><input type="text" class="form-control" disabled=true value=' + selectedManagerObject.find(obj => { return obj.Id === selectedManagerId }).name + ' name="mytext[]" /></div> ' +
+                        '<div class="col"><button class="btn btn-danger form-control delete">x</button></div> </div>');
+                        //add input box
                     }
                     else { alert('This manager already exists') }
                     }
