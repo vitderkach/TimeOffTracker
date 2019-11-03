@@ -38,10 +38,9 @@ namespace TOT.Dto
             } 
         }
         public string Notes { get; set; }
-        public int SelectedManager { get; set; }
+        public IList<int> SelectedManager { get; set; }
         public SelectList MyManagers { get; set; }
         public ICollection<ManagerResponseDto> ManagersResponses { get; set; }
-
         public int UserId { get; set; }
     }
     public static class ExtensionMethods

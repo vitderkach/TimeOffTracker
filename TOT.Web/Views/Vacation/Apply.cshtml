@@ -3,14 +3,13 @@
 @{
     ViewData["Title"] = "Apply";
 }
-
 <h2>Apply</h2>
 
 <h4>VacationRequestDto</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Apply">
+        <form asp-action="Apply" name="form" id="form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="StartDate" class="control-label"></label>
@@ -22,17 +21,18 @@
                 <input asp-for="EndDate" class="form-control" />
                 <span asp-validation-for="EndDate" class="text-danger"></span>
             </div>
-          
+
             <div class="form-group">
-                @Html.DropDownListFor(m => m.SelectedTimeOffType, ViewBag.TimeOffTypes as SelectList, new {@class="form-control"} )
+                @Html.DropDownListFor(m => m.SelectedTimeOffType, ViewBag.TimeOffTypes as SelectList, new { @class = "form-control" })
             </div>
             <div class="form-group">
                 <label asp-for="Notes" class="control-label"></label>
                 <input asp-for="Notes" class="form-control" />
                 <span asp-validation-for="Notes" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group container_selectedManagers">
                 @Html.DropDownListFor(m => m.SelectedManager, ViewBag.Managers as SelectList, new { @class = "form-control" })
+                <button class="btn btn-info add_form_field">+</button>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />
@@ -47,4 +47,87 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+    <script>
+        $(document).ready(function () {
+           var max_fields = 10;
+            var wrapper = $(".container_selectedManagers");
+            var add_button = $(".add_form_field");
+            var select_tag = $("#SelectedManager").children("option:selected");
+            var selectedManagerId;
+
+            var selectedManagerObject = [];
+            let id = select_tag.val();
+            let text = select_tag.text();
+            selectedManagerId = id;
+
+            $("#SelectedManager").change(function () {
+                let id = $(this).children("option:selected").val();
+                selectedManagerId = id;
+                console.log(selectedManagerId)
+            });
+
+            var x = 1;
+            $(add_button).click(function (e) {
+                e.preventDefault();
+
+                if (x < max_fields) {
+
+                    let id = $("#SelectedManager").children("option:selected").val();
+                    let text = $("#SelectedManager").children("option:selected").text();
+                    if (selectedManagerObject.filter(obj => { return obj.Id == id }).length == 0) {
+
+                        selectedManagerObject.push({ Id: id, name: text });
+                        x++;
+            
+                        $(wrapper).append('<div class="form-row">' +
+                        '<div class="col-6"><input type="text" class="form-control" disabled=true value=' + selectedManagerObject.find(obj => { return obj.Id === selectedManagerId }).name + ' name="mytext[]" /></div> ' +
+                        '<div class="col-6"><button class="btn-danger form-control delete">x</button></div> </div>');
+                        //add input box 
+                    }
+                    else { alert('This manager already exists') }
+                    }
+                else { alert('You Reached the limits') }
+            });
+            $(wrapper).on("click", ".delete", function (e) {
+                e.preventDefault();
+                var text = $(this).parent('div').prev('div').children('input').val();
+                console.log(text);
+                console.log('before: ' + selectedManagerObject);
+                selectedManagerObject = selectedManagerObject.filter(obj => { return obj.name != text });
+                console.log('after: ' + selectedManagerObject);
+                x--;
+                $(this).parent('div').parent('div').remove();   
+            })
+           $("#form").on("submit", function (event) {
+
+               var formData = new FormData();
+                formData.append("StartDate", $("#StartDate").val());
+                formData.append("EndDate", $("#EndDate").val());
+                formData.append("SelectedTimeOffType", $("#SelectedTimeOffType").val());
+                formData.append("Notes", $("#Notes").val());
+                let managersId = [];
+                for (let val of selectedManagerObject) {
+                    managersId.push(val.Id);
+                }
+                formData.append("SelectedManager", managersId);
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'Vacation/Apply',
+                    dataType: 'json',
+                    data: formData
+                })
+                .done(function () {
+                    alert('OK');
+                })
+                .fail(function () {
+                    alert('NOT OK');
+                });
+                event.preventDefault(); 
+            });
+            
+        });
+    </script>
 }

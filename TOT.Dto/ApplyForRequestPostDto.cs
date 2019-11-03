@@ -20,7 +20,7 @@ namespace TOT.Dto
         [Required]
         [Display(Name = "Manager")]
         public int SelectedManager { get; set; }
-        public IEnumerable<SelectListItem> MyManagers { get; set; }
+        public ICollection<SelectListItem> MyManagers { get; set; }
         public ICollection<ManagerResponseDto> ManagersResponses { get; set; }
 
         public int UserId { get; set; }

@@ -16,7 +16,7 @@ namespace TOT.Dto
         public TimeOffType VacationType { get; set; }
         public string Notes { get; set; }
         [ScaffoldColumn(false)]
-        public int SelectedManager { get; set; }
+        public IList<int> SelectedManager { get; set; }
         public ICollection<ManagerResponseDto> ManagersResponses { get; set; }
 
         public int UserId { get; set; }
