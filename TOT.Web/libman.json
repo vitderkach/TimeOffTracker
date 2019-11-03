@@ -39,6 +39,27 @@
         "dist/js/bootstrap.js",
         "dist/js/bootstrap.min.js"
       ]
+    },
+    {
+      "library": "bootstrap@4.3.1",
+      "destination": "wwwroot/bootstrap/",
+      "files": [
+        "dist/css/bootstrap.css",
+        "dist/css/bootstrap.min.css",
+        "dist/js/bootstrap.js",
+        "dist/js/bootstrap.min.js"
+      ]
     }
+  ,
+{
+  "library": "bootstrap@4.3.1",
+  "destination": "wwwroot/lib/bootstrap/",
+  "files": [
+    "dist/css/bootstrap.css",
+    "dist/css/bootstrap.min.css",
+    "dist/js/bootstrap.js",
+    "dist/js/bootstrap.min.js"
   ]
+}
+]
 }
