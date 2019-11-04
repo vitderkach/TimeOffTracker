@@ -6,10 +6,17 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="MailKit" Version="2.3.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1" />
     <ProjectReference Include="..\TOT.Business\TOT.Business.csproj" />
     <ProjectReference Include="..\TOT.Data\TOT.Data.csproj" />
     <ProjectReference Include="..\TOT.Interfaces\TOT.Interfaces.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.Identity.UI">
+      <HintPath>..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.identity.ui\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Identity.UI.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

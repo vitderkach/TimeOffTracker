@@ -35,6 +35,7 @@ namespace TOT.Web
             });
             services.ConfigureDatabase(Configuration);
             services.RegisterRepositoriesAndServices();
+            services.RegisterEmailSender(Configuration);
             services.AddAutoMapper();
             services.AddCustomIdentity();
 
