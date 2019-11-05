@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +14,7 @@ using TOT.Interfaces;
 using TOT.Interfaces.Repositories;
 using TOT.Interfaces.Services;
 using TOT.Utility.AutoMapper;
+using TOT.Utility.EmailNotification;
 
 namespace TOT.Utility.DI
 {
@@ -33,6 +35,13 @@ namespace TOT.Utility.DI
             services.AddTransient<IUserService, UserService>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+        }
+        public static void RegisterEmailSender(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddSingleton<IEmailSendConfiguration>(
+                configuration.GetSection("EmailConfiguration").Get<EmailSendConfiguration>());
+
+            services.AddTransient<IEmailSender, EmailSender>();
         }
         public static void AddAutoMapper(this IServiceCollection services)
         {

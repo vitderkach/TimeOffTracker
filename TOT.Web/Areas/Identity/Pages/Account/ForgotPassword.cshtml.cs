@@ -56,8 +56,9 @@ namespace TOT.Web.Areas.Identity.Pages.Account
 
                 await _emailSender.SendEmailAsync(
                     Input.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    $"Reset password in TimeOffTracker",
+                    $"You can reset your password for \"{user.UserName}\" account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>." +
+                    $"<p>If this request was not made by you, ignore this message.</p>");
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }
