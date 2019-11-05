@@ -22,6 +22,7 @@ namespace TOT.Web.Controllers
         private readonly IMapper _mapper;
         private readonly IVacationService _vacationService;
         private readonly IUserService _userService;
+        private readonly IHttpContextAccessor _httpContext;
 
         public VacationController(IVacationService vacationService, IMapper mapper
             , UserManager<ApplicationUser> userManager,
@@ -47,7 +48,7 @@ namespace TOT.Web.Controllers
         [HttpGet]
         public ActionResult Apply() 
         {
-            var managers = _userService.GetAllByRole("Employee");
+            var managers = _userService.GetAllByRole("Manager");
 
             var selectListManagers = new SelectList(managers, "Id", "UserInformation.LastName");
 
@@ -72,68 +73,12 @@ namespace TOT.Web.Controllers
             }
             return Redirect("Apply");
         }
-
-        // POST: Vacation/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        [HttpGet]
+        public IActionResult List()
         {
-            try
-            {
-                // TODO: Add insert logic here
+            var vacations = _vacationService.GetAllByCurrentUser();
 
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Vacation/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: Vacation/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Vacation/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Vacation/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return View(vacations);
         }
     }
 }

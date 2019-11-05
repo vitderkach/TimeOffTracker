@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TOT.Dto;
 using TOT.Entities;
@@ -13,27 +15,46 @@ namespace TOT.Business.Services
         private UserManager<ApplicationUser> _userManager;
         private IMapper _mapper;
         private IUnitOfWork _uow;
+        private readonly IHttpContextAccessor _httpContext;
+
         public VacationService(IMapper mapper, IUnitOfWork uow,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            IHttpContextAccessor httpContext)
         {
             _mapper = mapper;
             _uow = uow;
             _userManager = userManager;
+            _httpContext = httpContext;
         }
         public void ApplyForVacation(VacationRequestDto vacationRequestDto)
         {
             var vacation = _mapper.Map<VacationRequestDto, VacationRequest>(vacationRequestDto);
 
-            /*for(int i=0; i < vacationRequestDto.ManagersResponses.Count; i++)
+            for(int i=0; i < vacationRequestDto.ManagersResponses.Count; i++)
             {
                 vacation.ManagersResponses.Add(new ManagerResponse()
                 {
                     ManagerId = vacationRequestDto.SelectedManager[i]
                 });
-            }*/
-            vacation.ManagersResponses.Add(new ManagerResponse() { ManagerId = 1 });
-            vacation.ManagersResponses.Add(new ManagerResponse() { ManagerId = 2 });
+            }
+            
             _uow.VacationRequestRepository.Create(vacation);
         }
+
+        public IEnumerable<VacationRequestListDto> GetAllByCurrentUser()
+        {
+            var currentUser = getCurrentUser();
+            var currentUserId = currentUser.Result.Id;
+            var vacations = _uow.VacationRequestRepository.GetAll()
+                .Where(v => v.UserId == currentUserId);
+
+            var vacationsDto = _mapper.Map<IEnumerable<VacationRequest>, IEnumerable<VacationRequestListDto>>(vacations);
+            return vacationsDto;
+        }
+        private async Task<ApplicationUser> getCurrentUser()
+        {
+            var user = await _userManager.GetUserAsync(_httpContext.HttpContext.User);
+            return user;
+        } 
     }
 }

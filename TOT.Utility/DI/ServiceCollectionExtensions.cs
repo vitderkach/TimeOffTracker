@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions;
 using Microsoft.Extensions.Configuration;
@@ -39,6 +40,8 @@ namespace TOT.Utility.DI
         }
         public static void AddCustomIdentity(this IServiceCollection services)
         {
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddIdentity<ApplicationUser, IdentityRole<int>>(opts =>
             {
                 opts.Password.RequireDigit = false;
