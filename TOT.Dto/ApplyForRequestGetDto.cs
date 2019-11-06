@@ -10,10 +10,13 @@ using TOT.Entities;
 
 namespace TOT.Dto
 {
-    public class ApplyForRequestGetDto
-    {
+    public class ApplyForRequestGetDto {
+        public ApplyForRequestGetDto()
+        {
+            ManagersResponses = new Collection<ManagerResponseDto>();
+            SelectedManager = new List<int>();
+        }
         public int Id { get; set; }
-
         [DataType(DataType.Date)]
         public DateTime StartDate { get; set; }
         [DataType(DataType.Date)]
@@ -38,7 +41,7 @@ namespace TOT.Dto
             } 
         }
         public string Notes { get; set; }
-        public IList<int> SelectedManager { get; set; }
+        public IEnumerable<int> SelectedManager { get; set; }
         public SelectList MyManagers { get; set; }
         public ICollection<ManagerResponseDto> ManagersResponses { get; set; }
         public int UserId { get; set; }

@@ -82,7 +82,7 @@
 
                         selectedManagerObject.push({ Id: id, name: text });
                         x++;
-            
+
                         $(wrapper).append('<div class="form-row mt-2">' +
                         '<div class="col-9"><input type="text" class="form-control" disabled=true value=' + selectedManagerObject.find(obj => { return obj.Id === selectedManagerId }).name + ' name="mytext[]" /></div> ' +
                         '<div class="col"><button class="btn btn-danger form-control delete">x</button></div> </div>');
@@ -104,22 +104,47 @@
             })
            $("#form").on("submit", function (event) {
 
-               var formData = new FormData();
+               /*
+                var formData = new FormData();
                 formData.append("StartDate", $("#StartDate").val());
                 formData.append("EndDate", $("#EndDate").val());
                 formData.append("SelectedTimeOffType", $("#SelectedTimeOffType").val());
                 formData.append("Notes", $("#Notes").val());
-                let managersId = [];
+                */
+               var start = $("#StartDate").val();
+               var end = $("#EndDate").val();
+               var typeOff = $("#SelectedTimeOffType").val();
+               var notes = $("#Notes").val();
+               var managersId = [];
                 for (let val of selectedManagerObject) {
                     managersId.push(val.Id);
-                }
-                formData.append("SelectedManager", managersId);
+               }
+               var startJson = JSON.stringify(start);
+               var endJson = JSON.stringify(end);
+               var typeOffJson = JSON.stringify(typeOff);
+               var notesJson = JSON.stringify(notes);
+               var managersIdJson = JSON.stringify(managersId);
+               /*data = {
+                   StartDate: start,
+                   EndDate: end,
+                   SelectedTimeOffType: typeOff,
+                   Notes: notes,
+                   SelectedManager: managersId
+               }*/
+               var data = {};
 
-                $.ajax({
-                    type: 'POST',
-                    url: 'Vacation/Apply',
-                    dataType: 'json',
-                    data: formData
+               data["StartDate"] = start;
+               data["EndDate"] = end;
+               data["SelectedTimeOffType"] = typeOff;
+               data["Notes"] = notes;
+               data["SelectedManager"] = managersId;
+                   console.log(data);
+               
+               $.ajax({
+                   type: 'POST',
+                   url: '/Vacation/Apply',
+                   dataType: 'json',
+                   data: data
                 })
                 .done(function () {
                     alert('OK');

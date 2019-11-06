@@ -30,7 +30,7 @@ namespace TOT.Business.Services
         {
             var vacation = _mapper.Map<VacationRequestDto, VacationRequest>(vacationRequestDto);
 
-            for(int i=0; i < vacationRequestDto.ManagersResponses.Count; i++)
+            for(int i=0; i < vacationRequestDto.SelectedManager.Count; i++)
             {
                 vacation.ManagersResponses.Add(new ManagerResponse()
                 {
@@ -55,6 +55,14 @@ namespace TOT.Business.Services
         {
             var user = await _userManager.GetUserAsync(_httpContext.HttpContext.User);
             return user;
-        } 
+        }
+
+        public VacationRequestDto getVacationById(int id)
+        {
+            var vacation = _uow.VacationRequestRepository.Get(id);
+            var vacationDto = _mapper.Map<VacationRequest, VacationRequestDto>(vacation);
+
+            return vacationDto;
+        }
     }
 }

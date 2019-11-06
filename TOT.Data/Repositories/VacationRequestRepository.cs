@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using TOT.Entities;
 using TOT.Interfaces.Repositories;
@@ -35,7 +36,10 @@ namespace TOT.Data.Repositories
         public VacationRequest Get(int id)
         {
             var vacation = db.VacationRequests
-                .Find(id);
+                .Include(v => v.ManagersResponses)
+                .Include(v => v.User)
+                .Where(v => v.VacationRequestId == id)
+                .FirstOrDefault();
             return vacation;
         }
 

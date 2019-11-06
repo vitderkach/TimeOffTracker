@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -7,6 +8,10 @@ namespace TOT.Entities
 {
     public class VacationRequest
     {
+        public VacationRequest()
+        {
+            ManagersResponses = new Collection<ManagerResponse>();
+        }
         public int VacationRequestId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

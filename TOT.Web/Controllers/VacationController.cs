@@ -39,12 +39,6 @@ namespace TOT.Web.Controllers
             return View();
         }
 
-        // GET: Vacation/Details/5
-        public ActionResult Details(int id)
-        {
-
-            return View();
-        }
         [HttpGet]
         public ActionResult Apply() 
         {
@@ -66,7 +60,6 @@ namespace TOT.Web.Controllers
                 var user = await _userManager.GetUserAsync(HttpContext.User);
                 applyForRequestGetDto.UserId = user.Id;
 
-                //applyForRequestGetDto.UserId = 1;
                 var vacationRequest = _mapper.Map<ApplyForRequestGetDto, VacationRequestDto>(applyForRequestGetDto);
 
                 _vacationService.ApplyForVacation(vacationRequest);
@@ -79,6 +72,13 @@ namespace TOT.Web.Controllers
             var vacations = _vacationService.GetAllByCurrentUser();
 
             return View(vacations);
+        }
+        [HttpGet]
+        public IActionResult Details(int id)
+        {
+            var vacation = _vacationService.getVacationById(id);
+
+            return View(vacation);
         }
     }
 }

@@ -10,5 +10,6 @@ namespace TOT.Interfaces.Services
     {
         void ApplyForVacation(VacationRequestDto vacationRequestDto);
         IEnumerable<VacationRequestListDto> GetAllByCurrentUser();
+        VacationRequestDto getVacationById(int id);
     }
 }
