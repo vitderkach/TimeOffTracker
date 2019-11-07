@@ -9,6 +9,7 @@ using TOT.Entities;
 using TOT.Web.Models;
 using TOT.Dto;
 using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
 
 namespace TOT.Web.Controllers
 {
@@ -58,27 +59,22 @@ namespace TOT.Web.Controllers
                 UserInformationDto userInfoDTO = new UserInformationDto()
                 {
                     FirstName = model.Name,
-                    LastName = model.Surname
+                    LastName = model.Surname,
+                    
                 };
 
                 ApplicationUser user = new ApplicationUser()
                 {
                     UserName = model.Login,
-                    Email = model.Email                  
+                    Email = model.Email,
+                    UserInformation = new UserInformation() { FirstName = model.Name, LastName = model.Surname, VacationPolicyInfo = new VacationPolicyInfo() },
                 };
 
                 IdentityResult result = null;
 
-                if (!string.IsNullOrEmpty(userInfoDTO.FirstName) && !string.IsNullOrEmpty(userInfoDTO.LastName))
-                {
-                    userInfoService.SaveUserInfo(userInfoDTO);
-
-                    user.UserInformationId = userInfoService.GetUsersInfo().Where(fn =>
-                        fn.FirstName == userInfoDTO.FirstName && fn.LastName == userInfoDTO.LastName)
-                        .FirstOrDefault().UserInformationId;
 
                     result = await userManager.CreateAsync(user, defaultPassword);
-                }
+               
 
                 if (result.Succeeded)
                 {                   

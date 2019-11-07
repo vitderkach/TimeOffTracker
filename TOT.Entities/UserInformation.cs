@@ -8,6 +8,9 @@ namespace TOT.Entities
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
+        
+        public VacationPolicyInfo VacationPolicyInfo { get; set; }
+
         public ApplicationUser User { get; set; }
     }
 }

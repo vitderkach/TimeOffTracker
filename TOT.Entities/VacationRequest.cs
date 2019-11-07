@@ -18,6 +18,7 @@ namespace TOT.Entities
         public DateTime CreationDate { get; set; }
         public TimeOffType VacationType { get; set; }
         public string Notes { get; set; }
+        public bool? Approval { get; set; }
 
         public ICollection<ManagerResponse> ManagersResponses { get; set; }
 

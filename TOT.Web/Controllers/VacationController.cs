@@ -80,5 +80,11 @@ namespace TOT.Web.Controllers
 
             return View(vacation);
         }
+        [HttpPost]
+        public IActionResult Edit(string notes)
+        {
+
+            return RedirectToAction("List");
+        }
     }
 }

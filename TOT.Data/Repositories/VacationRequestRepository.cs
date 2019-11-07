@@ -37,9 +37,13 @@ namespace TOT.Data.Repositories
         {
             var vacation = db.VacationRequests
                 .Include(v => v.ManagersResponses)
+                    .ThenInclude(manager => manager.Manager)
+                        .ThenInclude(user => user.UserInformation)
+
                 .Include(v => v.User)
                 .Where(v => v.VacationRequestId == id)
                 .FirstOrDefault();
+
             return vacation;
         }
 
