@@ -104,13 +104,6 @@
             })
            $("#form").on("submit", function (event) {
 
-               /*
-                var formData = new FormData();
-                formData.append("StartDate", $("#StartDate").val());
-                formData.append("EndDate", $("#EndDate").val());
-                formData.append("SelectedTimeOffType", $("#SelectedTimeOffType").val());
-                formData.append("Notes", $("#Notes").val());
-                */
                var start = $("#StartDate").val();
                var end = $("#EndDate").val();
                var typeOff = $("#SelectedTimeOffType").val();
@@ -119,18 +112,7 @@
                 for (let val of selectedManagerObject) {
                     managersId.push(val.Id);
                }
-               var startJson = JSON.stringify(start);
-               var endJson = JSON.stringify(end);
-               var typeOffJson = JSON.stringify(typeOff);
-               var notesJson = JSON.stringify(notes);
-               var managersIdJson = JSON.stringify(managersId);
-               /*data = {
-                   StartDate: start,
-                   EndDate: end,
-                   SelectedTimeOffType: typeOff,
-                   Notes: notes,
-                   SelectedManager: managersId
-               }*/
+
                var data = {};
 
                data["StartDate"] = start;
@@ -144,15 +126,14 @@
                    type: 'POST',
                    url: '/Vacation/Apply',
                    dataType: 'json',
-                   data: data
+                   data: data,
+                    success: function(){ 
+                        alert('success!');
+                        },
+                        error: function(){
+                        console.log('error!');
+                        }
                 })
-                .done(function () {
-                    alert('OK');
-                })
-                .fail(function () {
-                    alert('NOT OK');
-                });
-                event.preventDefault(); 
             });
             
         });

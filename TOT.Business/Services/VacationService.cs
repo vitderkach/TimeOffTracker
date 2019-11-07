@@ -30,7 +30,14 @@ namespace TOT.Business.Services
         {
             var vacation = _mapper.Map<VacationRequestDto, VacationRequest>(vacationRequestDto);
 
-            for(int i=0; i < vacationRequestDto.SelectedManager.Count; i++)
+            vacation.ManagersResponses.Add(new ManagerResponse()
+            {
+                ManagerId = vacationRequestDto.SelectedManager[0],
+                isRequested = true
+            });
+            //todo send to e-mail that vacation is registred
+
+            for (int i=1; i < vacationRequestDto.SelectedManager.Count; i++)
             {
                 vacation.ManagersResponses.Add(new ManagerResponse()
                 {
