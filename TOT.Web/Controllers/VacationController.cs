@@ -44,7 +44,7 @@ namespace TOT.Web.Controllers
         {
             var managers = _userService.GetAllByRole("Manager");
 
-            var selectListManagers = new SelectList(managers, "Id", "UserInformation.LastName");
+            var selectListManagers = new SelectList(managers, "Id", "UserInformation.FullName");
 
             ApplyForRequestGetDto apply = new ApplyForRequestGetDto();
             ViewBag.TimeOffTypes = apply.VacationTypes;

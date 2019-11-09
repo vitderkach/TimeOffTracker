@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using TOT.Dto;
 using TOT.Interfaces;
 using TOT.Interfaces.Services;
-using AutoMapper;
 using TOT.Entities;
 
 namespace TOT.Business.Services
@@ -11,10 +10,11 @@ namespace TOT.Business.Services
     public class UserInformationService : IUserInfoService
     {
         private IUnitOfWork Database;
-
-        public UserInformationService(IUnitOfWork uow)
+        private IMapper _mapper;
+        public UserInformationService(IUnitOfWork uow, IMapper mapper)
         {
             Database = uow;
+            _mapper = mapper;
         }
 
         public void Dispose()
@@ -32,30 +32,30 @@ namespace TOT.Business.Services
             if (userInfo == null)
                 throw new NullReferenceException("userInfo not found");
 
-            return new UserInformationDto
+            return _mapper.Map<UserInformation, UserInformationDto>(userInfo);
+
+            /*return new UserInformationDto
             {
                 UserInformationId = userInfo.UserInformationId,
                 FirstName = userInfo.FirstName,
                 LastName = userInfo.LastName
-            };
+            };*/
         }
 
         public IEnumerable<UserInformationDto> GetUsersInfo()
         {
-            var mapper = new MapperConfiguration(cfg =>
-                cfg.CreateMap<UserInformation, UserInformationDto>()).CreateMapper();
-
-            return mapper.Map<IEnumerable<UserInformation>,
+            return _mapper.Map<IEnumerable<UserInformation>,
                 List<UserInformationDto>>(Database.UserInformationRepository.GetAll());
         }
 
         public void SaveUserInfo(UserInformationDto userInfoDTO)
         {
-            UserInformation userInfo = new UserInformation()
+            /*UserInformation userInfo = new UserInformation()
             {
                 FirstName = userInfoDTO.FirstName,
                 LastName = userInfoDTO.LastName
-            };
+            };*/
+            var userInfo = _mapper.Map<UserInformationDto, UserInformation>(userInfoDTO);
 
             Database.UserInformationRepository.Create(userInfo);
             Database.Save();

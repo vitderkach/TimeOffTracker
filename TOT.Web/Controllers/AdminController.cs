@@ -9,7 +9,7 @@ using TOT.Entities;
 using TOT.Web.Models;
 using TOT.Dto;
 using Microsoft.AspNetCore.Authorization;
-using AutoMapper;
+using TOT.Interfaces;
 
 namespace TOT.Web.Controllers
 {
@@ -19,15 +19,18 @@ namespace TOT.Web.Controllers
         private UserManager<ApplicationUser> userManager;
         private RoleManager<IdentityRole<int>> roleManager;
         private IUserInfoService userInfoService;
+        private IMapper _mapper;
 
         private readonly string defaultPassword = "user";
 
         public AdminController(RoleManager<IdentityRole<int>> roleMgr,
-            UserManager<ApplicationUser> userMgr, IUserInfoService service)
+            UserManager<ApplicationUser> userMgr, IUserInfoService service,
+            IMapper mapper)
         {
             roleManager = roleMgr;
             userManager = userMgr;
             userInfoService = service;
+            _mapper = mapper;
         }
 
         private void AddErrorsFromResult(IdentityResult result)
@@ -58,9 +61,7 @@ namespace TOT.Web.Controllers
             {
                 UserInformationDto userInfoDTO = new UserInformationDto()
                 {
-                    FirstName = model.Name,
-                    LastName = model.Surname,
-                    
+                    FullName = model.Surname + model.Name,
                 };
 
                 ApplicationUser user = new ApplicationUser()
