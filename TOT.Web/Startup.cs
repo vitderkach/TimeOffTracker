@@ -39,6 +39,7 @@ namespace TOT.Web
             services.AddAutoMapper();
             services.AddCustomIdentity();
 
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
