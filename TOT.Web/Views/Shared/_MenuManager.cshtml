@@ -1,0 +1,22 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using TOT.Entities
+
+@{
+    var permission = User.IsInRole("Manager") || User.IsInRole("Administrator");
+}
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User) && permission)
+{
+    <li class="nav-item dropdown justify-content-between">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Responses
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" asp-controller="Vacation" asp-action="Apply">All</a>
+            <a class="dropdown-item" asp-controller="Vacation" asp-action="List">Need to consider</a>
+        </div>
+    </li>
+}

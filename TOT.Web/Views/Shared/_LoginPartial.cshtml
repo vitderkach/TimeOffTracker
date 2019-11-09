@@ -4,22 +4,22 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
     <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" id="logoutForm" class="navbar-right">
-        <ul class="nav nav nav-tabs">
+        <ul class="row">
             @if (SignInManager.IsSignedIn(User))
             {
-
-                <li>
-                    <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
-                </li>
-                <li>
-                    <button type="submit" class="btn btn-link  nav-link">Logout</button>
-                </li>
+                <div class="row">
+                    <a class="nav-link col" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+                    <button type="submit col" class="btn btn-outline-light ">Log out</button>
+                </div>
             }
             else
             {
-                <li><a class="nav-link" asp-area="Identity" asp-page="/Account/Register">Register</a></li>
-                <li><a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Login</a></li>
+               <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Login</a>
             }
         </ul>
-
     </form>
+    <style>
+        button:hover{
+            color: blue;
+        }
+    </style>

@@ -24,6 +24,7 @@ namespace TOT.Business.Services
         }
         public IEnumerable<ApplicationUserDto> GetAllByRole(string role)
         {
+
             var managers = _userManager.GetUsersInRoleAsync(role).Result;
             //todo ask what could i do better
             var userInformation = _uow.UserInformationRepository.GetAll();
