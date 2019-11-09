@@ -12,7 +12,9 @@ namespace TOT.Data.Configuration {
         {
             entity.HasKey(r => r.Id);
 
-           
+            entity.HasOne(v => v.UserInformation)
+                .WithOne(vi => vi.VacationPolicyInfo)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         }
     }
 }

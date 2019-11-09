@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TOT.Data;
 
 namespace TOT.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191109124031_updateTables")]
+    partial class updateTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -390,9 +392,8 @@ namespace TOT.Data.Migrations
             modelBuilder.Entity("TOT.Entities.ManagerResponse", b =>
                 {
                     b.HasOne("TOT.Entities.ApplicationUser", "Manager")
-                        .WithMany()
-                        .HasForeignKey("ManagerId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany("ManagerResponses")
+                        .HasForeignKey("ManagerId");
 
                     b.HasOne("TOT.Entities.VacationRequest", "VacationRequest")
                         .WithMany("ManagersResponses")
@@ -403,7 +404,8 @@ namespace TOT.Data.Migrations
                 {
                     b.HasOne("TOT.Entities.UserInformation", "UserInformation")
                         .WithOne("VacationPolicyInfo")
-                        .HasForeignKey("TOT.Entities.VacationPolicyInfo", "UserInformationId");
+                        .HasForeignKey("TOT.Entities.VacationPolicyInfo", "UserInformationId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("TOT.Entities.VacationRequest", b =>

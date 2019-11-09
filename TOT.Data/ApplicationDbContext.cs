@@ -11,7 +11,7 @@ namespace TOT.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-            Database.EnsureDeleted();
+            //Database.EnsureDeleted();
         }
 
         #region DbSets

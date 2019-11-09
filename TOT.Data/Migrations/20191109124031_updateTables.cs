@@ -3,10 +3,18 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TOT.Data.Migrations
 {
-    public partial class addedapprovalsandvacationPolicy : Migration
+    public partial class updateTables : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Manager_Responses",
+                table: "ManagerResponses");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Request_Responses",
+                table: "ManagerResponses");
+
             migrationBuilder.AddColumn<bool>(
                 name: "Approval",
                 table: "VacationRequests",
@@ -48,7 +56,7 @@ namespace TOT.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    TimeOffType = table.Column<int>(nullable: false),
+                    TimeOffType = table.Column<string>(type: "nvarchar(30)", nullable: false),
                     WastedDays = table.Column<int>(nullable: false),
                     VacationPolicyInfoId = table.Column<int>(nullable: false)
                 },
@@ -73,10 +81,34 @@ namespace TOT.Data.Migrations
                 name: "IX_VacationTypes_VacationPolicyInfoId",
                 table: "VacationTypes",
                 column: "VacationPolicyInfoId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_ManagerResponses_AspNetUsers_ManagerId",
+                table: "ManagerResponses",
+                column: "ManagerId",
+                principalTable: "AspNetUsers",
+                principalColumn: "ApplicationUserId",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_ManagerResponses_VacationRequests_VacationRequestId",
+                table: "ManagerResponses",
+                column: "VacationRequestId",
+                principalTable: "VacationRequests",
+                principalColumn: "VacationRequestId",
+                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_ManagerResponses_AspNetUsers_ManagerId",
+                table: "ManagerResponses");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_ManagerResponses_VacationRequests_VacationRequestId",
+                table: "ManagerResponses");
+
             migrationBuilder.DropTable(
                 name: "VacationTypes");
 
@@ -94,6 +126,22 @@ namespace TOT.Data.Migrations
             migrationBuilder.DropColumn(
                 name: "isRequested",
                 table: "ManagerResponses");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Manager_Responses",
+                table: "ManagerResponses",
+                column: "ManagerId",
+                principalTable: "AspNetUsers",
+                principalColumn: "ApplicationUserId",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Request_Responses",
+                table: "ManagerResponses",
+                column: "VacationRequestId",
+                principalTable: "VacationRequests",
+                principalColumn: "VacationRequestId",
+                onDelete: ReferentialAction.Restrict);
         }
     }
 }

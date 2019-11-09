@@ -10,8 +10,8 @@ using TOT.Data;
 namespace TOT.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191107181156_added approvals and vacationPolicy")]
-    partial class addedapprovalsandvacationPolicy
+    [Migration("20191109125847_deletedManagerResponsesInAUser")]
+    partial class deletedManagerResponsesInAUser
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -322,7 +322,9 @@ namespace TOT.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("TimeOffType");
+                    b.Property<string>("TimeOffType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<int>("VacationPolicyInfoId");
 
@@ -384,23 +386,19 @@ namespace TOT.Data.Migrations
                 {
                     b.HasOne("TOT.Entities.UserInformation", "UserInformation")
                         .WithOne("User")
-                        .HasForeignKey("TOT.Entities.ApplicationUser", "UserInformationId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("TOT.Entities.ApplicationUser", "UserInformationId");
                 });
 
             modelBuilder.Entity("TOT.Entities.ManagerResponse", b =>
                 {
                     b.HasOne("TOT.Entities.ApplicationUser", "Manager")
-                        .WithMany("ManagerResponses")
+                        .WithMany()
                         .HasForeignKey("ManagerId")
-                        .HasConstraintName("FK_Manager_Responses")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("TOT.Entities.VacationRequest", "VacationRequest")
                         .WithMany("ManagersResponses")
-                        .HasForeignKey("VacationRequestId")
-                        .HasConstraintName("FK_Request_Responses")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("VacationRequestId");
                 });
 
             modelBuilder.Entity("TOT.Entities.VacationPolicyInfo", b =>
@@ -416,8 +414,7 @@ namespace TOT.Data.Migrations
                     b.HasOne("TOT.Entities.ApplicationUser", "User")
                         .WithMany("VacationRequests")
                         .HasForeignKey("UserId")
-                        .HasConstraintName("FK_AppUser_Requests")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasConstraintName("FK_AppUser_Requests");
                 });
 
             modelBuilder.Entity("TOT.Entities.VacationType", b =>

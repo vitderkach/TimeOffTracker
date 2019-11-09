@@ -9,6 +9,12 @@
     <Compile Remove="Migrations\20191107114028_addedVacationUserInfo.Designer.cs" />
     <Compile Remove="Migrations\20191107192735_policyFix.cs" />
     <Compile Remove="Migrations\20191107192735_policyFix.Designer.cs" />
+    <Compile Remove="Migrations\20191109112600_VacationOnClientSetNull.cs" />
+    <Compile Remove="Migrations\20191109112600_VacationOnClientSetNull.Designer.cs" />
+    <Compile Remove="Migrations\20191109121821_configureRelations.cs" />
+    <Compile Remove="Migrations\20191109121821_configureRelations.Designer.cs" />
+    <Compile Remove="Migrations\20191109122316_addVacationTypesAndConfgigureRealtions.cs" />
+    <Compile Remove="Migrations\20191109122316_addVacationTypesAndConfgigureRealtions.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -64,12 +64,23 @@ namespace TOT.Business.Services
             return user;
         }
 
-        public VacationRequestDto getVacationById(int id)
+        public VacationRequestDto GetVacationById(int id)
         {
             var vacation = _uow.VacationRequestRepository.Get(id);
             var vacationDto = _mapper.Map<VacationRequest, VacationRequestDto>(vacation);
 
             return vacationDto;
+        }
+        public void UpdateVacation(int id, string notes)
+        {
+            var vacation = _uow.VacationRequestRepository.Get(id);
+            vacation.Notes = notes;
+            _uow.VacationRequestRepository.Update(vacation);
+        }
+
+        public void DeleteVacation(int id)
+        {
+            _uow.VacationRequestRepository.Delete(id);
         }
     }
 }

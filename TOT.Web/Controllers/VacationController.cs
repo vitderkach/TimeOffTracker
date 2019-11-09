@@ -64,7 +64,7 @@ namespace TOT.Web.Controllers
 
                 _vacationService.ApplyForVacation(vacationRequest);
             }
-            return Redirect("Apply");
+            return RedirectToAction("List");
         }
         [HttpGet]
         public IActionResult List()
@@ -74,15 +74,22 @@ namespace TOT.Web.Controllers
             return View(vacations);
         }
         [HttpGet]
-        public IActionResult Details(int id)
+        public IActionResult Edit(int id)
         {
-            var vacation = _vacationService.getVacationById(id);
+            var vacation = _vacationService.GetVacationById(id);
 
             return View(vacation);
         }
         [HttpPost]
-        public IActionResult Edit(string notes)
+        public IActionResult Edit(int Id, string Notes)
         {
+            _vacationService.UpdateVacation(Id, Notes);
+
+            return RedirectToAction("List");
+        }
+        public IActionResult Delete(int id)
+        {
+            _vacationService.DeleteVacation(id);
 
             return RedirectToAction("List");
         }
