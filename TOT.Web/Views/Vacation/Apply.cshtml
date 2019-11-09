@@ -3,10 +3,7 @@
 @{
     ViewData["Title"] = "Apply";
 }
-<h2>Apply</h2>
 
-<h4>VacationRequestDto</h4>
-<hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Apply" name="form" id="form">
@@ -67,7 +64,9 @@
             $("#SelectedManager").change(function () {
                 let id = $(this).children("option:selected").val();
                 selectedManagerId = id;
-                console.log(selectedManagerId)
+                console.log(selectedManagerId);
+                console.log($("#SelectedManager").children("option:selected").text());
+
             });
 
             var x = 1;
@@ -78,15 +77,20 @@
 
                     let id = $("#SelectedManager").children("option:selected").val();
                     let text = $("#SelectedManager").children("option:selected").text();
+
                     if (selectedManagerObject.filter(obj => { return obj.Id == id }).length == 0) {
 
                         selectedManagerObject.push({ Id: id, name: text });
                         x++;
 
+                        console.log(selectedManagerObject);
+                        var myname = selectedManagerObject.find(obj => { return obj.Id === selectedManagerId }).name;
+                        console.log(myname);
                         $(wrapper).append('<div class="form-row mt-2">' +
-                        '<div class="col-9"><input type="text" class="form-control" disabled=true value=' + selectedManagerObject.find(obj => { return obj.Id === selectedManagerId }).name + ' name="mytext[]" /></div> ' +
+                        '<div class="col-9"><input type="text" class="form-control" disabled=true value="' + myname +'"/> </div>' +
                         '<div class="col"><button class="btn btn-danger form-control delete">x</button></div> </div>');
                         //add input box
+                        var a = 1;
                     }
                     else { alert('This manager already exists') }
                     }
@@ -100,7 +104,7 @@
                 selectedManagerObject = selectedManagerObject.filter(obj => { return obj.name != text });
                 console.log('after: ' + selectedManagerObject);
                 x--;
-                $(this).parent('div').parent('div').remove();   
+                $(this).parent('div').parent('div').remove();
             })
            $("#form").on("submit", function (event) {
 

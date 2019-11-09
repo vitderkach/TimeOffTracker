@@ -4,11 +4,6 @@
     ViewData["Title"] = "List";
 }
 
-<h2>List</h2>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -43,8 +38,10 @@
                 @Html.DisplayFor(modelItem => item.Notes)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.VacationRequestId }) |
-                @Html.ActionLink("Delete", "Delete", new {  id=item.VacationRequestId  })
+                <div class="row justify-content-end">
+                    @Html.ActionLink("Edit", "Edit", new { id = item.VacationRequestId }, new { @class = "btn btn-outline-dark form-control col-5 m-1" })
+                    @Html.ActionLink("Delete", "Delete", new { id = item.VacationRequestId }, new { @class = "btn btn-outline-dark form-control col-5 m-1" })
+                </div>
             </td>
         </tr>
 }
