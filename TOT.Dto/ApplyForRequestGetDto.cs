@@ -15,6 +15,7 @@ namespace TOT.Dto
         {
             ManagersResponses = new Collection<ManagerResponseDto>();
             SelectedManager = new List<int>();
+            ManagersId = new List<int>();
         }
         public int Id { get; set; }
         [DataType(DataType.Date)]
@@ -42,6 +43,7 @@ namespace TOT.Dto
         }
         public string Notes { get; set; }
         public IEnumerable<int> SelectedManager { get; set; }
+        public IEnumerable<int> ManagersId { get; set; }
         public SelectList MyManagers { get; set; }
         public ICollection<ManagerResponseDto> ManagersResponses { get; set; }
         public int UserId { get; set; }
