@@ -53,7 +53,7 @@ namespace TOT.Web.Controllers
             return View(); 
         }
         [HttpPost]
-        public async Task<ActionResult> Apply(ApplyForRequestGetDto applyForRequestGetDto)
+        public async Task<ActionResult> Apply([FromBody]ApplyForRequestGetDto applyForRequestGetDto)
         {
             if(ModelState.IsValid)
             {
@@ -63,8 +63,13 @@ namespace TOT.Web.Controllers
                 var vacationRequest = _mapper.Map<ApplyForRequestGetDto, VacationRequestDto>(applyForRequestGetDto);
 
                 _vacationService.ApplyForVacation(vacationRequest);
+                return RedirectToAction("List");
+                //return Ok();
             }
-            return RedirectToAction("List");
+            else
+            {
+                return new BadRequestResult();
+            }
         }
         [HttpGet]
         public IActionResult List()

@@ -37,7 +37,7 @@
                 </div>
             </div>
             <div class="form-group mt-5">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" id="submit-button" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -53,43 +53,37 @@
 
     <script>
         $(document).ready(function () {
-           var max_fields = 10;
+            var max_fields = 10;
             var wrapper = $(".container_selectedManagers");
             var add_button = $(".add_form_field");
             var select_tag = $("#SelectedManager").children("option:selected");
             var selectedManagerId;
-
             var selectedManagerObject = [];
             let id = select_tag.val();
             let text = select_tag.text();
             selectedManagerId = id;
-
             $("#SelectedManager").change(function () {
                 let id = $(this).children("option:selected").val();
                 selectedManagerId = id;
                 console.log(selectedManagerId)
             });
-
             var x = 1;
             $(add_button).click(function (e) {
                 e.preventDefault();
-
                 if (x < max_fields) {
-
                     let id = $("#SelectedManager").children("option:selected").val();
                     let text = $("#SelectedManager").children("option:selected").text();
                     if (selectedManagerObject.filter(obj => { return obj.Id == id }).length == 0) {
-
                         selectedManagerObject.push({ Id: id, name: text });
                         x++;
                         var myname = selectedManagerObject.find(obj => { return obj.Id === selectedManagerId }).name;
                         $(wrapper).append('<div class="form-row mt-2">' +
-                        '<div class="col-9"><input type="text" class="form-control" disabled=true value="' + myname + '" name="ManagersId['+(x-2)+']" /></div> ' +
-                        '<div class="col"><button class="btn btn-danger form-control delete">x</button></div> </div>');
+                            '<div class="col-9"><input type="text" class="form-control" disabled=true value="' + myname + '" name=ManagersId[' + (x - 2) + '] /></div> ' +
+                            '<div class="col"><button class="btn btn-danger form-control delete">x</button></div> </div>');
                         //add input box
                     }
                     else { alert('This manager already exists') }
-                    }
+                }
                 else { alert('You Reached the limits') }
             });
             $(wrapper).on("click", ".delete", function (e) {
@@ -100,47 +94,46 @@
                 selectedManagerObject = selectedManagerObject.filter(obj => { return obj.name != text });
                 console.log('after: ' + selectedManagerObject);
                 x--;
-                $(this).parent('div').parent('div').remove();   
+                $(this).parent('div').parent('div').remove();
             })
-           $("#form").on("submit", function (event) {
-
-               var start = $("#StartDate").val();
-               var end = $("#EndDate").val();
-               var typeOff = $("#SelectedTimeOffType").val();
-               var notes = $("#Notes").val();
-               var managersId = [];
+            $("#form").on("submit", function (event) {
+                var start = $("#StartDate").val();
+                var end = $("#EndDate").val();
+                var typeOff = $("#SelectedTimeOffType").val();
+                var notes = $("#Notes").val();
+                var managersId = [];
                 for (let val of selectedManagerObject) {
                     managersId.push(val.Id);
-               }
+                }
+                var data = {};
+                data["StartDate"] = start;
+                data["EndDate"] = end;
+                data["SelectedTimeOffType"] = typeOff;
+                data["Notes"] = notes;
+                data["SelectedManager"] = managersId;
+                data["ManagersId"] = managersId;
+                console.log(data);
 
-               var data = {};
+                $.ajax({
+                    type: 'POST',
+                    accepts: "application/json",
+                    url: '/Vacation/Apply',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function () {
 
-               data["StartDate"] = start;
-               data["EndDate"] = end;
-               data["SelectedTimeOffType"] = typeOff;
-               data["Notes"] = notes;
-               data["SelectedManager"] = managersId;
-               data["ManagersId"] = managersId;
-                   console.log(data);
-               
-               $.ajax({
-                   type: 'POST',
-                   url: '/Vacation/Apply',
-                   dataType: 'json',
-                   data: data,
-                   success: function(){ 
-                        alert('success!');
-                        },
-                        error: function(){
-                        console.log('error!');
-                   },
-                   complete: function () {
-                       location.href = "/Vacation/List";
-                   }
-               })
-               event.preventDefault();
+                    },
+                    complete: function (jqXHR) {
+                        if (jqXHR.status == 200) {
+                            location.href = "/Vacation/List";
+                        }
+                        else {
+                            alert('Error!');
+                        }
+                    }
+                })
+                event.preventDefault();
             });
-            
         });
     </script>
 }
