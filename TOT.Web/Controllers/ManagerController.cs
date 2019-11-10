@@ -45,10 +45,10 @@ namespace TOT.Web.Controllers
         }
 
         // requestId = null !!!
-        public IActionResult Approval(int requestId)
+        public IActionResult Approval(int id)
         {
             // чтобы протестировать нужно хардкодить значение requestId 
-            var vacationRequest = _vacationService.GetVacationById(requestId);
+            var vacationRequest = _vacationService.GetVacationById(id);
             var managerResponse = _managerService
                 .GetResponseByVacationId(vacationRequest.VacationRequestId);
             var userInfo = _userInfoService.GetUserInfo(vacationRequest.UserId);

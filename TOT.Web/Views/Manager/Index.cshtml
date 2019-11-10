@@ -45,8 +45,7 @@
                     @Html.DisplayFor(modelItem => item.EndDate)
                 </td>
                 <td>
-                    <a class="btn btn-sm btn-primary"
-                       asp-action="Approval" asp-route-id="@item.VacationRequestId">Open</a>
+                    @Html.ActionLink("Open", "Approval", new { id = item.VacationRequestId }, new { @class = "btn btn-outline-dark form-control col-5 m-1" })
                 </td>
             </tr>
         }
