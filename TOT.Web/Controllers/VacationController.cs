@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TOT.Business.Services;
 using TOT.Dto;
@@ -15,7 +16,7 @@ using TOT.Interfaces.Services;
 
 namespace TOT.Web.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class VacationController : Controller
     {
         private UserManager<ApplicationUser> _userManager;
@@ -53,18 +54,23 @@ namespace TOT.Web.Controllers
             return View(); 
         }
         [HttpPost]
-        public async Task<ActionResult> Apply([FromHeader] ApplyForRequestGetDto applyForRequestGetDto)
+        public async Task<IActionResult> Apply([FromBody]ApplyForRequestGetDto applyForRequestGetDto)
         {
             if(ModelState.IsValid)
-            {   
-                var user = await _userManager.GetUserAsync(HttpContext.User);
-                applyForRequestGetDto.UserId = user.Id;
-
+            {
+                // var user = await _userManager.GetUserAsync(HttpContext.User);
+                //applyForRequestGetDto.UserId = user.Id;
+                applyForRequestGetDto.UserId = 1007;
                 var vacationRequest = _mapper.Map<ApplyForRequestGetDto, VacationRequestDto>(applyForRequestGetDto);
 
                 _vacationService.ApplyForVacation(vacationRequest);
+                return RedirectToAction("List");
+                //return Ok();
             }
-            return RedirectToAction("List");
+            else
+            {
+                return new BadRequestResult();
+            }
         }
         [HttpGet]
         public IActionResult List()

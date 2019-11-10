@@ -9,7 +9,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Apply" name="form" id="form">
+        <form action="Apply" name="form" id="form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="StartDate" class="control-label"></label>
@@ -120,15 +120,19 @@
                    type: 'POST',
                    url: '/Vacation/Apply',
                    dataType: 'json',
-                   data: data,
+                   data: JSON.stringify(data),
+                   accepts: "application/json",
+                   contentType: 'application/json',
                    success: function(){ 
-                        alert('success!');
+                        
                     },
-                    error: function () {
-                        console.log('error!');
-                   },
-                   complete: function () {
-                       location.href = "/Vacation/List";
+                   complete: function (jqXHR) {
+                       if (jqXHR.status == 200) {
+                           location.href = "/Vacation/List";
+                       }
+                       else {
+                           alert('Error!');
+                       }
                    }
                })
                event.preventDefault();
