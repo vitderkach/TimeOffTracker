@@ -74,6 +74,7 @@ namespace TOT.Business.Services
             var managerResponse = _uow.ManagerResponseRepository.Get(managerResponseId);
             managerResponse.Approval = approval;
             managerResponse.Notes = managerNotes;
+            managerResponse.isRequested = false;
             _uow.ManagerResponseRepository.Update(managerResponse);
         }
     }

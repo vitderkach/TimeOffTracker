@@ -12,16 +12,13 @@ namespace TOT.Web.Controllers
     [Authorize(Roles = "Manager, Administrator")]
     public class ManagerController : Controller
     {
-        //private UserManager<ApplicationUser> _userManager;
         private readonly IManagerService _managerService;
         private readonly IVacationService _vacationService;
         private readonly IUserInfoService _userInfoService;
 
-        //UserManager<ApplicationUser> userManager,
         public ManagerController(IManagerService managerService,
             IVacationService vacationService, IUserInfoService userInfoService)
         {
-            //_userManager = userManager;
             _managerService = managerService;
             _vacationService = vacationService;
             _userInfoService = userInfoService;
@@ -47,9 +44,10 @@ namespace TOT.Web.Controllers
             return View(resultViewModel);
         }
 
+        // requestId = null 
         public IActionResult Approval(int requestId)
         {
-            var vacationRequest = _vacationService.GetVacationById(requestId);
+            var vacationRequest = _vacationService.GetVacationById(3016);
             var managerResponse = _managerService
                 .GetResponseByVacationId(vacationRequest.VacationRequestId);
             var userInfo = _userInfoService.GetUserInfo(vacationRequest.UserId);
@@ -69,14 +67,25 @@ namespace TOT.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Approval(RequestApprovalViewModel vm,
-             string notes, bool approval)
+        public IActionResult Approval(string submit,
+            RequestApprovalViewModel response)
         {
-            if (vm.ManagerResponseId != 0)
-            {
-                _managerService.ApproveUserRequest(vm.ManagerResponseId,
-                    notes, approval);
+            if (submit == "Approve") {
+                response.isApproval = true;
             }
+            else if (submit == "Reject") {
+                response.isApproval = false;
+            }
+            else {
+                return NotFound();
+            }
+
+            if (response.ManagerResponseId != 0)
+            {
+                _managerService.ApproveUserRequest(response.ManagerResponseId,
+                    response.ManagerNotes, response.isApproval);
+            }
+
             return RedirectToAction("Index");
         }
     }

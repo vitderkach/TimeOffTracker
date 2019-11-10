@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.ComponentModel.DataAnnotations;
 using TOT.Entities;
 
@@ -27,6 +28,7 @@ namespace TOT.Web.Models
 
         [Display(Name = "Notes to current request")]
         public string ManagerNotes { get; set; }
-        public bool? isApproval { get; set; }
+        //  [HiddenInput]
+        public bool isApproval { get; set; }
     }
 }

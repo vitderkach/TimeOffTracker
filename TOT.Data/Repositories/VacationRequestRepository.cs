@@ -51,7 +51,8 @@ namespace TOT.Data.Repositories
         {
             return db.VacationRequests
                 .Include(v => v.ManagersResponses)
-                .Include(v => v.User);
+                .Include(v => v.User)
+                    .ThenInclude(user => user.UserInformation);
         }
 
         public void Update(VacationRequest item)

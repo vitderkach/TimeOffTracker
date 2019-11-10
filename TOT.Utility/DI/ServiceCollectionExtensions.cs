@@ -34,6 +34,7 @@ namespace TOT.Utility.DI
             services.AddTransient<IUserInfoService, UserInformationService>();
             services.AddTransient<IVacationService, VacationService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IManagerService, ManagerService>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
