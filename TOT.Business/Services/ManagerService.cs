@@ -49,6 +49,21 @@ namespace TOT.Business.Services
             return vacationsRequestListDto;
         }
 
+        public IEnumerable<VacationRequestListDto> GetProcessedRequestsByCurrentManager()
+        {
+            var Id = GetCurrentUser().Result.Id;
+
+            var vacationRequests = _uow.VacationRequestRepository.GetAll()
+                .Where(v => v.ManagersResponses
+                .Any(x => x.ManagerId == Id && x.Approval != null))
+                .OrderByDescending(v => v.CreationDate);
+            //ManagersResponses.Select(x => x.DateResponse)
+            var vacationsRequestListDto = _mapper.Map<IEnumerable<VacationRequest>,
+                IEnumerable<VacationRequestListDto>>(vacationRequests);
+
+            return vacationsRequestListDto;
+        }
+
         public ManagerResponseDto GetResponseByVacationId(int vacationRequestId)
         {
             ManagerResponseDto managerResponseDto = default;

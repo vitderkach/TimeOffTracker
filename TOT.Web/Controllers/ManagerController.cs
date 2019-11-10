@@ -44,10 +44,16 @@ namespace TOT.Web.Controllers
             return View(resultViewModel);
         }
 
-        // requestId = null !!!
+        public IActionResult Processed()
+        {
+            var processedRequestsByCurrentManager =
+                _managerService.GetProcessedRequestsByCurrentManager();
+
+            return View(processedRequestsByCurrentManager);
+        }
+
         public IActionResult Approval(int id)
         {
-            // чтобы протестировать нужно хардкодить значение requestId 
             var vacationRequest = _vacationService.GetVacationById(id);
             var managerResponse = _managerService
                 .GetResponseByVacationId(vacationRequest.VacationRequestId);
