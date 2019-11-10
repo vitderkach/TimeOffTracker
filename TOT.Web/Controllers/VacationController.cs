@@ -53,10 +53,10 @@ namespace TOT.Web.Controllers
             return View(); 
         }
         [HttpPost]
-        public async Task<ActionResult> Apply(ApplyForRequestGetDto applyForRequestGetDto)
+        public async Task<ActionResult> Apply([FromHeader] ApplyForRequestGetDto applyForRequestGetDto)
         {
             if(ModelState.IsValid)
-            {
+            {   
                 var user = await _userManager.GetUserAsync(HttpContext.User);
                 applyForRequestGetDto.UserId = user.Id;
 
