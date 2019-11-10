@@ -82,9 +82,9 @@
 
                         selectedManagerObject.push({ Id: id, name: text });
                         x++;
-
+                        var myname = selectedManagerObject.find(obj => { return obj.Id === selectedManagerId }).name;
                         $(wrapper).append('<div class="form-row mt-2">' +
-                        '<div class="col-9"><input type="text" class="form-control" disabled=true value=' + selectedManagerObject.find(obj => { return obj.Id === selectedManagerId }).name + ' name="mytext[]" /></div> ' +
+                        '<div class="col-9"><input type="text" class="form-control" disabled=true value=' + myname + ' name="mytext[]" /></div> ' +
                         '<div class="col"><button class="btn btn-danger form-control delete">x</button></div> </div>');
                         //add input box
                     }
@@ -127,13 +127,14 @@
                    url: '/Vacation/Apply',
                    dataType: 'json',
                    data: data,
-                    success: function(){ 
+                   success: function(){ 
                         alert('success!');
                         },
                         error: function(){
                         console.log('error!');
                         }
-                })
+               })
+               event.preventDefault();
             });
             
         });
