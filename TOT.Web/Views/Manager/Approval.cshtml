@@ -1,0 +1,62 @@
+﻿@model TOT.Web.Models.RequestApprovalViewModel
+
+@{
+    ViewData["Title"] = "Approval";
+}
+<div class="container col-6">
+    <h4>Request from @Model.Employee</h4>
+    <hr />
+</div>
+<!--asp-action="Approval"-->
+<form asp-controller="Manager" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="container col-6">
+        <div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label asp-for="StartDate" class="control-label"></label>
+                    <input asp-for="StartDate" class="form-control" disabled />
+                </div>
+                <div class="form-group col-md-6">
+                    <div class="form-group">
+                        <label asp-for="EndDate" class="control-label"></label>
+                        <input asp-for="EndDate" class="form-control" disabled />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="VacationType" class="control-label"></label>
+                <input asp-for="VacationType" class="form-control" disabled />
+            </div>
+            <div class="form-group">
+                <label asp-for="EmployeeNotes" class="control-label"></label>
+                <textarea asp-for="EmployeeNotes" class="form-control" rows="3" cols="1" disabled></textarea>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label asp-for="ManagerNotes" class="control-label"></label>
+            <textarea asp-for="ManagerNotes" class="form-control" rows="3" cols="1"></textarea>
+            <!--<input asp-for="ManagerNotes" class="form-control" />-->
+            <span asp-validation-for="ManagerNotes" class="text-danger"></span>
+        </div>
+        <!--<div class="form-group">
+              <label asp-for="isApproval" class="control-label"></label>
+              <input type="checkbox" class="form-check-input" />
+          </div>-->
+        <div class="form-group">
+            <input type="submit" value="Approve" formaction="AppTrue" class="btn btn-primary" /> &nbsp;&nbsp;
+            <input type="submit" value="Reject" formaction="AppFalse" class="btn btn-danger" />
+        </div>
+    </div>
+</form>
+
+<div>
+    <button class="btn btn-info" asp-action="Index">Back to List</button>
+    <!-- <a asp-action="Index">Back to List</a>-->
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

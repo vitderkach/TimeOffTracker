@@ -1,0 +1,60 @@
+﻿@model IEnumerable<TOT.Web.Models.RequestsToManagerViewModel>
+
+@{
+    ViewData["Title"] = "CurrentRequests";
+}
+
+<h2>Current requests</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.VacationRequestId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Employee)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VacationType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndDate)
+            </th>
+            <th>
+                Details
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VacationRequestId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Employee)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VacationType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    <a class="btn btn-sm btn-primary"
+                       asp-action="Approval" asp-route-id="@item.VacationRequestId">Open</a>
+                    <!--@Html.ActionLink("View", "Approval", new { id = item.VacationRequestId })-->
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

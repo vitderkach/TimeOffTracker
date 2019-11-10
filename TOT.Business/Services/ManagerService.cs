@@ -67,5 +67,14 @@ namespace TOT.Business.Services
             }
             return managerResponseDto;
         }
+
+        public void ApproveUserRequest(int managerResponseId,
+            string managerNotes, bool approval)
+        {
+            var managerResponse = _uow.ManagerResponseRepository.Get(managerResponseId);
+            managerResponse.Approval = approval;
+            managerResponse.Notes = managerNotes;
+            _uow.ManagerResponseRepository.Update(managerResponse);
+        }
     }
 }

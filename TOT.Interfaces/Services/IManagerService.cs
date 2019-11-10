@@ -7,5 +7,6 @@ namespace TOT.Interfaces.Services
     {
         IEnumerable<VacationRequestListDto> GetAllNeedToConsiderByCurrentManager();
         ManagerResponseDto GetResponseByVacationId(int vacationRequestId);
+        void ApproveUserRequest(int managerResponseId, string managerNotes, bool approval);
     }
 }
