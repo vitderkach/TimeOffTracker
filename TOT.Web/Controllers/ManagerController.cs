@@ -47,7 +47,7 @@ namespace TOT.Web.Controllers
         // requestId = null 
         public IActionResult Approval(int requestId)
         {
-            var vacationRequest = _vacationService.GetVacationById(3016);
+            var vacationRequest = _vacationService.GetVacationById(requestId);
             var managerResponse = _managerService
                 .GetResponseByVacationId(vacationRequest.VacationRequestId);
             var userInfo = _userInfoService.GetUserInfo(vacationRequest.UserId);

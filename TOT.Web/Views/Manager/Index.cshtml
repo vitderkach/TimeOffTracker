@@ -11,9 +11,6 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.VacationRequestId)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Employee)
             </th>
             <th>
@@ -33,10 +30,8 @@
     <tbody>
         @foreach (var item in Model)
         {
+            @Html.HiddenFor(model => item.VacationRequestId)
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.VacationRequestId)
-                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Employee)
                 </td>
@@ -52,7 +47,6 @@
                 <td>
                     <a class="btn btn-sm btn-primary"
                        asp-action="Approval" asp-route-id="@item.VacationRequestId">Open</a>
-                    <!--@Html.ActionLink("View", "Approval", new { id = item.VacationRequestId })-->
                 </td>
             </tr>
         }
