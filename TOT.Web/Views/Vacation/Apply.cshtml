@@ -3,7 +3,10 @@
 @{
     ViewData["Title"] = "Apply";
 }
+<h2>Apply</h2>
 
+<h4>VacationRequestDto</h4>
+<hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Apply" name="form" id="form">
@@ -41,7 +44,7 @@
 </div>
 
 <div>
-    <a class="btn btn-primary" asp-action="List">Back to List</a>
+    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
@@ -50,50 +53,37 @@
 
     <script>
         $(document).ready(function () {
-           var max_fields = 10;
+            var max_fields = 10;
             var wrapper = $(".container_selectedManagers");
             var add_button = $(".add_form_field");
             var select_tag = $("#SelectedManager").children("option:selected");
             var selectedManagerId;
-
             var selectedManagerObject = [];
             let id = select_tag.val();
             let text = select_tag.text();
             selectedManagerId = id;
-
             $("#SelectedManager").change(function () {
                 let id = $(this).children("option:selected").val();
                 selectedManagerId = id;
-                console.log(selectedManagerId);
-                console.log($("#SelectedManager").children("option:selected").text());
-
+                console.log(selectedManagerId)
             });
-
             var x = 1;
             $(add_button).click(function (e) {
                 e.preventDefault();
-
                 if (x < max_fields) {
-
                     let id = $("#SelectedManager").children("option:selected").val();
                     let text = $("#SelectedManager").children("option:selected").text();
-
                     if (selectedManagerObject.filter(obj => { return obj.Id == id }).length == 0) {
-
                         selectedManagerObject.push({ Id: id, name: text });
                         x++;
-
-                        console.log(selectedManagerObject);
-                        var myname = selectedManagerObject.find(obj => { return obj.Id === selectedManagerId }).name;
-                        console.log(myname);
+                        let myname = selectedManagerObject.find(obj => { return obj.Id == selectedManagerId })
                         $(wrapper).append('<div class="form-row mt-2">' +
-                        '<div class="col-9"><input type="text" class="form-control" disabled=true value="' + myname +'"/> </div>' +
-                        '<div class="col"><button class="btn btn-danger form-control delete">x</button></div> </div>');
+                            '<div class="col-9"><input type="text" class="form-control" disabled=true value="' + myname.name + '" name="mytext[]" /></div> ' +
+                            '<div class="col"><button class="btn btn-danger form-control delete">x</button></div> </div>');
                         //add input box
-                        var a = 1;
                     }
                     else { alert('This manager already exists') }
-                    }
+                }
                 else { alert('You Reached the limits') }
             });
             $(wrapper).on("click", ".delete", function (e) {
@@ -106,40 +96,37 @@
                 x--;
                 $(this).parent('div').parent('div').remove();
             })
-           $("#form").on("submit", function (event) {
-
-               var start = $("#StartDate").val();
-               var end = $("#EndDate").val();
-               var typeOff = $("#SelectedTimeOffType").val();
-               var notes = $("#Notes").val();
-               var managersId = [];
+            $("#form").on("submit", function (event) {
+                var start = $("#StartDate").val();
+                var end = $("#EndDate").val();
+                var typeOff = $("#SelectedTimeOffType").val();
+                var notes = $("#Notes").val();
+                var managersId = [];
                 for (let val of selectedManagerObject) {
                     managersId.push(val.Id);
-               }
+                }
+                var data = {};
+                data["StartDate"] = start;
+                data["EndDate"] = end;
+                data["SelectedTimeOffType"] = typeOff;
+                data["Notes"] = notes;
+                data["SelectedManager"] = managersId;
+                console.log(data);
 
-               var data = {};
-
-               data["StartDate"] = start;
-               data["EndDate"] = end;
-               data["SelectedTimeOffType"] = typeOff;
-               data["Notes"] = notes;
-               data["SelectedManager"] = managersId;
-                   console.log(data);
-               
-               $.ajax({
-                   type: 'POST',
-                   url: '/Vacation/Apply',
-                   dataType: 'json',
-                   data: data,
-                    success: function(){ 
+                $.ajax({
+                    type: 'POST',
+                    url: '/Vacation/Apply',
+                    dataType: 'json',
+                    data: data,
+                    success: function () {
                         alert('success!');
-                        },
-                        error: function(){
+                    },
+                    error: function () {
                         console.log('error!');
-                        }
+                    }
                 })
             });
-            
+
         });
     </script>
 }
