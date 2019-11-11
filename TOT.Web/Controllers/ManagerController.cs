@@ -38,7 +38,7 @@ namespace TOT.Web.Controllers
                     Employee = rq.User.UserInformation.FullName,
                     VacationType = rq.VacationType,
                     StartDate = rq.StartDate,
-                    EndDate = rq.EndDate,
+                    EndDate = rq.EndDate
                 });
             }
             return View(resultViewModel);
@@ -46,10 +46,23 @@ namespace TOT.Web.Controllers
 
         public IActionResult Processed()
         {
+            var resultViewModel = new List<RequestsToManagerViewModel>();
             var processedRequestsByCurrentManager =
                 _managerService.GetProcessedRequestsByCurrentManager();
 
-            return View(processedRequestsByCurrentManager);
+            foreach (var rq in processedRequestsByCurrentManager)
+            {
+                resultViewModel.Add(new RequestsToManagerViewModel()
+                {
+                    VacationRequestId = rq.VacationRequestId,
+                    Employee = rq.User.UserInformation.FullName,
+                    VacationType = rq.VacationType,
+                    StartDate = rq.StartDate,
+                    EndDate = rq.EndDate
+                });
+            }
+
+            return View(resultViewModel);
         }
 
         public IActionResult Approval(int id)

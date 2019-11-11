@@ -56,8 +56,8 @@ namespace TOT.Business.Services
             var vacationRequests = _uow.VacationRequestRepository.GetAll()
                 .Where(v => v.ManagersResponses
                 .Any(x => x.ManagerId == Id && x.Approval != null))
-                .OrderByDescending(v => v.CreationDate);
-            //ManagersResponses.Select(x => x.DateResponse)
+                .OrderByDescending(v => v.EndDate);
+
             var vacationsRequestListDto = _mapper.Map<IEnumerable<VacationRequest>,
                 IEnumerable<VacationRequestListDto>>(vacationRequests);
 
