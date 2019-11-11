@@ -12,13 +12,16 @@ namespace TOT.Data.UnitOfWork
         readonly ApplicationDbContext db;
         readonly IRepository<UserInformation> _userInformationRepostitory;
         readonly IRepository<VacationRequest> _vacationRequestRepository;
+        readonly IRepository<ManagerResponse> _managerResponseRepository;
 
         public UnitOfWork(ApplicationDbContext context,
             IRepository<UserInformation> userInformationRepository,
-            IRepository<VacationRequest> vacationRequestRepository)
+            IRepository<VacationRequest> vacationRequestRepository,
+            IRepository<ManagerResponse> managerResponseRepository)
         {
             _userInformationRepostitory = userInformationRepository;
             _vacationRequestRepository = vacationRequestRepository;
+            _managerResponseRepository = managerResponseRepository;
             db = context;
             context.SaveChanges();
         }
@@ -44,6 +47,11 @@ namespace TOT.Data.UnitOfWork
         public IRepository<UserInformation> UserInformationRepository
         {
             get { return _userInformationRepostitory; }
+        }
+
+        public IRepository<ManagerResponse> ManagerResponseRepository
+        {
+            get { return _managerResponseRepository; }
         }
 
         protected virtual void Dispose(bool disposing)

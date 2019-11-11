@@ -13,6 +13,10 @@ namespace TOT.Dto {
         [DataType(DataType.Date)]
         public DateTime EndDate { get; set; }
         public TimeOffType VacationType { get; set; }
+
+        public ApplicationUserDto User { get; set; }
+
+        public ICollection<ManagerResponseDto> ManagersResponses { get; set; }
         public string Notes { get; set; }
     }
 }

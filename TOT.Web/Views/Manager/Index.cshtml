@@ -1,0 +1,54 @@
+﻿@model IEnumerable<TOT.Web.Models.RequestsToManagerViewModel>
+
+@{
+    ViewData["Title"] = "CurrentRequests";
+}
+
+<h3>Current requests</h3>
+<br />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Employee)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VacationType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndDate)
+            </th>
+            <th>
+                Details
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            @Html.HiddenFor(model => item.VacationRequestId)
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Employee)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VacationType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    @Html.ActionLink("Open", "Approval", new { id = item.VacationRequestId }, new { @class = "btn btn-outline-dark form-control col-5 m-1" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

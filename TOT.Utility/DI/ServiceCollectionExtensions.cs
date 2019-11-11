@@ -29,10 +29,12 @@ namespace TOT.Utility.DI
         {
             services.AddTransient<IRepository<UserInformation>, UserInformationRepository>();
             services.AddTransient<IRepository<VacationRequest>, VacationRequestRepository>();
+            services.AddTransient<IRepository<ManagerResponse>, ManagerResponseRepository>();
 
             services.AddTransient<IUserInfoService, UserInformationService>();
             services.AddTransient<IVacationService, VacationService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IManagerService, ManagerService>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
