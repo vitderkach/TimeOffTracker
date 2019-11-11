@@ -3,61 +3,11 @@
   "defaultProvider": "unpkg",
   "libraries": [
     {
-      "library": "bootstrap@4.3.1",
-      "destination": "wwwroot/lib/bootstrap/",
-      "files": [
-        "dist/js/bootstrap.js",
-        "dist/js/bootstrap.min.js",
-        "dist/css/bootstrap.css",
-        "dist/css/bootstrap.min.css"
-      ]
-    },
-    {
       "provider": "filesystem",
       "library": "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js",
       "destination": "wwwroot/lib/jquery/",
       "files": [
         "dist/jquery.js"
-      ]
-    },
-    {
-      "library": "bootstrap@4.3.1",
-      "destination": "wwwroot/bootstrap/dist",
-      "files": [
-        "dist/css/bootstrap.css",
-        "dist/css/bootstrap.min.css",
-        "dist/js/bootstrap.js",
-        "dist/js/bootstrap.min.js"
-      ]
-    },
-    {
-      "library": "bootstrap@4.3.1",
-      "destination": "wwwroot/lib/bootstrap/",
-      "files": [
-        "dist/css/bootstrap.css",
-        "dist/css/bootstrap.min.css",
-        "dist/js/bootstrap.js",
-        "dist/js/bootstrap.min.js"
-      ]
-    },
-    {
-      "library": "bootstrap@4.3.1",
-      "destination": "wwwroot/bootstrap/",
-      "files": [
-        "dist/css/bootstrap.css",
-        "dist/css/bootstrap.min.css",
-        "dist/js/bootstrap.js",
-        "dist/js/bootstrap.min.js"
-      ]
-    },
-    {
-      "library": "bootstrap@4.3.1",
-      "destination": "wwwroot/lib/bootstrap/",
-      "files": [
-        "dist/css/bootstrap.css",
-        "dist/css/bootstrap.min.css",
-        "dist/js/bootstrap.js",
-        "dist/js/bootstrap.min.js"
       ]
     },
     {
@@ -69,45 +19,28 @@
         "dist/popper.js",
         "dist/popper.min.js"
       ]
+    },
+    {
+      "library": "bootstrap@4.3.1",
+      "destination": "wwwroot/lib/bootstrap/",
+      "files": [
+        "js/dist/util.js",
+        "js/src/util.js",
+        "dist/css/bootstrap.css",
+        "dist/css/bootstrap.min.css",
+        "dist/js/bootstrap.bundle.js",
+        "dist/js/bootstrap.bundle.min.js",
+        "dist/js/bootstrap.js",
+        "dist/js/bootstrap.min.js"
+      ]
+    },
+    {
+      "library": "tooltip.js@1.3.3",
+      "destination": "wwwroot/lib/tooltip.js/",
+      "files": [
+        "dist/tooltip.min.js",
+        "dist/tooltip.js"
+      ]
     }
-  ,
-{
-  "library": "bootstrap@4.3.1",
-  "destination": "wwwroot/lib/bootstrap/",
-  "files": [
-    "js/dist/util.js",
-    "js/src/util.js",
-    "dist/js/bootstrap.bundle.js",
-    "dist/js/bootstrap.bundle.min.js"
   ]
-}
-,
-{
-  "library": "bootstrap@4.3.1",
-  "destination": "wwwroot/lib/bootstrap/",
-  "files": [
-    "js/dist/util.js",
-    "js/src/util.js",
-    "dist/css/bootstrap.css",
-    "dist/css/bootstrap.min.css",
-    "dist/js/bootstrap.bundle.js",
-    "dist/js/bootstrap.bundle.min.js",
-    "dist/js/bootstrap.js",
-    "dist/js/bootstrap.min.js"
-  ]
-}
-,
-{
-  "library": "tooltip.js@1.3.3",
-  "destination": "wwwroot/lib/tooltip.js/",
-  "files": [
-    "dist/tooltip.min.js",
-    "dist/tooltip.js",
-    "dist/umd/tooltip.min.js",
-    "dist/umd/tooltip.js",
-    "dist/esm/tooltip.js",
-    "dist/esm/tooltip.min.js"
-  ]
-}
-]
 }
