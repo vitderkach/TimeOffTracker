@@ -29,7 +29,7 @@ namespace TOT.Data.Configuration
                  .WithMany(mr => mr.ManagersResponses)
                  .HasForeignKey(fk => fk.VacationRequestId)
                  .HasConstraintName("FK_Request_Responses")
-                 .OnDelete(DeleteBehavior.Cascade);
+                 .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
