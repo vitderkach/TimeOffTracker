@@ -19,18 +19,21 @@ namespace TOT.Web.Controllers
         private UserManager<ApplicationUser> userManager;
         private RoleManager<IdentityRole<int>> roleManager;
         private IUserInfoService userInfoService;
+        private IVacationService _vacationService;
         private IMapper _mapper;
 
         private readonly string defaultPassword = "user";
 
         public AdminController(RoleManager<IdentityRole<int>> roleMgr,
             UserManager<ApplicationUser> userMgr, IUserInfoService service,
-            IMapper mapper)
+            IMapper mapper,
+            IVacationService vacationService)
         {
             roleManager = roleMgr;
             userManager = userMgr;
             userInfoService = service;
             _mapper = mapper;
+            _vacationService = vacationService;
         }
 
         private void AddErrorsFromResult(IdentityResult result)
@@ -98,10 +101,10 @@ namespace TOT.Web.Controllers
             if (user != null)
             {
                 IdentityResult result = await userManager.DeleteAsync(user);
-
                 if (result.Succeeded)
                 {
                     userInfoService.DeleteUserInfo(user.UserInformationId);
+                    _vacationService.DeleteVacationByUserId(id);
                     return RedirectToAction("Index");
                 }
                 else

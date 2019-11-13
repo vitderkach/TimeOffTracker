@@ -90,6 +90,13 @@ namespace TOT.Business.Services
             managerResponse.Approval = approval;
             managerResponse.Notes = managerNotes;
             managerResponse.isRequested = false;
+
+            //Это для если 1 менеджер, работает. Теперь надо пройти по всем managerResponse которые привязаны к vacation id
+            //и проверить, если менеджер остался 1, которому надо ответить - выполнять код ниже.
+
+            //var vacation = _uow.VacationRequestRepository.Get(managerResponse.VacationRequestId);
+            //vacation.Approval = true;
+            //_uow.VacationRequestRepository.Update(vacation);
             _uow.ManagerResponseRepository.Update(managerResponse);
         }
     }

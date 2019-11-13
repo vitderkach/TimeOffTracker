@@ -94,7 +94,7 @@ namespace TOT.Web.Controllers
         }
         public IActionResult Delete(int id)
         {
-            _vacationService.DeleteVacation(id);
+            bool isRemoved = _vacationService.DeleteVacation(id);
 
             return RedirectToAction("List");
         }

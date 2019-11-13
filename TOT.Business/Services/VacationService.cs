@@ -47,6 +47,17 @@ namespace TOT.Business.Services
             
             _uow.VacationRequestRepository.Create(vacation);
         }
+        public void DeleteVacationByUserId(int id)
+        {
+            //need to fix when another will be ready
+            var vacationsRemoved = _uow.VacationRequestRepository
+                .GetAll()
+                .Where(v => v.UserId == id);
+            foreach(var removed in vacationsRemoved)
+            {
+                _uow.VacationRequestRepository.Delete(removed.VacationRequestId);
+            }
+        }
 
         public IEnumerable<VacationRequestListDto> GetAllByCurrentUser()
         {
@@ -78,9 +89,18 @@ namespace TOT.Business.Services
             _uow.VacationRequestRepository.Update(vacation);
         }
 
-        public void DeleteVacation(int id)
+        public bool DeleteVacation(int id)
         {
-            _uow.VacationRequestRepository.Delete(id);
+            var vacation = _uow.VacationRequestRepository.Get(id);
+            if(vacation.Approval == null)
+            {
+                _uow.VacationRequestRepository.Delete(id);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

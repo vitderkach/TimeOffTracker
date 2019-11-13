@@ -19,11 +19,15 @@
             <th>
                 @Html.DisplayNameFor(model => model.Notes)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Approval)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model)
+{
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.StartDate)
@@ -38,9 +42,30 @@
                 @Html.DisplayFor(modelItem => item.Notes)
             </td>
             <td>
+                <div>
+                    @{
+                        if (item.Approval == null)
+                        { <div> ? </div> }
+                        if (item.Approval == false)
+                        { <div> x </div> }
+                        if (item.Approval == true)
+                        { <div> + </div> }
+                    }
+                </div>
+            </td>
+            <td>
                 <div class="row justify-content-end">
-                    @Html.ActionLink("Edit", "Edit", new { id = item.VacationRequestId }, new { @class = "btn btn-outline-dark form-control col-5 m-1" })
-                    @Html.ActionLink("Delete", "Delete", new { id = item.VacationRequestId }, new { @class = "btn btn-outline-dark form-control col-5 m-1" })
+                    @{
+                        @Html.ActionLink("Edit", "Edit", new { id = item.VacationRequestId }, new { @class = "btn btn-outline-dark form-control col-5 m-1" })
+                        if (item.Approval == null)
+                        { 
+                            @Html.ActionLink("Delete", "Delete", new { id = item.VacationRequestId }, new { @class = "btn btn-outline-dark form-control col-5 m-1" })
+                        }
+                        else
+                        { 
+                            <p>Delete</p>
+                        }
+                    }
                 </div>
             </td>
         </tr>
