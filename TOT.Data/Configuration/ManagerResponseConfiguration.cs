@@ -13,7 +13,7 @@ namespace TOT.Data.Configuration
 
             entity.Property(d => d.DateResponse)
                .HasColumnType("datetime")
-               .HasDefaultValueSql("GETDATE()");
+               .HasDefaultValueSql("GETUTCDATE()");
             entity.HasIndex(d => d.DateResponse);
 
             entity.Property(n => n.Notes)
@@ -29,7 +29,7 @@ namespace TOT.Data.Configuration
                  .WithMany(mr => mr.ManagersResponses)
                  .HasForeignKey(fk => fk.VacationRequestId)
                  .HasConstraintName("FK_Request_Responses")
-                 .OnDelete(DeleteBehavior.Restrict);
+                 .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

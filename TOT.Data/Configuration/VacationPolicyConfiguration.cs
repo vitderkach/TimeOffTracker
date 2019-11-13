@@ -14,7 +14,7 @@ namespace TOT.Data.Configuration {
 
             entity.HasOne(v => v.UserInformation)
                 .WithOne(vi => vi.VacationPolicyInfo)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

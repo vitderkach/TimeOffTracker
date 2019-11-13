@@ -27,7 +27,7 @@ namespace TOT.Data.Configuration
 
             entity.Property(c => c.CreationDate)
                .HasColumnType("datetime")
-               .HasDefaultValueSql("GETDATE()");
+               .HasDefaultValueSql("GETUTCDATE()");
             entity.HasIndex(cr => cr.CreationDate);
 
             var converter = new EnumToStringConverter<TimeOffType>();
@@ -36,12 +36,13 @@ namespace TOT.Data.Configuration
                 .HasConversion(converter)
                 .IsRequired();
             entity.HasIndex(t => t.VacationType);
-
+           
             entity.HasOne(u => u.User)
                 .WithMany(r => r.VacationRequests)
                 .HasForeignKey(fk => fk.UserId)
                 .HasConstraintName("FK_AppUser_Requests")
                 .OnDelete(DeleteBehavior.Restrict);
+            /*Если поменять DeleteBehavior выдает ошибку */
         }
     }
 }
