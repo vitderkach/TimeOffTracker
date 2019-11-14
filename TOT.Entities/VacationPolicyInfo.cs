@@ -8,13 +8,13 @@ namespace TOT.Entities {
     public class VacationPolicyInfo {
         public VacationPolicyInfo()
         {
-            TimeOffTypes = new Collection<VacationType>();
+            /*TimeOffTypes = new Collection<VacationType>();
 
             var values = Enum.GetValues(typeof(TimeOffType)).Cast<TimeOffType>();
             for(int i = 0; i < values.Count(); i++)
             {
                 TimeOffTypes.Add(new VacationType() { TimeOffType = values.ElementAt(i), WastedDays = 0 });
-            }
+            }*/
         }
         public int Id { get; set; }
         

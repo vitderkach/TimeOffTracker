@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<TOT.Dto.VacationRequestListDto>
 
 @{
-    ViewData["Title"] = "List";
+    
 }
 
 <table class="table">
@@ -42,17 +42,15 @@
                 @Html.DisplayFor(modelItem => item.Notes)
             </td>
             <td>
-                <div>
-                    @{
-                        if (item.Approval == null)
-                        { <div> ? </div> }
-                        if (item.Approval == false)
-                        { <div> x </div> }
-                        if (item.Approval == true)
-                        { <div> + </div> }
-                    }
-                </div>
-            </td>
+                @{
+                    if (item.Approval == null)
+                    { <div> In Process </div> }
+                    if (item.Approval == false)
+                    { <div> Declined </div> }
+                    if (item.Approval == true)
+                    { <div> Approved </div> }
+                }
+        </td>
             <td>
                 <div class="row justify-content-end">
                     @{
@@ -63,7 +61,7 @@
                         }
                         else
                         { 
-                            <p>Delete</p>
+                            <button class = "btn btn-outline-dark form-control col-5 m-1">Delete</button>
                         }
                     }
                 </div>

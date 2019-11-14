@@ -29,23 +29,19 @@ namespace TOT.Business.Services
         public void ApplyForVacation(VacationRequestDto vacationRequestDto)
         {
             var vacation = _mapper.Map<VacationRequestDto, VacationRequest>(vacationRequestDto);
-
-            vacation.ManagersResponses.Add(new ManagerResponse()
-            {
-                ManagerId = vacationRequestDto.SelectedManager[0],
-                isRequested = true
-            });
+            
             //todo send to e-mail that vacation is registred
-
-            for (int i=1; i < vacationRequestDto.SelectedManager.Count; i++)
+            for (int i=0; i < vacationRequestDto.SelectedManager.Count; i++)
             {
+
                 vacation.ManagersResponses.Add(new ManagerResponse()
                 {
-                    ManagerId = vacationRequestDto.SelectedManager[i]
+                    ManagerId = vacationRequestDto.SelectedManager[i],
+                    isRequested = i == 0 ? true : false,
                 });
             }
-            
             _uow.VacationRequestRepository.Create(vacation);
+            _uow.Save();
         }
         public void DeleteVacationByUserId(int id)
         {
@@ -67,6 +63,7 @@ namespace TOT.Business.Services
                 .Where(v => v.UserId == currentUserId);
 
             var vacationsDto = _mapper.Map<IEnumerable<VacationRequest>, IEnumerable<VacationRequestListDto>>(vacations);
+            
             return vacationsDto;
         }
         private async Task<ApplicationUser> getCurrentUser()

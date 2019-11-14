@@ -13,15 +13,21 @@ namespace TOT.Data.UnitOfWork
         readonly IRepository<UserInformation> _userInformationRepostitory;
         readonly IRepository<VacationRequest> _vacationRequestRepository;
         readonly IRepository<ManagerResponse> _managerResponseRepository;
+        readonly IRepository<VacationPolicyInfo> _vacationPolicyRepository;
+        readonly IRepository<VacationType> _vacationTypeRepository;
 
         public UnitOfWork(ApplicationDbContext context,
             IRepository<UserInformation> userInformationRepository,
             IRepository<VacationRequest> vacationRequestRepository,
-            IRepository<ManagerResponse> managerResponseRepository)
+            IRepository<ManagerResponse> managerResponseRepository,
+            IRepository<VacationPolicyInfo> vacationPolicyRepository,
+            IRepository<VacationType> vacationTypeRepository)
         {
             _userInformationRepostitory = userInformationRepository;
             _vacationRequestRepository = vacationRequestRepository;
             _managerResponseRepository = managerResponseRepository;
+            _vacationPolicyRepository = vacationPolicyRepository;
+            _vacationTypeRepository = vacationTypeRepository;
             db = context;
             context.SaveChanges();
         }
@@ -52,6 +58,15 @@ namespace TOT.Data.UnitOfWork
         public IRepository<ManagerResponse> ManagerResponseRepository
         {
             get { return _managerResponseRepository; }
+        }
+
+        public IRepository<VacationPolicyInfo> VacationPolicyRepository
+        {
+            get { return _vacationPolicyRepository; }
+        }
+        public IRepository<VacationType> VacationTypeRepository
+        {
+            get { return _vacationTypeRepository; }
         }
 
         protected virtual void Dispose(bool disposing)

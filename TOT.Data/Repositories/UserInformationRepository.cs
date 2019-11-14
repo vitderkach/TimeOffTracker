@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TOT.Entities;
@@ -53,7 +54,9 @@ namespace TOT.Data.Repositories
 
         public IEnumerable<UserInformation> GetAll()
         {
-            return context.UserInformations.ToList();
+            return context.UserInformations
+                .Include(u => u.VacationPolicyInfo)
+                .ToList();
         }
 
         public void Update(UserInformation item)
