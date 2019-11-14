@@ -56,6 +56,8 @@ namespace TOT.Data.Repositories
         {
             return context.UserInformations
                 .Include(u => u.VacationPolicyInfo)
+                    .ThenInclude(u => u.TimeOffTypes)
+                .Include(u => u.User)
                 .ToList();
         }
 

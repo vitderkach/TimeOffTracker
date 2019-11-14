@@ -36,7 +36,7 @@ namespace TOT.Web.Controllers
                 {
                     VacationRequestId = rq.VacationRequestId,
                     Employee = rq.User.UserInformation.FullName,
-                    VacationType = rq.VacationType,
+                   // VacationType = rq.VacationType,
                     StartDate = rq.StartDate,
                     EndDate = rq.EndDate
                 });
@@ -56,7 +56,7 @@ namespace TOT.Web.Controllers
                 {
                     VacationRequestId = rq.VacationRequestId,
                     Employee = rq.User.UserInformation.FullName,
-                    VacationType = rq.VacationType,
+                    //VacationType = rq.VacationType,
                     StartDate = rq.StartDate,
                     EndDate = rq.EndDate
                 });
