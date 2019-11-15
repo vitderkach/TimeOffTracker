@@ -17,7 +17,7 @@ namespace TOT.Business.Services
         private IUnitOfWork _uow;
         private readonly IHttpContextAccessor _httpContext;
 
-        public ManagerService(IMapper mapper, IUnitOfWork uow, 
+        public ManagerService(IMapper mapper, IUnitOfWork uow,
             IHttpContextAccessor httpContext,
             UserManager<ApplicationUser> userManager)
         {
@@ -33,35 +33,52 @@ namespace TOT.Business.Services
             var user = await _userManager.GetUserAsync(_httpContext.HttpContext.User);
             return user;
         }
-
-        public IEnumerable<VacationRequestListDto> GetAllNeedToConsiderByCurrentManager()
+        private bool CheckManagerResponsesForVacation(int vacationId)
         {
-            var Id = GetCurrentUser().Result.Id;
+            var managerResponses = _uow.ManagerResponseRepository.GetAll()
+                .Where(r => r.VacationRequestId == vacationId && r.Approval == null);
 
-            var vacationRequests = _uow.VacationRequestRepository.GetAll()
-                .Where(v => v.ManagersResponses
-                .Any(x => x.ManagerId == Id && x.isRequested == true))
-                .OrderBy(v => v.StartDate);
+            if (managerResponses.Any())
+                return true;
 
-            var vacationsRequestListDto = _mapper.Map<IEnumerable<VacationRequest>,
-                IEnumerable<VacationRequestListDto>>(vacationRequests);
-
-            return vacationsRequestListDto;
+            return false;
         }
 
-        public IEnumerable<VacationRequestListDto> GetProcessedRequestsByCurrentManager()
+        public IEnumerable<ManagerResponseDto> GetAllCurrentManagerResponses()
         {
             var Id = GetCurrentUser().Result.Id;
 
-            var vacationRequests = _uow.VacationRequestRepository.GetAll()
-                .Where(v => v.ManagersResponses
-                .Any(x => x.ManagerId == Id && x.Approval != null))
-                .OrderByDescending(v => v.EndDate);
+            var managerResponses = _uow.ManagerResponseRepository.GetAll()
+                .Where(vr => vr.ManagerId == Id && vr.isRequested == true)
+                .OrderBy(v => v.VacationRequest.StartDate);
 
-            var vacationsRequestListDto = _mapper.Map<IEnumerable<VacationRequest>,
-                IEnumerable<VacationRequestListDto>>(vacationRequests);
+            var managerResponsesDto = _mapper.Map<IEnumerable<ManagerResponse>,
+                IEnumerable<ManagerResponseDto>>(managerResponses);
 
-            return vacationsRequestListDto;
+            return managerResponsesDto;
+        }
+
+        public IEnumerable<ManagerResponseListDto> GetCurrentManagerRequests(
+            IEnumerable<ManagerResponseDto> managerResponsesDto)
+        {
+            var requestsToManager = _mapper.Map<IEnumerable<ManagerResponseDto>,
+                IEnumerable<ManagerResponseListDto>>(managerResponsesDto);
+
+            return requestsToManager;
+        }
+
+        public IEnumerable<ManagerResponseDto> GetProcessedRequestsByCurrentManager()
+        {
+            var Id = GetCurrentUser().Result.Id;
+
+            var managerResponses = _uow.ManagerResponseRepository.GetAll()
+                .Where(vr => vr.ManagerId == Id && vr.Approval != null)
+                .OrderByDescending(r => r.DateResponse);
+
+            var managerResponsesDto = _mapper.Map<IEnumerable<ManagerResponse>,
+                IEnumerable<ManagerResponseDto>>(managerResponses);
+
+            return managerResponsesDto;
         }
 
         public ManagerResponseDto GetResponseByVacationId(int vacationRequestId)
@@ -83,6 +100,15 @@ namespace TOT.Business.Services
             return managerResponseDto;
         }
 
+        public VacationRequestApprovalDto VacationApproval(
+            ManagerResponseDto managerResponse)
+        {
+            var approval = _mapper.Map<ManagerResponseDto,
+                VacationRequestApprovalDto>(managerResponse);
+
+            return approval;
+        }
+            
         public void ApproveUserRequest(int managerResponseId,
             string managerNotes, bool approval)
         {
@@ -90,6 +116,16 @@ namespace TOT.Business.Services
             managerResponse.Approval = approval;
             managerResponse.Notes = managerNotes;
             managerResponse.isRequested = false;
+            managerResponse.DateResponse = System.DateTime.UtcNow;
+
+            _uow.ManagerResponseRepository.Update(managerResponse);
+                                                            // && approval != false 
+            if (!CheckManagerResponsesForVacation(managerResponse.VacationRequestId))
+            {
+                var vacation = _uow.VacationRequestRepository.Get(managerResponse.VacationRequestId);
+                vacation.Approval = true;
+                _uow.VacationRequestRepository.Update(vacation);
+            }
 
             //Это для если 1 менеджер, работает. Теперь надо пройти по всем managerResponse которые привязаны к vacation id
             //и проверить, если менеджер остался 1, которому надо ответить - выполнять код ниже.
@@ -97,7 +133,6 @@ namespace TOT.Business.Services
             //var vacation = _uow.VacationRequestRepository.Get(managerResponse.VacationRequestId);
             //vacation.Approval = true;
             //_uow.VacationRequestRepository.Update(vacation);
-            _uow.ManagerResponseRepository.Update(managerResponse);
         }
     }
 }

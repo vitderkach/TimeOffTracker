@@ -1,17 +1,15 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using TOT.Entities;
 
-namespace TOT.Web.Models
+namespace TOT.Dto
 {
-    public class RequestsToManagerViewModel
+    public class ManagerResponseListDto
     {
         public int VacationRequestId { get; set; }
-
         public string Employee { get; set; }
 
         [Display(Name = "Time off reason")]
-        public TimeOffType VacationType { get; set; }
+        public string VacationType { get; set; }
 
         [Display(Name = "From")]
         [DataType(DataType.Date)]
@@ -20,5 +18,8 @@ namespace TOT.Web.Models
         [Display(Name = "To")]
         [DataType(DataType.Date)]
         public DateTime EndDate { get; set; }
+
+        [Display(Name = "Status")]
+        public bool? Approval { get; set; }
     }
 }

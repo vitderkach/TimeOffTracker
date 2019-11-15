@@ -23,6 +23,22 @@ namespace TOT.Utility.AutoMapper
             CreateMap<ManagerResponse, ManagerResponseDto>();
             CreateMap<VacationRequestListDto, VacationRequest>();
 
+            CreateMap<ManagerResponseDto, ManagerResponseListDto>()
+                .ForMember(dest => dest.VacationRequestId, opt => opt.MapFrom(src => src.VacationRequest.VacationRequestId))
+                .ForMember(dest => dest.Employee, opt => opt.MapFrom(src => src.VacationRequest.User.UserInformation.FullName))
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.VacationRequest.StartDate))
+                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.VacationRequest.EndDate))
+                .ForMember(dest => dest.VacationType, opt => opt.MapFrom(src => src.VacationRequest.VacationType.GetDescription()))
+                .ForMember(dest => dest.Approval, opt => opt.MapFrom(src => src.Approval));
+
+            CreateMap<ManagerResponseDto, VacationRequestApprovalDto>()
+                .ForMember(dest => dest.VacationRequestId, opt => opt.MapFrom(src => src.VacationRequest.VacationRequestId))
+                .ForMember(dest => dest.Employee, opt => opt.MapFrom(src => src.VacationRequest.User.UserInformation.FullName))
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.VacationRequest.StartDate))
+                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.VacationRequest.EndDate))
+                .ForMember(dest => dest.VacationType, opt => opt.MapFrom(src => src.VacationRequest.VacationType.GetDescription()))
+                .ForMember(dest => dest.EmployeeNotes, opt => opt.MapFrom(src => src.VacationRequest.Notes))
+                .ForMember(dest => dest.ManagerResponseId, opt => opt.MapFrom(src => src.Id));
         }
     }
     public static class ExtensionMethods
