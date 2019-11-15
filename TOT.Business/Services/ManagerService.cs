@@ -33,6 +33,16 @@ namespace TOT.Business.Services
             var user = await _userManager.GetUserAsync(_httpContext.HttpContext.User);
             return user;
         }
+        private bool CheckManagerResponsesForVacation(int vacationId)
+        {
+            var managerResponses = _uow.ManagerResponseRepository.GetAll()
+                .Where(r => r.VacationRequestId == vacationId && r.Approval == null);
+
+            if (managerResponses.Any())
+                return true;
+
+            return false;
+        }
 
         /*
         public IEnumerable<VacationRequestListDto> GetAllNeedToConsiderByCurrentManager()
@@ -125,7 +135,16 @@ namespace TOT.Business.Services
             managerResponse.Approval = approval;
             managerResponse.Notes = managerNotes;
             managerResponse.isRequested = false;
-            managerResponse.DateResponse = System.DateTime.UtcNow; 
+            managerResponse.DateResponse = System.DateTime.UtcNow;
+
+            _uow.ManagerResponseRepository.Update(managerResponse);
+                                                            // && approval != false 
+            if (!CheckManagerResponsesForVacation(managerResponse.VacationRequestId))
+            {
+                var vacation = _uow.VacationRequestRepository.Get(managerResponse.VacationRequestId);
+                vacation.Approval = true;
+                _uow.VacationRequestRepository.Update(vacation);
+            }
 
             //Это для если 1 менеджер, работает. Теперь надо пройти по всем managerResponse которые привязаны к vacation id
             //и проверить, если менеджер остался 1, которому надо ответить - выполнять код ниже.
@@ -133,7 +152,6 @@ namespace TOT.Business.Services
             //var vacation = _uow.VacationRequestRepository.Get(managerResponse.VacationRequestId);
             //vacation.Approval = true;
             //_uow.VacationRequestRepository.Update(vacation);
-            _uow.ManagerResponseRepository.Update(managerResponse);
         }
     }
 }
