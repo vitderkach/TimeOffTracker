@@ -23,6 +23,8 @@ namespace TOT.Utility.AutoMapper
             CreateMap<ManagerResponse, ManagerResponseDto>();
             CreateMap<VacationRequestListDto, VacationRequest>();
 
+            CreateMap<ManagerResponseListDto, ManagerResponse>();
+
         }
     }
     public static class ExtensionMethods

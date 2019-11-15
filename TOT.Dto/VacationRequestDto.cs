@@ -20,5 +20,6 @@ namespace TOT.Dto
         public ICollection<ManagerResponseDto> ManagersResponses { get; set; }
 
         public int UserId { get; set; }
+        public ApplicationUserDto User { get; set; }
     }
 }
