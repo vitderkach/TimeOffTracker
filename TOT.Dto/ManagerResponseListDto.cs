@@ -18,5 +18,8 @@ namespace TOT.Dto
         [Display(Name = "To")]
         [DataType(DataType.Date)]
         public DateTime EndDate { get; set; }
+
+        [Display(Name = "Status")]
+        public bool? Approval { get; set; }
     }
 }

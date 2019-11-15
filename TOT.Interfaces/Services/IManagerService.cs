@@ -5,13 +5,12 @@ namespace TOT.Interfaces.Services
 {
     public interface IManagerService
     {
-       // IEnumerable<VacationRequestListDto> GetAllNeedToConsiderByCurrentManager();
-        IEnumerable<VacationRequestListDto> GetProcessedRequestsByCurrentManager();
+        IEnumerable<ManagerResponseDto> GetProcessedRequestsByCurrentManager();
         ManagerResponseDto GetResponseByVacationId(int vacationRequestId);
         void ApproveUserRequest(int managerResponseId, string managerNotes, bool approval);
 
         IEnumerable<ManagerResponseDto> GetAllCurrentManagerResponses();
-        IEnumerable<ManagerResponseListDto> GetRequestsToConsiderByCurrentManager(
+        IEnumerable<ManagerResponseListDto> GetCurrentManagerRequests(
             IEnumerable<ManagerResponseDto> managerResponsesDto);
         VacationRequestApprovalDto VacationApproval(ManagerResponseDto managerResponse);
     }

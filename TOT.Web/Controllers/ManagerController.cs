@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TOT.Dto;
 using TOT.Interfaces.Services;
-using TOT.Web.Models;
 
 namespace TOT.Web.Controllers
 {
@@ -31,28 +30,19 @@ namespace TOT.Web.Controllers
                 _managerService.GetAllCurrentManagerResponses();
 
             var resultViewModel = _managerService
-                .GetRequestsToConsiderByCurrentManager(requestsByCurrentManager);
+                .GetCurrentManagerRequests(requestsByCurrentManager);
 
             return View(resultViewModel);
         }
 
+        // вывод обработанных запросов менеджера
         public IActionResult Processed()
         {
-            var resultViewModel = new List<RequestsToManagerViewModel>();
             var processedRequestsByCurrentManager =
                 _managerService.GetProcessedRequestsByCurrentManager();
 
-            foreach (var rq in processedRequestsByCurrentManager)
-            {
-                resultViewModel.Add(new RequestsToManagerViewModel()
-                {
-                    VacationRequestId = rq.VacationRequestId,
-                    Employee = rq.User.UserInformation.FullName,
-                    VacationType = rq.VacationType,
-                    StartDate = rq.StartDate,
-                    EndDate = rq.EndDate
-                });
-            }
+            var resultViewModel = _managerService
+                .GetCurrentManagerRequests(processedRequestsByCurrentManager);
 
             return View(resultViewModel);
         }

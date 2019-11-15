@@ -44,23 +44,6 @@ namespace TOT.Business.Services
             return false;
         }
 
-        /*
-        public IEnumerable<VacationRequestListDto> GetAllNeedToConsiderByCurrentManager()
-        {
-            var Id = GetCurrentUser().Result.Id;
-
-            var vacationRequests = _uow.VacationRequestRepository.GetAll()
-                .Where(v => v.ManagersResponses
-                .Any(x => x.ManagerId == Id && x.isRequested == true))
-                .OrderBy(v => v.StartDate);
-
-            var vacationsRequestListDto = _mapper.Map<IEnumerable<VacationRequest>,
-                IEnumerable<VacationRequestListDto>>(vacationRequests);
-
-            return vacationsRequestListDto;
-        }
-        */
-
         public IEnumerable<ManagerResponseDto> GetAllCurrentManagerResponses()
         {
             var Id = GetCurrentUser().Result.Id;
@@ -75,7 +58,7 @@ namespace TOT.Business.Services
             return managerResponsesDto;
         }
 
-        public IEnumerable<ManagerResponseListDto> GetRequestsToConsiderByCurrentManager(
+        public IEnumerable<ManagerResponseListDto> GetCurrentManagerRequests(
             IEnumerable<ManagerResponseDto> managerResponsesDto)
         {
             var requestsToManager = _mapper.Map<IEnumerable<ManagerResponseDto>,
@@ -84,19 +67,18 @@ namespace TOT.Business.Services
             return requestsToManager;
         }
 
-        public IEnumerable<VacationRequestListDto> GetProcessedRequestsByCurrentManager()
+        public IEnumerable<ManagerResponseDto> GetProcessedRequestsByCurrentManager()
         {
             var Id = GetCurrentUser().Result.Id;
 
-            var vacationRequests = _uow.VacationRequestRepository.GetAll()
-                .Where(v => v.ManagersResponses
-                .Any(x => x.ManagerId == Id && x.Approval != null))
-                .OrderByDescending(v => v.EndDate);
+            var managerResponses = _uow.ManagerResponseRepository.GetAll()
+                .Where(vr => vr.ManagerId == Id && vr.Approval != null)
+                .OrderByDescending(r => r.DateResponse);
 
-            var vacationsRequestListDto = _mapper.Map<IEnumerable<VacationRequest>,
-                IEnumerable<VacationRequestListDto>>(vacationRequests);
+            var managerResponsesDto = _mapper.Map<IEnumerable<ManagerResponse>,
+                IEnumerable<ManagerResponseDto>>(managerResponses);
 
-            return vacationsRequestListDto;
+            return managerResponsesDto;
         }
 
         public ManagerResponseDto GetResponseByVacationId(int vacationRequestId)
@@ -127,7 +109,6 @@ namespace TOT.Business.Services
             return approval;
         }
             
-
         public void ApproveUserRequest(int managerResponseId,
             string managerNotes, bool approval)
         {
