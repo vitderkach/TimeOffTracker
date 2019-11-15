@@ -41,6 +41,7 @@ namespace TOT.Data.Repositories
                         .ThenInclude(user => user.UserInformation)
 
                 .Include(v => v.User)
+                    .ThenInclude(user => user.UserInformation)
                 .Where(v => v.VacationRequestId == id)
                 .FirstOrDefault();
 
