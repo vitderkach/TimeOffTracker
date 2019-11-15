@@ -43,7 +43,15 @@ namespace TOT.Business.Services
 
             return false;
         }
+        private ManagerResponse SelectNextManager(int vacationId)
+        {
+            var nextResponse = _uow.ManagerResponseRepository.GetAll()
+                .Where(r => r.VacationRequestId == vacationId && r.isRequested == false
+                    && r.Approval == null)
+                .FirstOrDefault();
 
+            return nextResponse;
+        }
         public IEnumerable<ManagerResponseDto> GetAllCurrentManagerResponses()
         {
             var Id = GetCurrentUser().Result.Id;
@@ -119,12 +127,34 @@ namespace TOT.Business.Services
             managerResponse.DateResponse = System.DateTime.UtcNow;
 
             _uow.ManagerResponseRepository.Update(managerResponse);
-                                                            // && approval != false 
+
             if (!CheckManagerResponsesForVacation(managerResponse.VacationRequestId))
             {
                 var vacation = _uow.VacationRequestRepository.Get(managerResponse.VacationRequestId);
-                vacation.Approval = true;
+                if (approval != false)
+                {
+                    vacation.Approval = true;
+                }
+                else
+                {
+                    vacation.Approval = false;
+                }
                 _uow.VacationRequestRepository.Update(vacation);
+            }
+            else
+            {
+                if (approval != false)
+                {
+                    var nextResponse = SelectNextManager(managerResponse.VacationRequestId);
+                    nextResponse.isRequested = true;
+                    _uow.ManagerResponseRepository.Update(nextResponse);
+                }
+                else
+                {
+                    var vacation = _uow.VacationRequestRepository.Get(managerResponse.VacationRequestId);
+                    vacation.Approval = false;
+                    _uow.VacationRequestRepository.Update(vacation);
+                }
             }
 
             //Это для если 1 менеджер, работает. Теперь надо пройти по всем managerResponse которые привязаны к vacation id
