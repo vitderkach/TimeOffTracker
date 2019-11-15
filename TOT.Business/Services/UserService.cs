@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,12 +16,20 @@ namespace TOT.Business.Services
     {
         private IUnitOfWork _uow;
         private IMapper _mapper;
+        private IHttpContextAccessor _httpContext;
         private UserManager<ApplicationUser> _userManager;
-        public UserService(IUnitOfWork uow, UserManager<ApplicationUser> userManager, IMapper mapper)
+        public UserService(IUnitOfWork uow, UserManager<ApplicationUser> userManager, IMapper mapper,
+            IHttpContextAccessor httpContext)
         {
             _uow = uow;
             _userManager = userManager;
             _mapper = mapper;
+            _httpContext = httpContext;
+        }
+        public async Task<ApplicationUser> GetCurrentUser()
+        {
+            var user = await _userManager.GetUserAsync(_httpContext.HttpContext.User);
+            return user;
         }
         public IEnumerable<ApplicationUserDto> GetAllByRole(string role)
         {

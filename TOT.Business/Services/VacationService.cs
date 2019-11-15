@@ -16,20 +16,25 @@ namespace TOT.Business.Services
         private IMapper _mapper;
         private IUnitOfWork _uow;
         private readonly IHttpContextAccessor _httpContext;
+        private readonly IVacationEmailSender _vacationEmailSender;
+        private readonly IUserService _userService;
 
         public VacationService(IMapper mapper, IUnitOfWork uow,
             UserManager<ApplicationUser> userManager,
-            IHttpContextAccessor httpContext)
+            IHttpContextAccessor httpContext,
+            IVacationEmailSender vacationEmailSender,
+            IUserService userService)
         {
             _mapper = mapper;
             _uow = uow;
             _userManager = userManager;
             _httpContext = httpContext;
+            _userService = userService;
+            _vacationEmailSender = vacationEmailSender;
         }
         public void ApplyForVacation(VacationRequestDto vacationRequestDto)
         {
-            Approve(vacationRequestDto);
-
+            //Approve(vacationRequestDto);
             var vacation = _mapper.Map<VacationRequestDto, VacationRequest>(vacationRequestDto);
             //todo send to e-mail that vacation is registred
             for (int i=0; i < vacationRequestDto.SelectedManager.Count; i++)
@@ -43,6 +48,17 @@ namespace TOT.Business.Services
             }
             _uow.VacationRequestRepository.Create(vacation);
             _uow.Save();
+
+            var user = _userService.GetCurrentUser().Result;
+            var userInfo = _uow.UserInformationRepository.GetAll().Where(u => u.User.Id == user.Id).FirstOrDefault();
+
+            EmailModel emailModel = new EmailModel()
+            {
+                To = vacation.ManagersResponses.ElementAt(0).Manager.Email,
+                FullName = $"{userInfo.LastName} {userInfo.FirstName}",
+                Body = vacation.Notes
+            };
+            _vacationEmailSender.ExecuteToManager(emailModel);
         }
         public void DeleteVacationByUserId(int id)
         {
