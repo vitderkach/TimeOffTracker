@@ -13,15 +13,21 @@ namespace TOT.Data.UnitOfWork
         readonly IRepository<UserInformation> _userInformationRepostitory;
         readonly IRepository<VacationRequest> _vacationRequestRepository;
         readonly IRepository<ManagerResponse> _managerResponseRepository;
+        readonly IRepository<VacationPolicyInfo> _vacationPolicyRepository;
+        readonly IRepository<VacationType> _vacationTypeRepository;
 
         public UnitOfWork(ApplicationDbContext context,
             IRepository<UserInformation> userInformationRepository,
             IRepository<VacationRequest> vacationRequestRepository,
-            IRepository<ManagerResponse> managerResponseRepository)
+            IRepository<ManagerResponse> managerResponseRepository,
+            IRepository<VacationPolicyInfo> vacationPolicyRepository,
+            IRepository<VacationType> vacationTypeRepository)
         {
             _userInformationRepostitory = userInformationRepository;
             _vacationRequestRepository = vacationRequestRepository;
             _managerResponseRepository = managerResponseRepository;
+            _vacationPolicyRepository = vacationPolicyRepository;
+            _vacationTypeRepository = vacationTypeRepository;
             db = context;
             context.SaveChanges();
         }
@@ -54,6 +60,15 @@ namespace TOT.Data.UnitOfWork
             get { return _managerResponseRepository; }
         }
 
+        public IRepository<VacationPolicyInfo> VacationPolicyRepository
+        {
+            get { return _vacationPolicyRepository; }
+        }
+        public IRepository<VacationType> VacationTypeRepository
+        {
+            get { return _vacationTypeRepository; }
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -79,6 +94,7 @@ namespace TOT.Data.UnitOfWork
 
         // This code added to correctly implement the disposable pattern.
         public void Dispose()
+        
         {
             // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
             Dispose(true);

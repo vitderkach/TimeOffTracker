@@ -33,9 +33,19 @@
                         <div class="card-body">
                             <h5 class="card-title">
                                 @Html.DisplayFor(model => response.Manager.UserInformation.FullName)
+                                <hr />
                             </h5>
                             <p class="card-text">
-                                @Html.DisplayFor(model => response.Notes)
+                                @{
+                                    if (response.Notes == null)
+                                    {
+                                        <div style="opacity:50%;">Empty</div>
+                                    }
+                                    else
+                                    {
+                                        @Html.DisplayFor(model => response.Notes)
+                                    }
+                                }
                             </p>
                         </div>
                     </div>

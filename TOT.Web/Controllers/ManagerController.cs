@@ -22,36 +22,49 @@ namespace TOT.Web.Controllers
             _vacationService = vacationService;
         }
 
-        // вывод всех активных запросов на имя менеджера
-        // todo - routing
         public IActionResult Index()
         {
+            var resultViewModel = new List<RequestsToManagerViewModel>();
             var requestsByCurrentManager =
-                _managerService.GetAllCurrentManagerResponses();
+                _managerService.GetAllNeedToConsiderByCurrentManager();
 
-            var resultViewModel = _managerService
-                .GetCurrentManagerRequests(requestsByCurrentManager);
-
+            foreach (var rq in requestsByCurrentManager)
+            {
+                resultViewModel.Add(new RequestsToManagerViewModel()
+                {
+                    VacationRequestId = rq.VacationRequestId,
+                    Employee = rq.User.UserInformation.FullName,
+                   // VacationType = rq.VacationType,
+                    StartDate = rq.StartDate,
+                    EndDate = rq.EndDate
+                });
+            }
             return View(resultViewModel);
         }
 
-        // вывод обработанных запросов менеджера
         public IActionResult Processed()
         {
             var processedRequestsByCurrentManager =
                 _managerService.GetProcessedRequestsByCurrentManager();
 
-            var resultViewModel = _managerService
-                .GetCurrentManagerRequests(processedRequestsByCurrentManager);
+            foreach (var rq in processedRequestsByCurrentManager)
+            {
+                resultViewModel.Add(new RequestsToManagerViewModel()
+                {
+                    VacationRequestId = rq.VacationRequestId,
+                    Employee = rq.User.UserInformation.FullName,
+                    //VacationType = rq.VacationType,
+                    StartDate = rq.StartDate,
+                    EndDate = rq.EndDate
+                });
+            }
 
             return View(resultViewModel);
         }
 
-        // вывод страницы для Approve/Reject выбранного запроса
         public IActionResult Approval(int id)
         {
             var vacationRequest = _vacationService.GetVacationById(id);
-
             var managerResponse = _managerService
                 .GetResponseByVacationId(vacationRequest.VacationRequestId);
             var resultViewModel = _managerService.VacationApproval(managerResponse);

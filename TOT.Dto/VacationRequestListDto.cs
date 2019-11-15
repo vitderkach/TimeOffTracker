@@ -12,7 +12,7 @@ namespace TOT.Dto {
         public DateTime StartDate { get; set; }
         [DataType(DataType.Date)]
         public DateTime EndDate { get; set; }
-        public TimeOffType VacationType { get; set; }
+        public string VacationType { get; set; }
         public bool? Approval { get; set; }
 
         public ApplicationUserDto User { get; set; }
