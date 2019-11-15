@@ -13,5 +13,6 @@ namespace TOT.Interfaces.Services
         IEnumerable<ManagerResponseDto> GetAllCurrentManagerResponses();
         IEnumerable<ManagerResponseListDto> GetRequestsToConsiderByCurrentManager(
             IEnumerable<ManagerResponseDto> managerResponsesDto);
+        VacationRequestApprovalDto VacationApproval(ManagerResponseDto managerResponse);
     }
 }

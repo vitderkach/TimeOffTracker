@@ -17,7 +17,7 @@ namespace TOT.Business.Services
         private IUnitOfWork _uow;
         private readonly IHttpContextAccessor _httpContext;
 
-        public ManagerService(IMapper mapper, IUnitOfWork uow, 
+        public ManagerService(IMapper mapper, IUnitOfWork uow,
             IHttpContextAccessor httpContext,
             UserManager<ApplicationUser> userManager)
         {
@@ -108,6 +108,16 @@ namespace TOT.Business.Services
             return managerResponseDto;
         }
 
+        public VacationRequestApprovalDto VacationApproval(
+            ManagerResponseDto managerResponse)
+        {
+            var approval = _mapper.Map<ManagerResponseDto,
+                VacationRequestApprovalDto>(managerResponse);
+
+            return approval;
+        }
+            
+
         public void ApproveUserRequest(int managerResponseId,
             string managerNotes, bool approval)
         {
@@ -115,6 +125,7 @@ namespace TOT.Business.Services
             managerResponse.Approval = approval;
             managerResponse.Notes = managerNotes;
             managerResponse.isRequested = false;
+            managerResponse.DateResponse = System.DateTime.UtcNow; 
 
             //Это для если 1 менеджер, работает. Теперь надо пройти по всем managerResponse которые привязаны к vacation id
             //и проверить, если менеджер остался 1, которому надо ответить - выполнять код ниже.

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using TOT.Entities;
 
 namespace TOT.Dto
 {
@@ -10,7 +9,7 @@ namespace TOT.Dto
         public string Employee { get; set; }
 
         [Display(Name = "Time off reason")]
-        public TimeOffType VacationType { get; set; }
+        public string VacationType { get; set; }
 
         [Display(Name = "From")]
         [DataType(DataType.Date)]

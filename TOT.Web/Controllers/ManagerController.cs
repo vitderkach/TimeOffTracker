@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TOT.Dto;
 using TOT.Interfaces.Services;
 using TOT.Web.Models;
 
@@ -14,16 +15,16 @@ namespace TOT.Web.Controllers
     {
         private readonly IManagerService _managerService;
         private readonly IVacationService _vacationService;
-        private readonly IUserInfoService _userInfoService;
 
         public ManagerController(IManagerService managerService,
-            IVacationService vacationService, IUserInfoService userInfoService)
+            IVacationService vacationService)
         {
             _managerService = managerService;
             _vacationService = vacationService;
-            _userInfoService = userInfoService;
         }
 
+        // вывод всех активных запросов на имя менеджера
+        // todo - routing
         public IActionResult Index()
         {
             var requestsByCurrentManager =
@@ -56,30 +57,21 @@ namespace TOT.Web.Controllers
             return View(resultViewModel);
         }
 
+        // вывод страницы для Approve/Reject выбранного запроса
         public IActionResult Approval(int id)
         {
             var vacationRequest = _vacationService.GetVacationById(id);
+
             var managerResponse = _managerService
                 .GetResponseByVacationId(vacationRequest.VacationRequestId);
-            var userInfo = _userInfoService.GetUserInfo(vacationRequest.UserId);
-
-            var resultViewModel = new RequestApprovalViewModel()
-            {
-                VacationRequestId = vacationRequest.VacationRequestId,
-                Employee = userInfo.FullName,
-                VacationType = vacationRequest.VacationType,
-                StartDate = vacationRequest.StartDate,
-                EndDate = vacationRequest.EndDate,
-                EmployeeNotes = vacationRequest.Notes,
-                ManagerResponseId = managerResponse.Id
-            };
+            var resultViewModel = _managerService.VacationApproval(managerResponse);
 
             return View(resultViewModel);
         }
 
         [HttpPost]
         public IActionResult Approval(string submit,
-            RequestApprovalViewModel response)
+            VacationRequestApprovalDto response)
         {
             if (submit == "Approve") {
                 response.isApproval = true;
