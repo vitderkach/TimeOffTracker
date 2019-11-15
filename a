@@ -1,0 +1,453 @@
+[33mcommit b3e9e36ac077a7fffbff0f0c5ecaad401fa32b6d[m[33m ([m[1;36mHEAD -> [m[1;32mdevelop[m[33m)[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Fri Nov 15 21:58:38 2019 +0200
+
+    reverted
+
+[33mcommit 6118a417f4c46c1b986ad6c008ab0f21edbe35cf[m
+Merge: 97b7417 5264d3c
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Fri Nov 15 20:17:15 2019 +0200
+
+    Merge pull request #62 from ASbeletsky/redirect
+    
+    Redirect request to next manager
+
+[33mcommit 5264d3c5f91b0eec31617c05504626ae48a1e6f9[m[33m ([m[1;31morigin/redirect[m[33m)[m
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Fri Nov 15 20:08:35 2019 +0200
+
+    Переброс заявки следующему менеджеру
+
+[33mcommit 97b7417fa9120261ac3386f52b05f6d5b8c63469[m
+Merge: a376fbe 67d8f3b
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Fri Nov 15 17:58:20 2019 +0200
+
+    Merge pull request #60 from ASbeletsky/dto_fix
+    
+    Rework ManagerController
+
+[33mcommit 67d8f3b227146e09a7b51d2acfcb4cd09b6d29e0[m[33m ([m[1;31morigin/dto_fix[m[33m)[m
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Fri Nov 15 17:39:13 2019 +0200
+
+    Вывод обработанных запросов менеджера через Dto
+
+[33mcommit 84a90481bdaaacfdd374910857d9f62ebb7b08cd[m
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Fri Nov 15 17:06:14 2019 +0200
+
+    Approve заявки после рассмотрения последним менеджером
+
+[33mcommit 32480c1d6d6c91117b90d5a5b5aa1bf6cfc1c445[m
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Fri Nov 15 16:45:19 2019 +0200
+
+    Вывод страницы для Approve/Reject выбранного запроса
+    через Dto
+
+[33mcommit dad24d2e96e53f1eaf0439132523c8510bcf71d8[m
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Fri Nov 15 15:52:29 2019 +0200
+
+    Вывод запросов на имя менеджера через ManagerResponseListDto
+
+[33mcommit f2f81de7d07cd2cefb80d17034b0180a24cf2d0e[m
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Fri Nov 15 15:04:39 2019 +0200
+
+    remove _managerService.GetAllNeedToConsiderByCurrentManager()
+
+[33mcommit a376fbe48fb0ab1addc5907310948e8edf080599[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Thu Nov 14 00:51:03 2019 +0200
+
+    added display approvals for vacation list, changed vacationDelete, added logic to approve for managers
+
+[33mcommit 52684775c4c6ec533b1427c0c10c94e65a822bb4[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Wed Nov 13 17:05:36 2019 +0200
+
+    set ondelete restrict ForManagerResponse.VacationRequest
+
+[33mcommit 6a3800c61be0f6df378a79711736b5fa686f75ab[m[33m ([m[1;32mfixDeleteUser[m[33m)[m
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Wed Nov 13 12:07:39 2019 +0200
+
+    Исправлено удаление заявки и удаление пользователя
+
+[33mcommit 9662d0a6a5c773c233b3ad4da473e3856e40a65f[m
+Merge: 4d98058 9db9e11
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Mon Nov 11 11:28:08 2019 +0200
+
+    Merge pull request #50 from ASbeletsky/approveRequest
+    
+    Approve request by manager
+
+[33mcommit 9db9e112695f01e3b543f51d6144e2c14b09c8b1[m[33m ([m[1;31morigin/approveRequest[m[33m)[m
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Mon Nov 11 11:19:54 2019 +0200
+
+    Вывод прошлых запросов менеджера
+
+[33mcommit 4d98058879256a07bbf571ec8e2c6484657490e2[m[33m ([m[1;31morigin/fixManagersList[m[33m, [m[1;32mfixManagersList[m[33m)[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Mon Nov 11 02:30:12 2019 +0200
+
+    fixed styles
+
+[33mcommit f968243baf2c018a9cf853c31969a448ddedde20[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Mon Nov 11 01:43:28 2019 +0200
+
+    fixed
+
+[33mcommit fd9b1b7946992ad1e596d7f1e1577bf42cc53aef[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Sun Nov 10 23:44:44 2019 +0200
+
+    save
+
+[33mcommit 239ee14461ae601988128aa88186cc128044ab87[m
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Sun Nov 10 22:53:02 2019 +0200
+
+    Вывод списка обработанных заявок менеджера
+
+[33mcommit cadd1dc1a57c370eca7f0fb64209d5c58c8e6bab[m[33m ([m[1;32mapproveRequest[m[33m)[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Sun Nov 10 22:11:48 2019 +0200
+
+    fix
+
+[33mcommit 5c9c23a81380211ba789442be50b76f8795cb939[m
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Sun Nov 10 20:26:24 2019 +0200
+
+    add comment
+
+[33mcommit 32fdeceef331c797ca56176dcf46bd48245fbff6[m
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Sun Nov 10 20:01:21 2019 +0200
+
+    Проблема с передачей Id в public IActionResult Approval(int requestId)
+
+[33mcommit 941a71834a94244fd40411f7cda3dd6985fc4fd2[m
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Sun Nov 10 19:42:29 2019 +0200
+
+    Добавлено подтверждение заявок менеджером
+
+[33mcommit d3c573bdf34058186d199e4ee22f0213c883dbc7[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Sun Nov 10 18:55:21 2019 +0200
+
+    save
+
+[33mcommit c9690bce5e335ab4be1411283b9c8a22492a7ed1[m
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Sun Nov 10 18:13:33 2019 +0200
+
+    ManagerController. Вывод списка заявок на имя менеджера
+
+[33mcommit b076e7436de2304db3fa202ffc3e50f23e22dad5[m
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Sun Nov 10 17:50:01 2019 +0200
+
+    Добавлен ManagerService
+
+[33mcommit ce70c48206e4a949fb4d866b060bbcff0b1f1eba[m
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Sun Nov 10 17:41:41 2019 +0200
+
+    Добавлен ManagerResponseRepository
+
+[33mcommit 9fdc1b17f158fa05f47e9f94617764af2ebd8412[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Sun Nov 10 02:03:01 2019 +0200
+
+    created project for testing, downloaded packaged xUnit
+
+[33mcommit ced4f8ef34901ce01a57661cd7139004890b6e43[m[33m ([m[1;31morigin/HomeIndexFixNavbar[m[33m, [m[1;32mHomeIndexFixNavbar[m[33m)[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Sun Nov 10 00:27:21 2019 +0200
+
+    fixed adding to managerslist
+
+[33mcommit d7c512418f722e4866b78cbc6c1e2cee420441d0[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Sat Nov 9 22:27:06 2019 +0200
+
+    created navbar
+
+[33mcommit a2c92c7783615f06604b7192fb3d7855a5fb7f32[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Sat Nov 9 18:31:27 2019 +0200
+
+    need to fix click on register
+
+[33mcommit f291125eb87556a1f6477ab48d88cabcea211423[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Sat Nov 9 17:23:54 2019 +0200
+
+    configured redirect to login when user does't have permission
+
+[33mcommit 8ffd474ef61b50ceb8a93479c81afc47238852b3[m[33m ([m[1;31morigin/iss-43-add-fullnames[m[33m, [m[1;32miss-43-add-fullnames[m[33m)[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Sat Nov 9 16:04:19 2019 +0200
+
+    fix userinformation fullname, change manually mapping to custom
+
+[33mcommit 3e2da57e4b743e3dbd6800123dd1eb49c81cae4c[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Sat Nov 9 15:25:41 2019 +0200
+
+    added delete but need to fix relations error
+
+[33mcommit d055676d6a17615799c6bec737cd5f0b15329239[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Thu Nov 7 23:43:14 2019 +0200
+
+    after apply for vacation in the first manager response isRequested = true
+
+[33mcommit f06d4758831f47b1183d6552fbda55684383b7e1[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Thu Nov 7 21:54:25 2019 +0200
+
+    added vacationPolicy with configurations, configured default vacationTypes, but need to move to serviceLayer
+
+[33mcommit d147918e2504cf723109fc3fa214b1981baebd61[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Wed Nov 6 10:21:15 2019 +0200
+
+    apply for vacation is fixed, added basic page for vacation/details
+
+[33mcommit 3fd65240d7b451e01d11d3a5634f900a3f528578[m
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Tue Nov 5 23:18:47 2019 +0200
+
+    Добавлен Microsoft.AspNetCore.Identity.UI в проект TOT.Utility
+
+[33mcommit 3030f2151013d6c83243d8b0aa92fbea25af2289[m
+Merge: 6969aa8 8dc2592
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Tue Nov 5 22:50:39 2019 +0200
+
+    push to origin
+
+[33mcommit 6969aa8c3a53296caa7bec41caa7e779845d8ae5[m
+Merge: 768ba94 34aa7f8
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Tue Nov 5 22:47:50 2019 +0200
+
+    Merge branch 'iss-25-apply-for-vacation' into develop
+
+[33mcommit 34aa7f8a33f0cea814f806be47e396e826efe88b[m[33m ([m[1;31morigin/iss-25-apply-for-vacation[m[33m, [m[1;32miss-25-apply-for-vacation[m[33m)[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Tue Nov 5 22:47:14 2019 +0200
+
+    added list of user requests
+
+[33mcommit 8dc259291960c1821087fb8b358763f17536595e[m
+Merge: 768ba94 e981585
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Tue Nov 5 00:35:09 2019 +0200
+
+    Merge pull request #45 from ASbeletsky/user_account
+    
+    #8 Добавлен функционал учетной записи
+
+[33mcommit 768ba94b450617e2640ea7bf36a8b1f89976e43e[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Sun Nov 3 22:13:05 2019 +0200
+
+    added bootstrap4.3.1
+
+[33mcommit bc5cd7f330528338f94d1fb2de2fa85f243e5ecf[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Sun Nov 3 21:50:16 2019 +0200
+
+    added bootstrap4.3.1, stylized managers list vacation/apply
+
+[33mcommit 716fca50764f62e4f69a51efe5cb66ba1b9ffb61[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Sun Nov 3 21:03:26 2019 +0200
+
+    multiple select managers is working
+
+[33mcommit 477cece0ad875810cae176e5d64bcab47b077660[m
+Merge: dfa6104 d24f15c
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Sun Nov 3 00:49:59 2019 +0200
+
+    Merge branch 'develop' into iss-25-apply-for-vacation
+
+[33mcommit dfa6104695a7a24ab63078d0280f3f456725a592[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Sun Nov 3 00:49:12 2019 +0200
+
+    record in managerResponse creates
+
+[33mcommit e981585419450e6481acfbe8fd5a8a5049a2c9b1[m[33m ([m[1;31morigin/user_account[m[33m, [m[1;32muser_account[m[33m)[m
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Sat Nov 2 18:28:04 2019 +0200
+
+    Реализован функционал учетной записи
+    
+    Пользователь можеть изменять свой email и пароль на странице
+    Identity\Account\Manage
+
+[33mcommit 8a76e7807117f17c53130e43df7dcff512616a7e[m
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Sat Nov 2 16:25:27 2019 +0200
+
+    Добавлена функция отправки Email пользователям
+    
+    1. Для подтверждения электронной почты
+    2. Для смены пароля в "Forget password?"
+
+[33mcommit a648b45bc09fdd848524de18892681f9aabc77a1[m
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Sat Nov 2 16:00:00 2019 +0200
+
+    Добавлена страница Identity\Account\Manage\StatusMessage
+    
+    После авторизации пользователя, нажав на кнопку "Hello <userLogin>",
+     открывается страница с информацией об аккаунте
+    
+    Добавлены классы EmailSendConfiguration и EmailSender
+    для отправки писем пользователям
+
+[33mcommit 9376ca442e7c55e19e35ff4996f5e85076c2c115[m
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Sat Nov 2 15:29:29 2019 +0200
+
+    Расширен функционал Identity\Account
+    
+    Добавлены страницы:
+    1. Manage\ChangePassword
+    2. ResetPassword
+    3. ResetPasswordConfirmation
+
+[33mcommit d24f15c1005daa3b28aaf977c637dfed8f7b0704[m
+Merge: 7b26561 4cafa65
+Author: TimurMirzaiev <48753722+TimurMirzaiev@users.noreply.github.com>
+Date:   Sat Nov 2 01:14:28 2019 +0200
+
+    Merge pull request #41 from ASbeletsky/iss-25-apply-for-vacation
+    
+    Iss 25 apply for vacation
+
+[33mcommit 4cafa657e7e13401c9270863e0e94420614715e6[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Sat Nov 2 01:11:37 2019 +0200
+
+    fix
+
+[33mcommit 4a91bfa42b00bfc353114238dcb27d56fb7899bc[m
+Merge: 2fe8e9f 7b26561
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Sat Nov 2 01:11:03 2019 +0200
+
+    merged vacation with registration/auth
+
+[33mcommit 2fe8e9f4f1c791a5d4470dc3bb5a14947459a154[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Fri Nov 1 19:32:25 2019 +0200
+
+    enum is working. adding vacation is working but need to consider how to store managersResponse
+
+[33mcommit 7b26561ddfad7687431b8592b0607d0256afb139[m
+Merge: 1db6601 4a88e98
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Fri Nov 1 18:54:41 2019 +0200
+
+    Merge pull request #40 from ASbeletsky/authentication
+    
+    Authentication
+
+[33mcommit 0a6899709e36b6fe8f11563276cff538e4a380b7[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Fri Nov 1 17:44:06 2019 +0200
+
+    configure applydto and applyforvacation
+
+[33mcommit 4a88e98ba2797f3dd187a1cd774a66441dd7f445[m[33m ([m[1;31morigin/authentication[m[33m)[m
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Thu Oct 31 21:11:48 2019 +0200
+
+    Исправлена ошибка падения приложения при вводе E-mail, которого
+    нет в базе
+
+[33mcommit d27efcb79becc81c885ede7933d2b1364ebe36c8[m
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Thu Oct 31 19:46:46 2019 +0200
+
+    Исправлено удаление пользователя
+    
+    Данные пользователя из таблицы UserInformations удаляются
+    вместе с данными из таблицы AspNetUsers
+
+[33mcommit 68b592b91438b3394369bcbd5a0eaecaf13361a2[m
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Thu Oct 31 11:16:01 2019 +0200
+
+    Добавлена аутентификация пользователей средствами Identity
+    
+    TOT.Web\Areas\...\Account:
+    1. AccessDenied
+    2. ForgotPassword
+    3. ForgotPasswordConfirmation
+    4. Login
+    5. Logout
+    6. ConfirmEmail
+    7. Manage\Index
+    8. Manage\Layout
+
+[33mcommit cf550247ebf55ec09e916b71656d3c83443865cb[m
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Thu Oct 31 10:21:52 2019 +0200
+
+    Добавлена реализация IDisposable в класс UnitOfWork
+
+[33mcommit 40b9a36d38501f939333ee2f3c5617be11425561[m
+Author: Dewold <56039693+Dewold@users.noreply.github.com>
+Date:   Thu Oct 31 10:00:50 2019 +0200
+
+    Изменения в регистрации новых пользователей
+    
+    Свойства из AddUserInfoViewModel перемещены в AddUserViewModel
+    Класс AddUserInfoViewModel, связанный с ним Action-метод контроллера
+    Admin и представление CreateInfo.cshtml были удалены из проекта
+
+[33mcommit 697c1d09960de062757d8ddb29c99cb4d21c3151[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Tue Oct 29 22:07:24 2019 +0200
+
+    added userservice, change userinformation and vacation services
+
+[33mcommit 86aa25287b2590de94a92ae3f89f766d8db9697a[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Tue Oct 29 00:20:40 2019 +0200
+
+    simple vacation request send to database
+
+[33mcommit 5cf250b520019e35966d127fa3f9b142a99f0564[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Mon Oct 28 23:46:37 2019 +0300
+
+    added vacationService
+
+[33mcommit 067ee693e52e0a3d6771d5482540713fd829d180[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Tue Oct 29 00:19:44 2019 +0300
+
+    revert
+
+[33mcommit d0374ff74b74591b352f98206ded73c725196083[m
+Author: Timur Mirzaiev <timur.mirzaiev@gmail.com>
+Date:   Tue Oct 29 00:17:59 2019 +0300
+
+    revert
