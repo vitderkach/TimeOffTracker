@@ -19,7 +19,7 @@ namespace TOT.Dto
         public IList<int> SelectedManager { get; set; }
         public ICollection<ManagerResponseDto> ManagersResponses { get; set; }
         public bool Approval { get; set; }
-        public ApplicationUser User { get; set; }
         public int UserId { get; set; }
+        public ApplicationUserDto User { get; set; }
     }
 }

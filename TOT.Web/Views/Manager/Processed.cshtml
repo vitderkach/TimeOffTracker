@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TOT.Web.Models.RequestsToManagerViewModel>
+﻿@model IEnumerable<TOT.Dto.ManagerResponseListDto>
 
 @{
     ViewData["Title"] = "Processed";
@@ -22,6 +22,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.EndDate)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Approval)
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -39,6 +42,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Approval)
                 </td>
             </tr>
         }

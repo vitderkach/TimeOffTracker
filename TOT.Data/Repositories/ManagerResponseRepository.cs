@@ -71,6 +71,8 @@ namespace TOT.Data.Repositories
             return context.ManagerResponses
                 .Include(manager => manager.Manager)
                 .Include(vr => vr.VacationRequest)
+                    .ThenInclude(user => user.User)
+                        .ThenInclude(info => info.UserInformation)
                 .ToList();
         }
 
