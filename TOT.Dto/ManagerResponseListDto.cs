@@ -1,18 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel.DataAnnotations;
+using TOT.Entities;
 
 namespace TOT.Dto
 {
     public class ManagerResponseListDto
     {
-        public int Id { get; set; }
-        public string Notes { get; set; }
-        public DateTime DateResponse { get; set; }
-        public bool? Approval { get; set; }
-        public bool isRequested { get; set; }
+        public int VacationRequestId { get; set; }
+        public string Employee { get; set; }
 
-        public VacationRequestDto VacationRequest { get; set; }
-        public ApplicationUserDto Manager { get; set; }
+        [Display(Name = "Time off reason")]
+        public TimeOffType VacationType { get; set; }
+
+        [Display(Name = "From")]
+        [DataType(DataType.Date)]
+        public DateTime StartDate { get; set; }
+
+        [Display(Name = "To")]
+        [DataType(DataType.Date)]
+        public DateTime EndDate { get; set; }
     }
 }

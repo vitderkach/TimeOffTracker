@@ -26,23 +26,12 @@ namespace TOT.Web.Controllers
 
         public IActionResult Index()
         {
-            var resultViewModel = new List<RequestsToManagerViewModel>();
-            /*  var requestsByCurrentManager =
-                  _managerService.GetAllNeedToConsiderByCurrentManager();*/
             var requestsByCurrentManager =
-                _managerService.GetAllNeed();
+                _managerService.GetAllCurrentManagerResponses();
 
-            foreach (var rq in requestsByCurrentManager)
-            {
-                resultViewModel.Add(new RequestsToManagerViewModel()
-                {
-                    VacationRequestId = rq.VacationRequest.VacationRequestId,
-                    Employee = rq.VacationRequest.User.UserInformation.FullName,
-                    VacationType = rq.VacationRequest.VacationType,
-                    StartDate = rq.VacationRequest.StartDate,
-                    EndDate = rq.VacationRequest.EndDate
-                });
-            }
+            var resultViewModel = _managerService
+                .GetRequestsToConsiderByCurrentManager(requestsByCurrentManager);
+
             return View(resultViewModel);
         }
 

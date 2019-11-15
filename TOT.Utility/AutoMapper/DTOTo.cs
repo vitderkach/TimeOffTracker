@@ -22,7 +22,7 @@ namespace TOT.Utility.AutoMapper
 
             CreateMap<VacationRequest, VacationRequestListDto>();
 
-            CreateMap<ManagerResponse, ManagerResponseListDto>();
+            //CreateMap<ManagerResponseDto, ManagerResponseListDto>();
         }
     }
     public static class EnumExtensions

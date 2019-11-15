@@ -23,8 +23,12 @@ namespace TOT.Utility.AutoMapper
             CreateMap<ManagerResponse, ManagerResponseDto>();
             CreateMap<VacationRequestListDto, VacationRequest>();
 
-            CreateMap<ManagerResponseListDto, ManagerResponse>();
-
+            CreateMap<ManagerResponseDto, ManagerResponseListDto>()
+                .ForMember(dest => dest.VacationRequestId, opt => opt.MapFrom(src => src.VacationRequest.VacationRequestId))
+                .ForMember(dest => dest.Employee, opt => opt.MapFrom(src => src.VacationRequest.User.UserInformation.FullName))
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.VacationRequest.StartDate))
+                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.VacationRequest.EndDate))
+                .ForMember(dest => dest.VacationType, opt => opt.MapFrom(src => src.VacationRequest.VacationType));
         }
     }
     public static class ExtensionMethods

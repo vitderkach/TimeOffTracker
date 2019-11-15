@@ -34,7 +34,7 @@ namespace TOT.Business.Services
             return user;
         }
 
-        // заменить на GetAllNeed()
+        /*
         public IEnumerable<VacationRequestListDto> GetAllNeedToConsiderByCurrentManager()
         {
             var Id = GetCurrentUser().Result.Id;
@@ -49,8 +49,9 @@ namespace TOT.Business.Services
 
             return vacationsRequestListDto;
         }
+        */
 
-        public IEnumerable<ManagerResponseListDto> GetAllNeed()
+        public IEnumerable<ManagerResponseDto> GetAllCurrentManagerResponses()
         {
             var Id = GetCurrentUser().Result.Id;
 
@@ -58,13 +59,20 @@ namespace TOT.Business.Services
                 .Where(vr => vr.ManagerId == Id && vr.isRequested == true)
                 .OrderBy(v => v.VacationRequest.StartDate);
 
-            var managerResponsesListDto = _mapper.Map<IEnumerable<ManagerResponse>,
-                IEnumerable<ManagerResponseListDto>>(managerResponses);
+            var managerResponsesDto = _mapper.Map<IEnumerable<ManagerResponse>,
+                IEnumerable<ManagerResponseDto>>(managerResponses);
 
-            return managerResponsesListDto;
+            return managerResponsesDto;
         }
 
+        public IEnumerable<ManagerResponseListDto> GetRequestsToConsiderByCurrentManager(
+            IEnumerable<ManagerResponseDto> managerResponsesDto)
+        {
+            var requestsToManager = _mapper.Map<IEnumerable<ManagerResponseDto>,
+                IEnumerable<ManagerResponseListDto>>(managerResponsesDto);
 
+            return requestsToManager;
+        }
 
         public IEnumerable<VacationRequestListDto> GetProcessedRequestsByCurrentManager()
         {
