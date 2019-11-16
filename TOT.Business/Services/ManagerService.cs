@@ -133,14 +133,7 @@ namespace TOT.Business.Services
             if (!CheckManagerResponsesForVacation(managerResponse.VacationRequestId))
             {
                 var vacation = _uow.VacationRequestRepository.Get(managerResponse.VacationRequestId);
-                if (approval != false)
-                {
-                    vacation.Approval = true;
-                }
-                else
-                {
-                    vacation.Approval = false;
-                }
+                vacation.Approval = approval;
                 _uow.VacationRequestRepository.Update(vacation);
             }
             else
@@ -158,13 +151,6 @@ namespace TOT.Business.Services
                     _uow.VacationRequestRepository.Update(vacation);
                 }
             }
-
-            //Это для если 1 менеджер, работает. Теперь надо пройти по всем managerResponse которые привязаны к vacation id
-            //и проверить, если менеджер остался 1, которому надо ответить - выполнять код ниже.
-
-            //var vacation = _uow.VacationRequestRepository.Get(managerResponse.VacationRequestId);
-            //vacation.Approval = true;
-            //_uow.VacationRequestRepository.Update(vacation);
         }
     }
 }
