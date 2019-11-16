@@ -45,7 +45,7 @@ namespace TOT.Business.Services {
             var subject = "New response from the TimeOffTracker System";
             var to = new EmailAddress(model.To, "User");
             var plainTextContent = "Hello, this is plainTextContent!";
-            var htmlContent = $"<strong>Hello, your request is accepted! </strong><hr/>";
+            var htmlContent = $"<strong>Dear {model.FullName} your request is accepted! </strong><hr/>";
             
             var host = _httpContext.HttpContext.Request.Host;
             htmlContent += $"<a href='{host}/Manager/Index'>Follow the link</a>";
@@ -63,12 +63,12 @@ namespace TOT.Business.Services {
             var subject = "New response from the TimeOffTracker System";
             var to = new EmailAddress(model.To, "User");
             var plainTextContent = "Hello, this is plainTextContent!";
-            var htmlContent = $"<strong>Sorry, your request is declined</strong><hr/>";
+            var htmlContent = $"<strong>Dear {model.FullName}, unfortunally your request is declined</strong><hr/>";
            
             //htmlContent += String.IsNullOrEmpty(model.Body) ? "<p>This message doesn't have notes</p>"
            //         : $"<p>{model.Body}</p>";
             var host = _httpContext.HttpContext.Request.Host;
-            htmlContent = $"<a href='{host}/Manager/Index'>Follow the link</a>";
+            htmlContent += $"<a href='{host}/Manager/Index'>Follow the link</a>";
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
 
             var response = await client.SendEmailAsync(msg);

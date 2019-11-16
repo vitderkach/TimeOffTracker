@@ -25,6 +25,8 @@ namespace TOT.Utility.AutoMapper
             CreateMap<VacationRequest, VacationRequestListDto>()
                 .ForMember(dest => dest.VacationType, opt => opt.MapFrom(src => src.VacationType.GetDescription()));
 
+
+
             CreateMap<ManagerResponseDto, ManagerResponseListDto>()
                 .ForMember(dest => dest.VacationRequestId, opt => opt.MapFrom(src => src.VacationRequest.VacationRequestId))
                 .ForMember(dest => dest.Employee, opt => opt.MapFrom(src => src.VacationRequest.User.UserInformation.FullName))

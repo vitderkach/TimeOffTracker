@@ -20,7 +20,9 @@ namespace TOT.Utility.AutoMapper
                 .ForMember(dest => dest.VacationType, opt => opt.MapFrom(
                     src => src.SelectedTimeOffType.ToEnum<TimeOffType>()));
 
-            CreateMap<VacationRequest, VacationRequestListDto>();
+            CreateMap<VacationRequestListDto, VacationRequest>()
+                .ForMember(dest => dest.VacationType, opt => opt.MapFrom(
+                    src => src.VacationType.ToEnum<TimeOffType>()));
 
             //CreateMap<ManagerResponseDto, ManagerResponseListDto>();
         }

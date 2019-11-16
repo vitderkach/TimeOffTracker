@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TOT.Dto;
+using TOT.Interfaces;
 using TOT.Interfaces.Services;
 
 namespace TOT.Web.Controllers {
@@ -65,7 +65,6 @@ namespace TOT.Web.Controllers {
         public IActionResult Approval(string submit,
             VacationRequestApprovalDto response)
         {
-            var vacationRequestDto = _mapper.Map<VacationRequestApprovalDto, VacationRequestDto>(response);
             if (submit == "Approve")
             {
                 response.isApproval = true;
