@@ -44,7 +44,14 @@
                     @Html.DisplayFor(modelItem => item.EndDate)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Approval)
+                    @{
+                        if (item.Approval == false){
+                            <div> Declined </div> 
+                        }
+                        if (item.Approval == true){
+                            <div> Approved </div> 
+                        }
+                    }
                 </td>
             </tr>
         }
