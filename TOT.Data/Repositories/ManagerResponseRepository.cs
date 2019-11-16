@@ -58,8 +58,8 @@ namespace TOT.Data.Repositories
                 .Include(manager => manager.Manager)
                     .ThenInclude(info => info.UserInformation)
                 .Include(vr => vr.VacationRequest)
-                /*.ThenInclude(user => user.User)
-                    .ThenInclude(info => info.UserInformation)*/
+                .ThenInclude(user => user.User)
+                    .ThenInclude(info => info.UserInformation)
                 .Where(mr => mr.Id == id)
                 .FirstOrDefault();
 

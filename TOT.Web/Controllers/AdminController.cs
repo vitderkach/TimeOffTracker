@@ -71,7 +71,15 @@ namespace TOT.Web.Controllers
                 {
                     UserName = model.Login,
                     Email = model.Email,
-                    UserInformation = new UserInformation() { FirstName = model.Name, LastName = model.Surname, VacationPolicyInfo = new VacationPolicyInfo() },
+                    UserInformation = new UserInformation() { FirstName = model.Name, LastName = model.Surname, VacationPolicyInfo = new VacationPolicyInfo() 
+                    { 
+                        TimeOffTypes = new List<VacationType>() { new VacationType() { TimeOffType = TimeOffType.SickLeave, WastedDays = 0 },
+                                                new VacationType() { TimeOffType = TimeOffType.StudyLeave, WastedDays = 0 },
+                                                new VacationType() { TimeOffType = TimeOffType.Vacation, WastedDays = 0 },
+                                                new VacationType() { TimeOffType = TimeOffType.UnpaidVacation, WastedDays = 0 },
+                        }
+                    } 
+                    },
                 };
 
                 IdentityResult result = null;

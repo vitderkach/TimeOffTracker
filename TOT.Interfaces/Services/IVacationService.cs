@@ -14,6 +14,5 @@ namespace TOT.Interfaces.Services
         void UpdateVacation(int id, string notes);
         bool DeleteVacation(int id);
         void DeleteVacationByUserId(int id);
-        void WasteVacationDays(VacationRequestDto vacationRequestDto);
     }
 }

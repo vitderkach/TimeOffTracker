@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Text;
 using TOT.Dto;
 using TOT.Entities;
@@ -26,6 +27,8 @@ namespace TOT.Utility.AutoMapper
                 .ForMember(dest => dest.VacationType, opt => opt.MapFrom(src => src.VacationType.GetDescription()));
 
 
+            CreateMap<VacationRequestApprovalDto, VacationRequestDto>()
+                 .ForMember(dest => dest.VacationType, opt => opt.MapFrom(src => src.VacationType.Replace(" ", "")));
 
             CreateMap<ManagerResponseDto, ManagerResponseListDto>()
                 .ForMember(dest => dest.VacationRequestId, opt => opt.MapFrom(src => src.VacationRequest.VacationRequestId))

@@ -10,8 +10,7 @@ using TOT.Interfaces.Services;
 
 namespace TOT.Business.Services
 {
-    public class ManagerService : IManagerService
-    {
+    public class ManagerService : IManagerService {
         private UserManager<ApplicationUser> _userManager;
         private IMapper _mapper;
         private IUnitOfWork _uow;
@@ -125,7 +124,7 @@ namespace TOT.Business.Services
 
             return approval;
         }
-            
+
         public void ApproveUserRequest(int managerResponseId,
             string managerNotes, bool approval)
         {
@@ -149,10 +148,11 @@ namespace TOT.Business.Services
             {
                 vacation.Approval = approval;
 
-                if(approval == true)
+                if (approval == true)
                 {
-                   _vacationService.WasteVacationDays(_mapper.Map<VacationRequest, VacationRequestDto>(vacation));
                     _vacationEmailSender.ExecuteToEmployeeAccept(emailModel);
+
+                    CalculateVacationDays(vacation);
                 }
                 else
                 {
@@ -179,13 +179,140 @@ namespace TOT.Business.Services
                     _uow.VacationRequestRepository.Update(vacation);
                 }
             }
-
-            //Это для если 1 менеджер, работает. Теперь надо пройти по всем managerResponse которые привязаны к vacation id
-            //и проверить, если менеджер остался 1, которому надо ответить - выполнять код ниже.
-
-            //var vacation = _uow.VacationRequestRepository.Get(managerResponse.VacationRequestId);
-            //vacation.Approval = true;
-            //_uow.VacationRequestRepository.Update(vacation);
         }
+        private void CalculateVacationDays(VacationRequest vacationRequestDto)
+        {
+            var vacationPolicy = _uow.VacationPolicyRepository.GetAll()
+                .Where(v => v.UserInformationId == vacationRequestDto.User.UserInformationId)
+                .FirstOrDefault();
+
+            for (int i = 0; i < vacationPolicy.TimeOffTypes.Count; i++)
+            {
+                var timeType = vacationPolicy.TimeOffTypes.ElementAt(i).TimeOffType;
+                if (vacationPolicy.TimeOffTypes.ElementAt(i).TimeOffType ==
+                    vacationRequestDto.VacationType)
+                {
+
+                    int wastedDays = (int)(vacationRequestDto.EndDate - vacationRequestDto.StartDate).TotalDays + 1;
+
+                    switch (timeType)
+                    {
+                        case TimeOffType.SickLeave:
+                        {
+                            int currentWastedDays = vacationPolicy.TimeOffTypes.ElementAt(i).WastedDays + wastedDays;
+                            if (currentWastedDays <= 15)
+                            {
+                                vacationPolicy.TimeOffTypes.ElementAt(i).WastedDays = currentWastedDays;
+                            }
+                            else
+                            {
+                                var daysToFull = 15 - vacationPolicy.TimeOffTypes.ElementAt(i).WastedDays;
+                                vacationPolicy.TimeOffTypes.ElementAt(i).WastedDays += daysToFull;
+                                currentWastedDays = wastedDays - daysToFull;
+
+                                var paidVacation = vacationPolicy.TimeOffTypes
+                                    .Where(t => t.TimeOffType == TimeOffType.Vacation).FirstOrDefault();
+
+                                var predictVacationDays = paidVacation.WastedDays + currentWastedDays;
+
+                                if (predictVacationDays <= 15)
+                                {
+                                    vacationPolicy.TimeOffTypes.ElementAt(i).WastedDays = predictVacationDays;
+                                }
+                                else
+                                {
+                                    daysToFull = 15 - paidVacation.WastedDays;
+                                    paidVacation.WastedDays = 15;
+                                    currentWastedDays = currentWastedDays - daysToFull;
+
+                                    if (currentWastedDays > 0)
+                                    {
+                                        paidVacation = vacationPolicy.TimeOffTypes
+                                            .Where(t => t.TimeOffType == TimeOffType.UnpaidVacation).FirstOrDefault();
+
+                                        paidVacation.WastedDays = currentWastedDays;
+                                    }
+                                    vacationPolicy.TimeOffTypes
+                                         .Where(t => t.TimeOffType == TimeOffType.UnpaidVacation).FirstOrDefault()
+                                         .WastedDays = paidVacation.WastedDays;
+                                }
+                            }
+                            break;
+                        }
+                        case TimeOffType.StudyLeave:
+                        {
+                            int currentWastedDays = vacationPolicy.TimeOffTypes.ElementAt(i).WastedDays + wastedDays;
+                            if (currentWastedDays <= 10)
+                            {
+                                vacationPolicy.TimeOffTypes.ElementAt(i).WastedDays = currentWastedDays;
+                            }
+                            else
+                            {
+                                var daysToFull = 10 - vacationPolicy.TimeOffTypes.ElementAt(i).WastedDays;
+                                vacationPolicy.TimeOffTypes.ElementAt(i).WastedDays += daysToFull;
+                                currentWastedDays = wastedDays - daysToFull;
+
+                                var paidVacation = vacationPolicy.TimeOffTypes
+                                    .Where(t => t.TimeOffType == TimeOffType.Vacation).FirstOrDefault();
+
+                                var predictVacationDays = paidVacation.WastedDays + currentWastedDays;
+
+                                if (predictVacationDays <= 15)
+                                {
+                                    vacationPolicy.TimeOffTypes.ElementAt(i).WastedDays = predictVacationDays;
+                                }
+                                else
+                                {
+                                    daysToFull = 15 - paidVacation.WastedDays;
+                                    paidVacation.WastedDays = 15;
+                                    currentWastedDays = currentWastedDays - daysToFull;
+
+                                    if (currentWastedDays > 0)
+                                    {
+                                        paidVacation = vacationPolicy.TimeOffTypes
+                                            .Where(t => t.TimeOffType == TimeOffType.UnpaidVacation).FirstOrDefault();
+
+                                        paidVacation.WastedDays = currentWastedDays;
+                                    }
+                                    vacationPolicy.TimeOffTypes
+                                         .Where(t => t.TimeOffType == TimeOffType.UnpaidVacation).FirstOrDefault()
+                                         .WastedDays = paidVacation.WastedDays;
+                                }
+                            }
+                            break;
+                        }
+                        case TimeOffType.UnpaidVacation:
+                        {
+                            int currentWastedDays = vacationPolicy.TimeOffTypes.ElementAt(i).WastedDays + wastedDays;
+                            vacationPolicy.TimeOffTypes.ElementAt(i).WastedDays = currentWastedDays;
+                            break;
+                        }
+                        case TimeOffType.Vacation:
+                        {
+                            int currentWastedDays = vacationPolicy.TimeOffTypes.ElementAt(i).WastedDays + wastedDays;
+                            if (currentWastedDays <= 15)
+                            {
+                                vacationPolicy.TimeOffTypes.ElementAt(i).WastedDays = currentWastedDays;
+                            }
+                            else
+                            {
+                                var daysToFull = 15 - vacationPolicy.TimeOffTypes.ElementAt(i).WastedDays;
+                                vacationPolicy.TimeOffTypes.ElementAt(i).WastedDays += daysToFull;
+                                currentWastedDays = wastedDays - daysToFull;
+
+                                vacationPolicy.TimeOffTypes
+                                        .Where(t => t.TimeOffType == TimeOffType.UnpaidVacation)
+                                        .FirstOrDefault()
+                                        .WastedDays += currentWastedDays;
+                            }
+                            break;
+                        }
+                    }
+
+                }
+            }
+            _uow.VacationPolicyRepository.Update(vacationPolicy);
+        }
+
     }
 }
