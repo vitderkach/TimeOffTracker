@@ -9,23 +9,18 @@ using TOT.Interfaces.Services;
 namespace TOT.Business.Services
 {
     public class ManagerService : IManagerService {
-        private UserManager<ApplicationUser> _userManager;
         private IMapper _mapper;
         private IUnitOfWork _uow;
-        private readonly IHttpContextAccessor _httpContext;
         private readonly IVacationService _vacationService;
         private readonly IUserService _userService;
         private readonly IVacationEmailSender _vacationEmailSender;
 
         public ManagerService(IMapper mapper, IUnitOfWork uow,
-            IHttpContextAccessor httpContext,
             IVacationService vacationService,
             IVacationEmailSender vacationEmailSender,
-            IUserService userService,
-            UserManager<ApplicationUser> userManager)
+            IUserService userService)
         {
             _userService = userService;
-            _userManager = userManager;
             _vacationService = vacationService;
             _vacationEmailSender = vacationEmailSender;
             _mapper = mapper;
