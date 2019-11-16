@@ -16,12 +16,18 @@ namespace TOT.Business.Services
         private IMapper _mapper;
         private IUnitOfWork _uow;
         private readonly IHttpContextAccessor _httpContext;
+        private readonly IVacationService _vacationService;
+        private readonly IVacationEmailSender _vacationEmailSender;
 
         public ManagerService(IMapper mapper, IUnitOfWork uow,
             IHttpContextAccessor httpContext,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            IVacationService vacationService,
+            IVacationEmailSender vacationEmailSender)
         {
             _userManager = userManager;
+            _vacationService = vacationService;
+            _vacationEmailSender = vacationEmailSender;
             _mapper = mapper;
             _uow = uow;
             _httpContext = httpContext;
@@ -127,32 +133,54 @@ namespace TOT.Business.Services
             managerResponse.DateResponse = System.DateTime.UtcNow;
 
             _uow.ManagerResponseRepository.Update(managerResponse);
+            var vacation = _uow.VacationRequestRepository.Get(managerResponse.VacationRequestId);
 
+            //All managers reviewed vacation
             if (!CheckManagerResponsesForVacation(managerResponse.VacationRequestId))
             {
-                var vacation = _uow.VacationRequestRepository.Get(managerResponse.VacationRequestId);
-                if (approval != false)
+
+                vacation.Approval = approval;
+
+                EmailModel emailModel = new EmailModel()
                 {
-                    vacation.Approval = true;
+                    Body = managerNotes,
+                    FullName = $"{vacation.User.UserInformation.LastName} {vacation.User.UserInformation.FirstName}",
+                    To = managerResponse.Manager.Email
+                };
+                if(approval == true)
+                {
+                   _vacationService.WasteVacationDays(_mapper.Map<VacationRequest, VacationRequestDto>(vacation));
+                    _vacationEmailSender.ExecuteToEmployeeAccept(emailModel);
                 }
                 else
                 {
-                    vacation.Approval = false;
+                    _vacationEmailSender.ExecuteToEmployeeDecline(emailModel);
                 }
+
                 _uow.VacationRequestRepository.Update(vacation);
             }
+            //if vacation request has any manager responses when manager hasn't reviewed request (approval == null)
             else
             {
+                EmailModel emailModel = new EmailModel()
+                {
+                    Body = managerNotes,
+                    FullName = $"{vacation.User.UserInformation.LastName} {vacation.User.UserInformation.FirstName}",
+                    To = managerResponse.Manager.Email
+                };
+
                 if (approval != false)
                 {
                     var nextResponse = SelectNextManager(managerResponse.VacationRequestId);
                     nextResponse.isRequested = true;
+                    _vacationEmailSender.ExecuteToManager(emailModel);
                     _uow.ManagerResponseRepository.Update(nextResponse);
                 }
                 else
                 {
-                    var vacation = _uow.VacationRequestRepository.Get(managerResponse.VacationRequestId);
+                    vacation = _uow.VacationRequestRepository.Get(managerResponse.VacationRequestId);
                     vacation.Approval = false;
+                    _vacationEmailSender.ExecuteToEmployeeDecline(emailModel);
                     _uow.VacationRequestRepository.Update(vacation);
                 }
             }

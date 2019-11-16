@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TOT.Dto;
@@ -12,12 +13,15 @@ namespace TOT.Web.Controllers {
     public class ManagerController : Controller {
         private readonly IManagerService _managerService;
         private readonly IVacationService _vacationService;
+        private readonly IMapper _mapper;
 
         public ManagerController(IManagerService managerService,
-            IVacationService vacationService)
+            IVacationService vacationService,
+            IMapper mapper)
         {
             _managerService = managerService;
             _vacationService = vacationService;
+            _mapper = mapper;
         }
 
         // вывод всех активных запросов на имя менеджера
@@ -61,6 +65,7 @@ namespace TOT.Web.Controllers {
         public IActionResult Approval(string submit,
             VacationRequestApprovalDto response)
         {
+            var vacationRequestDto = _mapper.Map<VacationRequestApprovalDto, VacationRequestDto>(response);
             if (submit == "Approve")
             {
                 response.isApproval = true;
