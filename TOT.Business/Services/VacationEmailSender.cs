@@ -42,13 +42,11 @@ namespace TOT.Business.Services {
             var client = new SendGridClient(apiKey);
 
             var from = new EmailAddress("apriorit-time-off-tracker@example.com", "TimeOffTracker System");
-            var subject = "New request from the TimeOffTracker System";
+            var subject = "New response from the TimeOffTracker System";
             var to = new EmailAddress(model.To, "User");
             var plainTextContent = "Hello, this is plainTextContent!";
-            var htmlContent = $"<strong>Hello, you have got new request to review</strong><p>Time Off Tracker: " +
-                            $"{model.FullName} want to take a vacation</p><hr/>";
-            htmlContent += String.IsNullOrEmpty(model.Body) ? "<p>This message doesn't have notes</p>"
-                    : $"<p>{model.Body}</p>";
+            var htmlContent = $"<strong>Hello, your request is accepted! </strong><hr/>";
+            
             var host = _httpContext.HttpContext.Request.Host;
             htmlContent += $"<a href='{host}/Manager/Index'>Follow the link</a>";
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
@@ -62,15 +60,15 @@ namespace TOT.Business.Services {
             var client = new SendGridClient(apiKey);
 
             var from = new EmailAddress("apriorit-time-off-tracker@example.com", "TimeOffTracker System");
-            var subject = "New request from the TimeOffTracker System";
+            var subject = "New response from the TimeOffTracker System";
             var to = new EmailAddress(model.To, "User");
             var plainTextContent = "Hello, this is plainTextContent!";
-            var htmlContent = $"<strong>Hello, you have got new request to review</strong><p>Time Off Tracker: " +
-                            $"{model.FullName} want to take a vacation</p><hr/>";
-            htmlContent += String.IsNullOrEmpty(model.Body) ? "<p>This message doesn't have notes</p>"
-                    : $"<p>{model.Body}</p>";
+            var htmlContent = $"<strong>Sorry, your request is declined</strong><hr/>";
+           
+            //htmlContent += String.IsNullOrEmpty(model.Body) ? "<p>This message doesn't have notes</p>"
+           //         : $"<p>{model.Body}</p>";
             var host = _httpContext.HttpContext.Request.Host;
-            htmlContent += $"<a href='{host}/Manager/Index'>Follow the link</a>";
+            htmlContent = $"<a href='{host}/Manager/Index'>Follow the link</a>";
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
 
             var response = await client.SendEmailAsync(msg);

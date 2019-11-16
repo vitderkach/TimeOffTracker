@@ -118,9 +118,9 @@ namespace TOT.Business.Services
         }
 
         //need to refactor
-        public void Approve(VacationRequestDto vacationRequestDto)
+        public void WasteVacationDays(VacationRequestDto vacationRequestDto)
         {
-            var userInfo = _uow.UserInformationRepository
+            var userInfo = _uow.UserInformationRepository 
                 .GetAll()
                 .Where(u => u.User.Id == vacationRequestDto.UserId)
                 .FirstOrDefault();
@@ -222,7 +222,28 @@ namespace TOT.Business.Services
                         }
                         case TimeOffType.UnpaidVacation:
                         {
+                            //need to check that is working right
+                            int currentWastedDays = userInfo.VacationPolicyInfo.TimeOffTypes.ElementAt(i).WastedDays + wastedDays;
+                            if (currentWastedDays <= 20)
+                            {
+                                userInfo.VacationPolicyInfo.TimeOffTypes.ElementAt(i).WastedDays = currentWastedDays;
+                            }
+                            else
+                            {
+                                currentWastedDays -= 20;
+                                var daysToFull = 20 - userInfo.VacationPolicyInfo.TimeOffTypes.ElementAt(i).WastedDays;
+                                userInfo.VacationPolicyInfo.TimeOffTypes.ElementAt(i).WastedDays += daysToFull;
+                                currentWastedDays -= daysToFull;
 
+                                var paidVacation = userInfo.VacationPolicyInfo.TimeOffTypes
+                                    .Where(t => t.TimeOffType == TimeOffType.UnpaidVacation).FirstOrDefault();
+
+                                
+                                    paidVacation.WastedDays = currentWastedDays;
+                             
+                                    _uow.VacationTypeRepository.Update(paidVacation);
+
+                            }
                             break;
                         }
                         case TimeOffType.Vacation:
