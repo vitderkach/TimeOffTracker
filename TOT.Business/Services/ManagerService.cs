@@ -17,13 +17,15 @@ namespace TOT.Business.Services
         private IUnitOfWork _uow;
         private readonly IHttpContextAccessor _httpContext;
         private readonly IVacationService _vacationService;
+        private readonly IUserService _userService;
         private readonly IVacationEmailSender _vacationEmailSender;
 
         public ManagerService(IMapper mapper, IUnitOfWork uow,
             IHttpContextAccessor httpContext,
             IVacationService vacationService,
             IVacationEmailSender vacationEmailSender,
-            IUserService userService)
+            IUserService userService,
+            UserManager<ApplicationUser> userManager)
         {
             _userService = userService;
             _userManager = userManager;
@@ -145,7 +147,6 @@ namespace TOT.Business.Services
             //All managers reviewed vacation
             if (!CheckManagerResponsesForVacation(managerResponse.VacationRequestId))
             {
-                var vacation = _uow.VacationRequestRepository.Get(managerResponse.VacationRequestId);
                 vacation.Approval = approval;
 
                 if(approval == true)
