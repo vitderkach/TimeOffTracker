@@ -69,7 +69,7 @@ namespace TOT.Web.Controllers {
             {
                 response.isApproval = true;
             }
-            else if (submit == "Reject")
+            else if (submit == "Decline")
             {
                 response.isApproval = false;
             }

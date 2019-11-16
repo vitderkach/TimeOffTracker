@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TOT.Dto;
@@ -32,15 +30,9 @@ namespace TOT.Business.Services
             _vacationEmailSender = vacationEmailSender;
             _mapper = mapper;
             _uow = uow;
-            _httpContext = httpContext;
         }
 
-        /*Можно вынести куда-то*/
-        private async Task<ApplicationUser> GetCurrentUser()
-        {
-            var user = await _userManager.GetUserAsync(_httpContext.HttpContext.User);
-            return user;
-        }
+        // проверяет, есть ли еще менеджеры, которые должны рассмотреть заявку
         private bool CheckManagerResponsesForVacation(int vacationId)
         {
             var managerResponses = _uow.ManagerResponseRepository.GetAll()
@@ -51,6 +43,7 @@ namespace TOT.Business.Services
 
             return false;
         }
+        // выберает следующий на очереди ManagerResponse для выбранной заявки
         private ManagerResponse SelectNextManager(int vacationId)
         {
             var nextResponse = _uow.ManagerResponseRepository.GetAll()
@@ -60,9 +53,11 @@ namespace TOT.Business.Services
 
             return nextResponse;
         }
+
+        // список всех активных запросов на имя менеджера
         public IEnumerable<ManagerResponseDto> GetAllCurrentManagerResponses()
         {
-            var Id = GetCurrentUser().Result.Id;
+            var Id = _userService.GetCurrentUser().Result.Id;
 
             var managerResponses = _uow.ManagerResponseRepository.GetAll()
                 .Where(vr => vr.ManagerId == Id && vr.isRequested == true)
@@ -74,6 +69,7 @@ namespace TOT.Business.Services
             return managerResponsesDto;
         }
 
+        // мапит данные из списка запросов для вывода во View
         public IEnumerable<ManagerResponseListDto> GetCurrentManagerRequests(
             IEnumerable<ManagerResponseDto> managerResponsesDto)
         {
@@ -83,9 +79,10 @@ namespace TOT.Business.Services
             return requestsToManager;
         }
 
+        // список всех уже рассмотренных запросов текущего менеджера
         public IEnumerable<ManagerResponseDto> GetProcessedRequestsByCurrentManager()
         {
-            var Id = GetCurrentUser().Result.Id;
+            var Id = _userService.GetCurrentUser().Result.Id;
 
             var managerResponses = _uow.ManagerResponseRepository.GetAll()
                 .Where(vr => vr.ManagerId == Id && vr.Approval != null)
@@ -97,10 +94,12 @@ namespace TOT.Business.Services
             return managerResponsesDto;
         }
 
+        // получает ManagerResponse, которой был предварительно создан после
+        // создания заявки, для текущего менеджера
         public ManagerResponseDto GetResponseByVacationId(int vacationRequestId)
         {
             ManagerResponseDto managerResponseDto = default;
-            var managerId = GetCurrentUser().Result.Id;
+            var managerId = _userService.GetCurrentUser().Result.Id;
 
             var managerResponse = _uow.ManagerResponseRepository.GetAll()
                 .Where(x => x.VacationRequestId == vacationRequestId &&
@@ -116,6 +115,8 @@ namespace TOT.Business.Services
             return managerResponseDto;
         }
 
+        // мапит данные выбранной менеджером заявки для
+        // вывода View с Approve/Reject 
         public VacationRequestApprovalDto VacationApproval(
             ManagerResponseDto managerResponse)
         {
@@ -146,6 +147,7 @@ namespace TOT.Business.Services
             //All managers reviewed vacation
             if (!CheckManagerResponsesForVacation(managerResponse.VacationRequestId))
             {
+
                 vacation.Approval = approval;
 
                 if (approval == true)
