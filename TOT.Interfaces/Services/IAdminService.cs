@@ -12,5 +12,6 @@ namespace TOT.Interfaces.Services
         Task<IdentityResult> RegistrationNewUser(RegistrationUserDto registrationForm);
         EditApplicationUserDto EditUserData(int userId);
         Task<IdentityResult> UserDataManipulation(int userId, int userRoleId);
+        Task<IdentityResult> DeleteUser(int userId);
     }
 }

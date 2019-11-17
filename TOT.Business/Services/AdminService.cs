@@ -19,18 +19,20 @@ namespace TOT.Business.Services
 
         private readonly IUserService _userService;
         private readonly IUserInfoService _userInfoService;
+        private readonly IVacationService _vacationService;
 
         private readonly string defaultPassword = "user";
 
         public AdminService(RoleManager<IdentityRole<int>> roleManager,
             IMapper mapper, IUserService userService,
             UserManager<ApplicationUser> userManager,
-            IUserInfoService userInfoService)
+            IUserInfoService userInfoService, IVacationService vacationService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _userService = userService;
             _userInfoService = userInfoService;
+            _vacationService = vacationService;
             _mapper = mapper;
         }
 
@@ -167,6 +169,27 @@ namespace TOT.Business.Services
             else
             {
                 result = IdentityResult.Success;
+            }
+            return result;
+        }
+
+        public async Task<IdentityResult> DeleteUser(int userId)
+        {
+            IdentityResult result = null;
+            ApplicationUser user = _userManager.FindByIdAsync(userId.ToString()).Result;
+
+            if (user != null)
+            {
+                result = await _userManager.DeleteAsync(user);
+                if (result.Succeeded)
+                {
+                    _userInfoService.DeleteUserInfo(user.UserInformationId);
+                    _vacationService.DeleteVacationByUserId(userId);
+                }
+            }
+            else
+            {
+                result = IdentityResult.Failed();
             }
             return result;
         }

@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TOT.Interfaces.Services;
-using TOT.Entities;
-using TOT.Web.Models;
 using TOT.Dto;
 using Microsoft.AspNetCore.Authorization;
-using TOT.Interfaces;
 
 namespace TOT.Web.Controllers
 {
@@ -17,25 +11,10 @@ namespace TOT.Web.Controllers
     public class AdminController : Controller
     {
         private IAdminService _adminService;
-        private UserManager<ApplicationUser> userManager;
-        private RoleManager<IdentityRole<int>> roleManager;
-        private IUserInfoService userInfoService;
-        private IVacationService _vacationService;
-        private IMapper _mapper;
 
-        private readonly string defaultPassword = "user";
-
-        public AdminController(RoleManager<IdentityRole<int>> roleMgr,
-            UserManager<ApplicationUser> userMgr, IUserInfoService service,
-            IMapper mapper, IAdminService adminService,
-            IVacationService vacationService)
+        public AdminController( IAdminService adminService)
         {
-            roleManager = roleMgr;
-            userManager = userMgr;
-            userInfoService = service;
-            _mapper = mapper;
             _adminService = adminService;
-            _vacationService = vacationService;
         }
 
         private void AddErrorsFromResult(IdentityResult result)
@@ -44,11 +23,6 @@ namespace TOT.Web.Controllers
             {
                 ModelState.AddModelError("", error.Description);
             }
-        }
-
-        public IActionResult Index()
-        {
-            return View(userManager.Users);
         }
 
         public IActionResult List()
@@ -84,27 +58,14 @@ namespace TOT.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            ApplicationUser user = await userManager.FindByIdAsync(id.ToString());
+            var result = await _adminService.DeleteUser(id);
 
-            if (user != null)
+            if (!result.Succeeded)
             {
-                IdentityResult result = await userManager.DeleteAsync(user);
-                if (result.Succeeded)
-                {
-                    userInfoService.DeleteUserInfo(user.UserInformationId);
-                    _vacationService.DeleteVacationByUserId(id);
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    AddErrorsFromResult(result);
-                }
+                AddErrorsFromResult(result);
             }
-            else
-            {
-                ModelState.AddModelError("", "User not found");
-            }
-            return View("Index", userManager.Users);
+
+            return RedirectToAction("List");
         }
 
         public IActionResult Edit(int id)
