@@ -60,54 +60,25 @@ namespace TOT.Web.Controllers
 
         public IActionResult Create()
         {
-            ViewData["roles"] = roleManager.Roles.ToList();
+            ViewData["roles"] = _adminService.GetApplicationRoles();
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(AddUserViewModel model)
+        public async Task<IActionResult> Create(RegistrationUserDto registrationForm)
         {
-            var role = roleManager.FindByIdAsync(model.RoleId.ToString()).Result;
-
             if (ModelState.IsValid)
             {
-                UserInformationDto userInfoDTO = new UserInformationDto()
+                var registrationResult = await _adminService.RegistrationNewUser(registrationForm);
+
+                if (!registrationResult.Succeeded)
                 {
-                    FullName = model.Surname + model.Name,
-                };
-
-                ApplicationUser user = new ApplicationUser()
-                {
-                    UserName = model.Login,
-                    Email = model.Email,
-                    UserInformation = new UserInformation() { FirstName = model.Name, LastName = model.Surname, VacationPolicyInfo = new VacationPolicyInfo() 
-                    { 
-                        TimeOffTypes = new List<VacationType>() { new VacationType() { TimeOffType = TimeOffType.SickLeave, WastedDays = 0 },
-                                                new VacationType() { TimeOffType = TimeOffType.StudyLeave, WastedDays = 0 },
-                                                new VacationType() { TimeOffType = TimeOffType.Vacation, WastedDays = 0 },
-                                                new VacationType() { TimeOffType = TimeOffType.UnpaidVacation, WastedDays = 0 },
-                        }
-                    } 
-                    },
-                };
-
-                IdentityResult result = null;
-
-
-                    result = await userManager.CreateAsync(user, defaultPassword);
-               
-
-                if (result.Succeeded)
-                {                   
-                    await userManager.AddToRoleAsync(user, role.Name);
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    AddErrorsFromResult(result);
+                    AddErrorsFromResult(registrationResult);
+                    ViewData["roles"] = _adminService.GetApplicationRoles();
+                    return View(registrationForm);
                 }
             }
-            return View(model);
+            return RedirectToAction("List");
         }
 
         [HttpPost]

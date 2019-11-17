@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TOT.Dto;
 
 namespace TOT.Interfaces.Services
@@ -8,5 +9,6 @@ namespace TOT.Interfaces.Services
     {
         IEnumerable<ApplicationUserListDto> GetApplicationUserList();
         List<IdentityRole<int>> GetApplicationRoles();
+        Task<IdentityResult> RegistrationNewUser(RegistrationUserDto registrationForm);
     }
 }

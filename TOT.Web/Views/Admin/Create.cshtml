@@ -1,38 +1,56 @@
 ﻿@using Microsoft.AspNetCore.Identity;
-@model AddUserViewModel
+@model TOT.Dto.RegistrationUserDto
+
 @{
     var roles = (List<IdentityRole<int>>)ViewData["roles"];
+    var roleList = new SelectList(roles, "Id", "Name", selectedValue: 2);
 }
 
-<h2>Add new user</h2>
+<div class="container col-6">
+    <h4>Registration</h4>
+    <hr />
+</div>
 
-<div asp-validation-summary="All" class="text-danger"></div>
-
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" />
+<form asp-controller="Admin" asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="container col-6">
+        <div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Surname" class="control-label"></label>
+                <input asp-for="Surname" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label asp-for="UserName" class="control-label"></label>
+                    <input asp-for="UserName" class="form-control" />
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="RoleId" class="control-label"></label>
+                    <select asp-for="RoleId" class="form-control"
+                            asp-items=@roleList>
+                    </select>
+                    <span asp-validation-for="RoleId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <input name="submit" type="submit" value="Add user" class="btn btn-secondary" />
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        <label asp-for="Surname"></label>
-        <input asp-for="Surname" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="Login"></label>
-        <input asp-for="Login" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="RoleId"></label>
-        <select asp-for="RoleId" class="form-control"
-                asp-items='new SelectList(roles, "Id", "Name")'>
-        </select>
-        <span asp-validation-for="RoleId" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Add user</button>
-    <a asp-action="Index" class="btn btn-link">Cancel</a>
 </form>
+
+<div>
+    <button class="btn btn-info" asp-action="List">Back to List</button>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
