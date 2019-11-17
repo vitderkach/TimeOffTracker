@@ -33,22 +33,21 @@ namespace TOT.Business.Services
         }
         public IEnumerable<ApplicationUserDto> GetAllByRole(string role)
         {
-
             var managers = _userManager.GetUsersInRoleAsync(role).Result;
-            //todo ask what could i do better
             var userInformation = _uow.UserInformationRepository.GetAll();
-            //manager.Information is null, so need to map
-            for (int i = 0; i < managers.Count; i++)
+            if (managers != null)
             {
-                var userInfo = userInformation
-                    .Where(u => u.UserInformationId == managers[i].UserInformationId)
-                    .FirstOrDefault();
-                if (userInfo != null)
-                    managers[i].UserInformation = userInfo;
+                for (int i = 0; i < managers.Count; i++)
+                {
+                    var userInfo = userInformation
+                        .Where(u => u.UserInformationId == managers[i].UserInformationId)
+                        .FirstOrDefault();
+                    if (userInfo != null)
+                        managers[i].UserInformation = userInfo;
+                }
             }
             var managersDto = _mapper.Map<IEnumerable<ApplicationUser>,
                                 IEnumerable<ApplicationUserDto>>(managers);
-
             return managersDto;
         }
     }

@@ -33,13 +33,6 @@ namespace TOT.Business.Services
                 throw new NullReferenceException("userInfo not found");
 
             return _mapper.Map<UserInformation, UserInformationDto>(userInfo);
-
-            /*return new UserInformationDto
-            {
-                UserInformationId = userInfo.UserInformationId,
-                FirstName = userInfo.FirstName,
-                LastName = userInfo.LastName
-            };*/
         }
 
         public IEnumerable<UserInformationDto> GetUsersInfo()
@@ -50,15 +43,11 @@ namespace TOT.Business.Services
 
         public void SaveUserInfo(UserInformationDto userInfoDTO)
         {
-            /*UserInformation userInfo = new UserInformation()
-            {
-                FirstName = userInfoDTO.FirstName,
-                LastName = userInfoDTO.LastName
-            };*/
             var userInfo = _mapper.Map<UserInformationDto, UserInformation>(userInfoDTO);
-
-            Database.UserInformationRepository.Create(userInfo);
-            Database.Save();
+            if(userInfo != null)
+            {
+                Database.UserInformationRepository.Create(userInfo);
+            }
         }
 
         public void DeleteUserInfo(int? id)

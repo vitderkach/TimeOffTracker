@@ -11,7 +11,6 @@ namespace TOT.Business.Services
     public class ManagerService : IManagerService {
         private IMapper _mapper;
         private IUnitOfWork _uow;
-        private readonly IVacationService _vacationService;
         private readonly IUserService _userService;
         private readonly IVacationEmailSender _vacationEmailSender;
 
@@ -21,7 +20,6 @@ namespace TOT.Business.Services
             IUserService userService)
         {
             _userService = userService;
-            _vacationService = vacationService;
             _vacationEmailSender = vacationEmailSender;
             _mapper = mapper;
             _uow = uow;
@@ -177,6 +175,7 @@ namespace TOT.Business.Services
                 }
             }
         }
+        #region CaluclateVacationDays
         private void CalculateVacationDays(VacationRequest vacationRequestDto)
         {
             var vacationPolicy = _uow.VacationPolicyRepository.GetAll()
@@ -310,6 +309,6 @@ namespace TOT.Business.Services
             }
             _uow.VacationPolicyRepository.Update(vacationPolicy);
         }
-
+        #endregion
     }
 }

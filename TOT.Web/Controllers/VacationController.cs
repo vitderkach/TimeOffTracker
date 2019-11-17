@@ -64,7 +64,6 @@ namespace TOT.Web.Controllers
 
                 _vacationService.ApplyForVacation(vacationRequest);
                 return RedirectToAction("List");
-                //return Ok();
             }
             else
             {
