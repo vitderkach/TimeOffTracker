@@ -16,6 +16,7 @@ namespace TOT.Web.Controllers
     [Authorize(Roles = "Administrator")]
     public class AdminController : Controller
     {
+        private IAdminService _adminService;
         private UserManager<ApplicationUser> userManager;
         private RoleManager<IdentityRole<int>> roleManager;
         private IUserInfoService userInfoService;
@@ -26,13 +27,14 @@ namespace TOT.Web.Controllers
 
         public AdminController(RoleManager<IdentityRole<int>> roleMgr,
             UserManager<ApplicationUser> userMgr, IUserInfoService service,
-            IMapper mapper,
+            IMapper mapper, IAdminService adminService,
             IVacationService vacationService)
         {
             roleManager = roleMgr;
             userManager = userMgr;
             userInfoService = service;
             _mapper = mapper;
+            _adminService = adminService;
             _vacationService = vacationService;
         }
 
@@ -47,6 +49,13 @@ namespace TOT.Web.Controllers
         public IActionResult Index()
         {
             return View(userManager.Users);
+        }
+
+        public IActionResult List()
+        {
+            var userList = _adminService.GetApplicationUserList();
+
+            return View(userList);
         }
 
         public IActionResult Create()
