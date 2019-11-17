@@ -46,6 +46,10 @@ namespace TOT.Utility.AutoMapper
                 .ForMember(dest => dest.VacationType, opt => opt.MapFrom(src => src.VacationRequest.VacationType.GetDescription()))
                 .ForMember(dest => dest.EmployeeNotes, opt => opt.MapFrom(src => src.VacationRequest.Notes))
                 .ForMember(dest => dest.ManagerResponseId, opt => opt.MapFrom(src => src.Id));
+
+            CreateMap<ApplicationUser, ApplicationUserListDto>()
+                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src =>
+                    src.UserInformation.FirstName + " " + src.UserInformation.LastName));
         }
     }
     public static class ExtensionMethods
