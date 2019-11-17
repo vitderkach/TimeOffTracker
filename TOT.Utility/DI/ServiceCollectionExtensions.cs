@@ -38,6 +38,7 @@ namespace TOT.Utility.DI
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IManagerService, ManagerService>();
             services.AddTransient<IVacationEmailSender, VacationEmailSender>();
+            services.AddTransient<IAdminService, AdminService>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }

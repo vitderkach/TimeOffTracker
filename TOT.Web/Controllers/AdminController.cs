@@ -1,39 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TOT.Interfaces.Services;
-using TOT.Entities;
-using TOT.Web.Models;
 using TOT.Dto;
 using Microsoft.AspNetCore.Authorization;
-using TOT.Interfaces;
 
 namespace TOT.Web.Controllers
 {
     [Authorize(Roles = "Administrator")]
     public class AdminController : Controller
     {
-        private UserManager<ApplicationUser> userManager;
-        private RoleManager<IdentityRole<int>> roleManager;
-        private IUserInfoService userInfoService;
-        private IVacationService _vacationService;
-        private IMapper _mapper;
+        private IAdminService _adminService;
 
-        private readonly string defaultPassword = "user";
-
-        public AdminController(RoleManager<IdentityRole<int>> roleMgr,
-            UserManager<ApplicationUser> userMgr, IUserInfoService service,
-            IMapper mapper,
-            IVacationService vacationService)
+        public AdminController( IAdminService adminService)
         {
-            roleManager = roleMgr;
-            userManager = userMgr;
-            userInfoService = service;
-            _mapper = mapper;
-            _vacationService = vacationService;
+            _adminService = adminService;
         }
 
         private void AddErrorsFromResult(IdentityResult result)
@@ -44,138 +25,77 @@ namespace TOT.Web.Controllers
             }
         }
 
-        public IActionResult Index()
+        public IActionResult List()
         {
-            return View(userManager.Users);
+            var userList = _adminService.GetApplicationUserList();
+
+            return View(userList);
         }
 
         public IActionResult Create()
         {
-            ViewData["roles"] = roleManager.Roles.ToList();
+            ViewData["roles"] = _adminService.GetApplicationRoles();
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(AddUserViewModel model)
+        public async Task<IActionResult> Create(RegistrationUserDto registrationForm)
         {
-            var role = roleManager.FindByIdAsync(model.RoleId.ToString()).Result;
-
             if (ModelState.IsValid)
             {
-                UserInformationDto userInfoDTO = new UserInformationDto()
+                var registrationResult = await _adminService.RegistrationNewUser(registrationForm);
+
+                if (!registrationResult.Succeeded)
                 {
-                    FullName = model.Surname + model.Name,
-                };
-
-                ApplicationUser user = new ApplicationUser()
-                {
-                    UserName = model.Login,
-                    Email = model.Email,
-                    UserInformation = new UserInformation() { FirstName = model.Name, LastName = model.Surname, VacationPolicyInfo = new VacationPolicyInfo() 
-                    { 
-                        TimeOffTypes = new List<VacationType>() { new VacationType() { TimeOffType = TimeOffType.SickLeave, WastedDays = 0 },
-                                                new VacationType() { TimeOffType = TimeOffType.StudyLeave, WastedDays = 0 },
-                                                new VacationType() { TimeOffType = TimeOffType.Vacation, WastedDays = 0 },
-                                                new VacationType() { TimeOffType = TimeOffType.UnpaidVacation, WastedDays = 0 },
-                        }
-                    } 
-                    },
-                };
-
-                IdentityResult result = null;
-
-
-                    result = await userManager.CreateAsync(user, defaultPassword);
-               
-
-                if (result.Succeeded)
-                {                   
-                    await userManager.AddToRoleAsync(user, role.Name);
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    AddErrorsFromResult(result);
+                    AddErrorsFromResult(registrationResult);
+                    ViewData["roles"] = _adminService.GetApplicationRoles();
+                    return View(registrationForm);
                 }
             }
-            return View(model);
+            return RedirectToAction("List");
         }
 
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            ApplicationUser user = await userManager.FindByIdAsync(id.ToString());
+            var result = await _adminService.DeleteUser(id);
 
-            if (user != null)
+            if (!result.Succeeded)
             {
-                IdentityResult result = await userManager.DeleteAsync(user);
-                if (result.Succeeded)
-                {
-                    userInfoService.DeleteUserInfo(user.UserInformationId);
-                    _vacationService.DeleteVacationByUserId(id);
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    AddErrorsFromResult(result);
-                }
+                AddErrorsFromResult(result);
             }
-            else
-            {
-                ModelState.AddModelError("", "User not found");
-            }
-            return View("Index", userManager.Users);
+
+            return RedirectToAction("List");
         }
 
-        public async Task<IActionResult> Edit(int id)
+        public IActionResult Edit(int id)
         {
-            ApplicationUser user = await userManager.FindByIdAsync(id.ToString());
+            var editUser = _adminService.EditUserData(id);
 
-            if (user != null)
+            if (editUser == null)
             {
-                var userRoles = await userManager.GetRolesAsync(user);
-                var allRoles = roleManager.Roles.ToList();
-
-                return View(new ChangeUserRoleViewModel
-                {
-                    UserId = user.Id,
-                    Name = user.UserName,
-                    RoleName = userRoles,
-                    AllRoles = allRoles
-                });
-            }
-            else
-            {
-                ModelState.AddModelError("", "User not found");
+                return NotFound();
             }
 
-            return NotFound();
+            return View(editUser);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, List<string> roles)
+        public async Task<IActionResult> Edit(int id, int currentRoleId)
         {
-            var user = userManager.FindByIdAsync(id.ToString()).Result;
-
-            if (user != null)
+            if (ModelState.IsValid)
             {
-                var userRoles = await userManager.GetRolesAsync(user);
-                var allRoles = roleManager.Roles.ToList();
+                var result = await _adminService.UserDataManipulation(id, currentRoleId);
 
-                var addedRoles = roles.Except(userRoles);
-                var removedRoles = userRoles.Except(roles);
-
-                await userManager.RemoveFromRolesAsync(user, removedRoles);
-                await userManager.AddToRolesAsync(user, addedRoles);
-
-                return RedirectToAction("Index");
-            }
-            else
-            {
-                ModelState.AddModelError("", "User not found");
+                if (!result.Succeeded)
+                {
+                    AddErrorsFromResult(result);
+                    return View();
+                   // return RedirectToAction($"Edit/{id}");
+                }
             }
 
-            return NotFound();
+            return RedirectToAction("List");
         }
     }
 }

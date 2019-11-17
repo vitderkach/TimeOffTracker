@@ -1,25 +1,26 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TOT.Web.Models
+namespace TOT.Dto
 {
-    public class AddUserViewModel
+    public class RegistrationUserDto
     {
         [Required]
+        [Display(Name = "Name*")]
         public string Name { get; set; }
 
         [Required]
+        [Display(Name = "Surname*")]
         public string Surname { get; set; }
 
-        [Required]
-        public string Login { get; set; }
+        [Display(Name = "Login")]
+        public string UserName { get; set; }
 
         [Required]
+        [Display(Name = "E-mail*")]
         public string Email { get; set; }
 
         [Required]
+        [Display(Name = "Role")]
         public int RoleId { get; set; }
-
-        [Required]
-        public int UserInfoId { get; set; }
     }
 }
