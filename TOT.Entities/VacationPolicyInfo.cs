@@ -6,10 +6,6 @@ using System.Text;
 
 namespace TOT.Entities {
     public class VacationPolicyInfo {
-        public VacationPolicyInfo()
-        {
-            
-        }
         public int Id { get; set; }
         
         public ICollection<VacationType> TimeOffTypes { get; set; }

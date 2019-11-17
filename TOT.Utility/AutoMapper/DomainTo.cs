@@ -13,14 +13,15 @@ namespace TOT.Utility.AutoMapper
     {
         public DomainTo()
         {
-            CreateMap<VacationRequest, VacationRequestDto>();
+            CreateMap<VacationRequest, VacationRequestDto>()
+                .ForMember(dest => dest.VacationTypeString, opt => opt.MapFrom(src => src.VacationType.GetDescription()));
             CreateMap<VacationRequest, ApplyForRequestGetDto>()
                 .ForMember(dest => dest.VacationTypes, opt => opt.MapFrom(src => src.VacationType.GetDescription()));
 
             CreateMap<ApplicationUser, ApplicationUserDto>();
             CreateMap<UserInformation, UserInformationDto>()
-                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => $"{src.LastName} {src.FirstName}"))
-                ;
+                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => $"{src.LastName} {src.FirstName}"));
+
             CreateMap<ManagerResponse, ManagerResponseDto>();
             CreateMap<VacationRequestListDto, VacationRequest>();
             CreateMap<VacationRequest, VacationRequestListDto>()

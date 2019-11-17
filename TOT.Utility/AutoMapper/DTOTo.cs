@@ -12,6 +12,7 @@ namespace TOT.Utility.AutoMapper
         public DTOTo()
         {
             CreateMap<VacationRequestDto, VacationRequest>();
+
             CreateMap<ApplicationUserDto, ApplicationUser>();
             CreateMap<UserInformationDto, UserInformation>();
 

@@ -21,7 +21,6 @@ namespace TOT.Web.Controllers
         private readonly IMapper _mapper;
         private readonly IVacationService _vacationService;
         private readonly IUserService _userService;
-        private readonly IHttpContextAccessor _httpContext;
 
         public VacationController(IVacationService vacationService, IMapper mapper,
             IUserService userService)
@@ -81,7 +80,7 @@ namespace TOT.Web.Controllers
             {
                 return View(vacation);
             }
-            return View();
+            return RedirectToAction("List");
         }
         [HttpPost]
         public IActionResult Edit(int Id, string Notes)
