@@ -18,22 +18,18 @@ namespace TOT.Web.Controllers
     [Authorize]
     public class VacationController : Controller
     {
-        private UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
         private readonly IVacationService _vacationService;
         private readonly IUserService _userService;
         private readonly IHttpContextAccessor _httpContext;
 
-        public VacationController(IVacationService vacationService, IMapper mapper
-            , UserManager<ApplicationUser> userManager,
+        public VacationController(IVacationService vacationService, IMapper mapper,
             IUserService userService)
         {
             _vacationService = vacationService;
             _mapper = mapper;
-            _userManager = userManager;
             _userService = userService;
         }
-        // GET: Vacation
         public ActionResult Index()
         {
             return View();
@@ -53,11 +49,11 @@ namespace TOT.Web.Controllers
             return View(); 
         }
         [HttpPost]
-        public async Task<ActionResult> Apply([FromBody]ApplyForRequestGetDto applyForRequestGetDto)
+        public ActionResult Apply([FromBody]ApplyForRequestGetDto applyForRequestGetDto)
         {
             if(ModelState.IsValid)
             {
-                var user = await _userManager.GetUserAsync(HttpContext.User);
+                var user = _userService.GetCurrentUser().Result;
                 applyForRequestGetDto.UserId = user.Id;
 
                 var vacationRequest = _mapper.Map<ApplyForRequestGetDto, VacationRequestDto>(applyForRequestGetDto);
@@ -81,8 +77,11 @@ namespace TOT.Web.Controllers
         public IActionResult Edit(int id)
         {
             var vacation = _vacationService.GetVacationById(id);
-
-            return View(vacation);
+            if (vacation != null)
+            {
+                return View(vacation);
+            }
+            return View();
         }
         [HttpPost]
         public IActionResult Edit(int Id, string Notes)
