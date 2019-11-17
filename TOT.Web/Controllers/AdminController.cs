@@ -107,55 +107,34 @@ namespace TOT.Web.Controllers
             return View("Index", userManager.Users);
         }
 
-        public async Task<IActionResult> Edit(int id)
+        public IActionResult Edit(int id)
         {
-            ApplicationUser user = await userManager.FindByIdAsync(id.ToString());
+            var editUser = _adminService.EditUserData(id);
 
-            if (user != null)
+            if (editUser == null)
             {
-                var userRoles = await userManager.GetRolesAsync(user);
-                var allRoles = roleManager.Roles.ToList();
-
-                return View(new ChangeUserRoleViewModel
-                {
-                    UserId = user.Id,
-                    Name = user.UserName,
-                    RoleName = userRoles,
-                    AllRoles = allRoles
-                });
-            }
-            else
-            {
-                ModelState.AddModelError("", "User not found");
+                return NotFound();
             }
 
-            return NotFound();
+            return View(editUser);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, List<string> roles)
+        public async Task<IActionResult> Edit(int id, int currentRoleId)
         {
-            var user = userManager.FindByIdAsync(id.ToString()).Result;
-
-            if (user != null)
+            if (ModelState.IsValid)
             {
-                var userRoles = await userManager.GetRolesAsync(user);
-                var allRoles = roleManager.Roles.ToList();
+                var result = await _adminService.UserDataManipulation(id, currentRoleId);
 
-                var addedRoles = roles.Except(userRoles);
-                var removedRoles = userRoles.Except(roles);
-
-                await userManager.RemoveFromRolesAsync(user, removedRoles);
-                await userManager.AddToRolesAsync(user, addedRoles);
-
-                return RedirectToAction("Index");
-            }
-            else
-            {
-                ModelState.AddModelError("", "User not found");
+                if (!result.Succeeded)
+                {
+                    AddErrorsFromResult(result);
+                    return View();
+                   // return RedirectToAction($"Edit/{id}");
+                }
             }
 
-            return NotFound();
+            return RedirectToAction("List");
         }
     }
 }

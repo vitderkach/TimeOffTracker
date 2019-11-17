@@ -1,18 +1,53 @@
-﻿@using Microsoft.AspNetCore.Identity
-@model TOT.Web.Models.ChangeUserRoleViewModel
+﻿@model TOT.Dto.EditApplicationUserDto
 
-<h2> Change @Model.Name role</h2>
+@{
+    var roleList = new SelectList(Model.AllRoles, "Id", "Name", selectedValue: Model.RoleId);
+}
 
-<form asp-action="Edit" method="post">
-    <input type="hidden" name="id" value="@Model.UserId" />
-    <div class="form-group">
-        @foreach (IdentityRole<int> role in Model.AllRoles)
-        {
-            <input type="radio" name="roles" value="@role.Name"
-                   @(Model.RoleName.Contains(role.Name) ? "checked=\"checked\"" : "") />@role.Name <br />
-            }
+<div class="container col-6">
+    <h4>User Profile</h4>
+    <hr />
+</div>
+
+<form asp-controller="Admin" asp-action="Edit" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="container col-6">
+        <div>
+            <input type="text" asp-for="Id" hidden />
+            <div class="form-group">
+                <label asp-for="FullName" class="control-label"></label>
+                <input asp-for="FullName" class="form-control" readonly />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" readonly />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" class="form-control" readonly />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RoleId" class="control-label"></label>
+                <select asp-for="RoleId" class="form-control" name="currentRoleId"
+                        asp-items=@roleList>
+                </select>
+                <span asp-validation-for="RoleId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save changes" class="btn btn-secondary" />
+            </div>
+        </div>
     </div>
-    <button type="submit" class="btn btn-primary">Save changes</button>
-    <a asp-action="Index" class="btn btn-link">Cancel</a>
 </form>
+
+<div>
+    <button class="btn btn-info" asp-action="List">Back to List</button>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
 

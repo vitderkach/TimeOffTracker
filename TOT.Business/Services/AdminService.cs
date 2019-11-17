@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,16 +18,19 @@ namespace TOT.Business.Services
         private IMapper _mapper;
 
         private readonly IUserService _userService;
+        private readonly IUserInfoService _userInfoService;
 
         private readonly string defaultPassword = "user";
 
         public AdminService(RoleManager<IdentityRole<int>> roleManager,
             IMapper mapper, IUserService userService,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            IUserInfoService userInfoService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _userService = userService;
+            _userInfoService = userInfoService;
             _mapper = mapper;
         }
 
@@ -56,6 +60,19 @@ namespace TOT.Business.Services
         public List<IdentityRole<int>> GetApplicationRoles()
         {
             return _roleManager.Roles.ToList();
+        }
+
+        private int GetRoleIdByUserId(int userId)
+        {
+            ApplicationUser user = _userManager.FindByIdAsync(
+                userId.ToString()).Result;
+            string currentRoleName = _userManager.GetRolesAsync(user)
+                .Result.FirstOrDefault();
+
+            var currentRole = _roleManager.FindByNameAsync(currentRoleName).Result;
+            var currentRoleId = _roleManager.GetRoleIdAsync(currentRole).Result;
+
+            return Convert.ToInt32(currentRoleId);
         }
 
         // [HttpPost] Create() Добавление нового пользователя
@@ -98,6 +115,59 @@ namespace TOT.Business.Services
                 await _userManager.AddToRoleAsync(user, userRole.Name);
             }
 
+            return result;
+        }
+
+        // [HttpGet] Edit/{id} Вывод данных пользователя
+        public EditApplicationUserDto EditUserData(int userId)
+        {
+            ApplicationUser user = _userManager.FindByIdAsync(userId.ToString()).Result;
+            EditApplicationUserDto editUserDto;
+
+            if (user != null)
+            {
+                var userInfo = _userInfoService.GetUserInfo(user.UserInformationId);
+
+                editUserDto = new EditApplicationUserDto()
+                {
+                    Id = user.Id,
+                    FullName = userInfo.FullName,
+                    Email = user.Email,
+                    UserName = user.UserName,
+                    RoleId = GetRoleIdByUserId(userId),
+                    AllRoles = GetApplicationRoles()
+                };
+            }
+            else
+            {
+                editUserDto = null;
+            }
+
+            return editUserDto;
+        }
+
+        // [HttpPost] Edit/{id} Изменение данных пользователя (роли)
+        public async Task<IdentityResult> UserDataManipulation(int userId, int newRoleId)
+        {
+            IdentityResult result = null;
+            var user = _userManager.FindByIdAsync(userId.ToString()).Result;
+            var currentRoleName = _userManager.GetRolesAsync(user)
+                .Result.FirstOrDefault();
+            var newRoleName = _roleManager.FindByIdAsync(newRoleId.ToString()).Result.Name;
+
+            if (!currentRoleName.Equals(newRoleName))
+            {
+                var removeResult =  await _userManager.RemoveFromRoleAsync(user, currentRoleName);
+
+                if (removeResult.Succeeded)
+                {
+                    result = await _userManager.AddToRoleAsync(user, newRoleName);
+                }
+            }
+            else
+            {
+                result = IdentityResult.Success;
+            }
             return result;
         }
     }
