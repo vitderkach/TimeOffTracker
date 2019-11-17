@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using TOT.Dto;
 using TOT.Interfaces;
 using TOT.Interfaces.Services;
+using TOT.Web.Models;
 
 namespace TOT.Web.Controllers {
     [Authorize(Roles = "Manager, Administrator")]
@@ -26,7 +27,7 @@ namespace TOT.Web.Controllers {
 
         // вывод всех активных запросов на имя менеджера
         // todo - routing
-        public IActionResult Index()
+        public IActionResult Index(int page = 1)
         {
             var requestsByCurrentManager =
                 _managerService.GetAllCurrentManagerResponses();
@@ -34,7 +35,21 @@ namespace TOT.Web.Controllers {
             var resultViewModel = _managerService
                 .GetCurrentManagerRequests(requestsByCurrentManager);
 
-            return View(resultViewModel);
+            int pageSize = 3;   // количество элементов на странице
+
+            var responses = resultViewModel;
+            var count = responses.Count();
+            var items = responses.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
+
+            ManagerResponseListViewModel viewModel = new ManagerResponseListViewModel
+            {
+                PageViewModel = pageViewModel,
+                Responses = items
+            };
+
+            return View(viewModel);
         }
 
         // вывод обработанных запросов менеджера

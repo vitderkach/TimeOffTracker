@@ -9,12 +9,12 @@
             {
                 <div class="row">
                     <a class="nav-link col" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
-                    <button type="submit col" class="btn btn-outline-light ">Log out</button>
+                    <button type="submit col" class="btn btn-outline-light">Log out</button>
                 </div>
             }
             else
             {
-               <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Login</a>
+               <a class="nav-link btn btn-outline-light" asp-area="Identity" asp-page="/Account/Login">Login</a>
             }
         </ul>
     </form>

@@ -1,7 +1,8 @@
-﻿@model IEnumerable<TOT.Dto.ManagerResponseListDto>
+﻿@model ManagerResponseListViewModel
 
 @{
     ViewData["Title"] = "CurrentRequests";
+    var response = Model.Responses.FirstOrDefault();
 }
 
 <h3>Current requests</h3>
@@ -11,16 +12,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Employee)
+                @Html.DisplayNameFor(model => response.Employee)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.VacationType)
+                @Html.DisplayNameFor(model => response.VacationType)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StartDate)
+                @Html.DisplayNameFor(model => response.StartDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EndDate)
+                @Html.DisplayNameFor(model => response.EndDate)
             </th>
             <th>
                 Details
@@ -28,7 +29,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.Responses)
         {
             @Html.HiddenFor(model => item.VacationRequestId)
             <tr>
@@ -51,4 +52,21 @@
         }
     </tbody>
 </table>
+@if (Model.PageViewModel.HasPreviousPage)
+{
+    <a asp-action="Index"
+       asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+       class="btn btn-outline-dark">
+
+        Prev
+    </a>
+}
+@if (Model.PageViewModel.HasNextPage)
+{
+    <a asp-action="Index"
+       asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+       class="btn btn-outline-dark">
+        Next
+    </a>
+}
 

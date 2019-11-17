@@ -1,72 +1,90 @@
-﻿@model IEnumerable<TOT.Dto.VacationRequestListDto>
+﻿@model VacationListViewModel
 
 @{
-    
+    var vacations = @Model.Vacations.FirstOrDefault();
 }
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.StartDate)
+                @Html.DisplayNameFor(model => vacations.StartDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EndDate)
+                @Html.DisplayNameFor(model => vacations.EndDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.VacationType)
+                @Html.DisplayNameFor(model => vacations.VacationType)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Notes)
+                @Html.DisplayNameFor(model => vacations.Notes)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Approval)
+                @Html.DisplayNameFor(model => vacations.Approval)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model)
-{
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VacationType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Notes)
-            </td>
-            <td>
-                @{
-                    if (item.Approval == null)
-                    { <div> In Process </div> }
-                    if (item.Approval == false)
-                    { <div> Declined </div> }
-                    if (item.Approval == true)
-                    { <div> Approved </div> }
-                }
-        </td>
-            <td>
-                <div class="row justify-content-end">
+        @foreach (var item in Model.Vacations)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VacationType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Notes)
+                </td>
+                <td>
                     @{
-                        @Html.ActionLink("Edit", "Edit", new { id = item.VacationRequestId }, new { @class = "btn btn-outline-dark form-control col-5 m-1" })
                         if (item.Approval == null)
-                        { 
-                            @Html.ActionLink("Delete", "Delete", new { id = item.VacationRequestId }, new { @class = "btn btn-outline-dark form-control col-5 m-1" })
-                        }
-                        else
-                        { 
-                            <button class = "btn btn-outline-dark form-control col-5 m-1" disabled>Delete</button>
-                        }
+                        { <div> In Process </div> }
+                        if (item.Approval == false)
+                        { <div> Declined </div> }
+                        if (item.Approval == true)
+                        { <div> Approved </div> }
                     }
-                </div>
-            </td>
-        </tr>
-}
+                </td>
+                <td>
+                    <div class="row justify-content-end">
+                        @{
+                            @Html.ActionLink("Edit", "Edit", new { id = item.VacationRequestId }, new { @class = "btn btn-outline-dark form-control col-5 m-1" })
+                            if (item.Approval == null)
+                            {
+                                @Html.ActionLink("Delete", "Delete", new { id = item.VacationRequestId }, new { @class = "btn btn-outline-dark form-control col-5 m-1" })
+                            }
+                            else
+                            {
+                                <button class="btn btn-outline-dark form-control col-5 m-1" disabled>Delete</button>
+                            }
+                        }
+                    </div>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+@if (Model.PageViewModel.HasPreviousPage)
+{
+<a asp-action="List"
+   asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+   class="btn btn-outline-dark">
+    
+    Prev
+</a>
+}
+@if (Model.PageViewModel.HasNextPage)
+{
+    <a asp-action="List"
+       asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+       class="btn btn-outline-dark">
+        Next
+    </a>
+}

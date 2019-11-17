@@ -12,6 +12,7 @@ using TOT.Dto;
 using TOT.Entities;
 using TOT.Interfaces;
 using TOT.Interfaces.Services;
+using TOT.Web.Models;
 
 namespace TOT.Web.Controllers
 {
@@ -66,11 +67,22 @@ namespace TOT.Web.Controllers
             }
         }
         [HttpGet]
-        public IActionResult List()
+        public IActionResult List(int page = 1)
         {
-            var vacations = _vacationService.GetAllByCurrentUser();
+            int pageSize = 3;   // количество элементов на странице
 
-            return View(vacations);
+            var vacations = _vacationService.GetAllByCurrentUser();
+            var count = vacations.Count();
+            var items = vacations.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
+
+            VacationListViewModel viewModel = new VacationListViewModel
+            {
+                PageViewModel = pageViewModel,
+                Vacations = items
+            };
+            return View(viewModel);
         }
         [HttpGet]
         public IActionResult Edit(int id)

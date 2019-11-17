@@ -18,11 +18,17 @@ namespace TOT.Dto
             ManagersId = new List<int>();
         }
         public int Id { get; set; }
+        [Display(Name ="From")]
         [DataType(DataType.Date)]
         public DateTime StartDate { get; set; }
+        [Display(Name = "To")]
         [DataType(DataType.Date)]
         public DateTime EndDate { get; set; }
+
+        [Display(Name = "Vacation types")]
         public string SelectedTimeOffType { get; set; }
+
+        [Display(Name = "Vacation types")]
         public SelectList VacationTypes { 
             get
             {
@@ -41,9 +47,14 @@ namespace TOT.Dto
                 return list;
             } 
         }
+        [Display(Name = "Notes")]
         public string Notes { get; set; }
+
+        [Display(Name = "Managers")]
         public IEnumerable<int> SelectedManager { get; set; }
         public IEnumerable<int> ManagersId { get; set; }
+
+        [Display(Name = "Managers")]
         public SelectList MyManagers { get; set; }
         public ICollection<ManagerResponseDto> ManagersResponses { get; set; }
         public int UserId { get; set; }
