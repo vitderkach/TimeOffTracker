@@ -2,7 +2,7 @@
 @using TOT.Entities
 
 @{
-    var permission = User.IsInRole("Manager") || User.IsInRole("Administrator");
+    var permission = User.IsInRole("Administrator");
 }
 
 @inject SignInManager<ApplicationUser> SignInManager
@@ -12,10 +12,11 @@
 {
     <li class="nav-item dropdown justify-content-between">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Manager
+            Admin
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" asp-controller="Manager" asp-action="Index">Need to consider</a>
+            <a class="dropdown-item" asp-controller="Admin" asp-action="List">List of users</a>
+            <a class="dropdown-item" asp-controller="Admin" asp-action="Create">Create user</a>
         </div>
     </li>
 }
