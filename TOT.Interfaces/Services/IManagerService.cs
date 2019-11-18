@@ -10,6 +10,7 @@ namespace TOT.Interfaces.Services
         void ApproveUserRequest(int managerResponseId, string managerNotes, bool approval);
 
         IEnumerable<ManagerResponseDto> GetAllCurrentManagerResponses();
+        IEnumerable<ManagerResponseListDto> GetAllMyManagerResponses();
         IEnumerable<ManagerResponseListDto> GetCurrentManagerRequests(
             IEnumerable<ManagerResponseDto> managerResponsesDto);
         VacationRequestApprovalDto VacationApproval(ManagerResponseDto managerResponse);

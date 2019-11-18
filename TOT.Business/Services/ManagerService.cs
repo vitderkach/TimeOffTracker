@@ -46,7 +46,21 @@ namespace TOT.Business.Services
 
             return nextResponse;
         }
+        public IEnumerable<ManagerResponseListDto> GetAllMyManagerResponses()
+        {
+            var Id = _userService.GetCurrentUser().Result.Id;
 
+            var managerResponses = _uow.ManagerResponseRepository.GetAll()
+                .Where(vr => vr.ManagerId == Id)
+                .OrderBy(v => v.VacationRequest.StartDate);
+
+            var managerResponsesDto = _mapper.Map<IEnumerable<ManagerResponse>,
+                IEnumerable<ManagerResponseDto>>(managerResponses);
+
+            var managerResponsesListDto = _mapper.Map<IEnumerable<ManagerResponseDto>,
+                IEnumerable<ManagerResponseListDto>>(managerResponsesDto);
+            return managerResponsesListDto;
+        }
         // список всех активных запросов на имя менеджера
         public IEnumerable<ManagerResponseDto> GetAllCurrentManagerResponses()
         {
