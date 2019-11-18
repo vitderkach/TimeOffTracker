@@ -29,24 +29,26 @@ namespace TOT.Web.Controllers {
         // вывод всех активных запросов на имя менеджера
         // todo - routing
         public async Task<IActionResult> Index(
-             string sortOrder,
+            string sortOrder,
             string currentFilter,
             string searchString,
             int? pageNumber)
         {
             if (searchString != null)
-                ViewData["NameSortParm"] = searchString;
-            if (currentFilter != null)
-            ViewData["CurrentFilter"] = currentFilter;
-            ViewData["NameSortParm"] = searchString;
-            if (searchString != null)
             {
-                pageNumber = 1;
+                ViewData["NameSortParm"] = searchString;
             }
             else
             {
-                searchString = ViewData["CurrentFilter"] as string;
+                if (currentFilter == null)
+                {
+                    pageNumber = 1;
+                }
             }
+
+            if (currentFilter != null)
+                ViewData["CurrentFilter"] = currentFilter;
+
             IEnumerable<ManagerResponseListDto> responses = new List<ManagerResponseListDto>();
             switch (currentFilter)
             {
@@ -74,7 +76,7 @@ namespace TOT.Web.Controllers {
                         .GetCurrentManagerRequests(requestsByCurrentManager).Where(m => m.Approval == null);
                     var name = ViewData["NameSortParm"] as string;
                     if (name != null)
-                        responses = responses.Where(m => m.VacationRequest.User.UserInformation.FullName.Contains(name));
+                        responses = responses.Where(m => m.VacationRequest.User.UserInformation.FullName.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0);
                     break;
                 }
             }
