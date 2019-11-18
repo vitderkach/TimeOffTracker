@@ -52,7 +52,7 @@ namespace TOT.Web.Controllers
                     return View(registrationForm);
                 }
             }
-            return RedirectToAction("List");
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
@@ -74,7 +74,7 @@ namespace TOT.Web.Controllers
 
             if (editUser == null)
             {
-                return NotFound();
+                return RedirectToAction("Index", "Home");
             }
 
             return View(editUser);
@@ -90,8 +90,8 @@ namespace TOT.Web.Controllers
                 if (!result.Succeeded)
                 {
                     AddErrorsFromResult(result);
-                    return View();
-                   // return RedirectToAction($"Edit/{id}");
+                    return RedirectToAction("Index", "Home");
+                    // return RedirectToAction($"Edit/{id}");
                 }
             }
 

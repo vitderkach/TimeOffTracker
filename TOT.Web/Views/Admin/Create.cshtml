@@ -2,6 +2,8 @@
 @model TOT.Dto.RegistrationUserDto
 
 @{
+    ViewData["Title"] = "Create";
+
     var roles = (List<IdentityRole<int>>)ViewData["roles"];
     var roleList = new SelectList(roles, "Id", "Name", selectedValue: 2);
 }
@@ -40,8 +42,9 @@
                     <span asp-validation-for="RoleId" class="text-danger"></span>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-3">
                 <input name="submit" type="submit" value="Add user" class="btn btn-outline-dark" />
+                <a class="btn btn-outline-light text-dark" asp-controller="Home" asp-action="Index">Cancel</a>
             </div>
         </div>
     </div>

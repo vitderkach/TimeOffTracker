@@ -110,7 +110,15 @@ namespace TOT.Business.Services
             }
 
             IdentityResult result = null;
-            result = await _userManager.CreateAsync(user, defaultPassword);
+            try
+            {
+                result = await _userManager.CreateAsync(user, defaultPassword);
+            }
+            catch
+            {
+                result = IdentityResult.Failed();
+                return result;
+            }
 
             if (result.Succeeded)
             {

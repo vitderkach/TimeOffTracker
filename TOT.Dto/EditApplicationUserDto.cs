@@ -14,14 +14,17 @@ namespace TOT.Dto
         public int Id { get; set; }
 
         [Required]
-        [Display(Name = "User")]
+        [StringLength(50)]
+        [Display(Name = "Name")]
         public string FullName { get; set; }
 
         [Required]
+        [EmailAddress]
         [Display(Name = "E-mail")]
         public string Email { get; set; }
 
         [Required]
+        [StringLength(40)]
         [Display(Name = "Login")]
         public string UserName { get; set; }
 
