@@ -53,7 +53,7 @@ namespace TOT.Business.Services
             };
             _vacationEmailSender.ExecuteToManager(emailModel);
         }
-        public void DeleteVacationByUserId(int id)
+        /*public void DeleteVacationByUserId(int id)
         {
             var vacationsRemoved = _uow.VacationRequestRepository
                 .GetAll()
@@ -62,6 +62,26 @@ namespace TOT.Business.Services
             {
                 _uow.VacationRequestRepository.Delete(removed.VacationRequestId);
             }
+        }*/
+
+        public List<int> GetAllVacationIdsByUser(int userId)
+        {
+            List<int> vacationIds = new List<int>();
+            var vacations = _uow.VacationRequestRepository
+                .GetAll()
+                .Where(v => v.UserId == userId);
+
+            foreach (VacationRequest request in vacations)
+            {
+                vacationIds.Add(request.VacationRequestId);
+            }
+
+            return vacationIds;
+        }
+
+        public void DeleteVacationById(int id)
+        {
+            _uow.VacationRequestRepository.Delete(id);
         }
 
         public IEnumerable<VacationRequestListDto> GetAllByCurrentUser()

@@ -13,6 +13,9 @@ namespace TOT.Interfaces.Services
         VacationRequestDto GetVacationById(int id);
         void UpdateVacation(int id, string notes);
         bool DeleteVacation(int id);
-        void DeleteVacationByUserId(int id);
+       // void DeleteVacationByUserId(int id);
+
+        List<int> GetAllVacationIdsByUser(int userId);
+        void DeleteVacationById(int id);
     }
 }

@@ -29,7 +29,10 @@ namespace TOT.Data.Configuration
                  .WithMany(mr => mr.ManagersResponses)
                  .HasForeignKey(fk => fk.VacationRequestId)
                  .HasConstraintName("FK_Request_Responses")
-                 .OnDelete(DeleteBehavior.Restrict);
+                 .OnDelete(DeleteBehavior.Cascade);
+            /*Если удаляется заявка, удаляются и ответы к ней.
+              Заявка удаляется либо самим пользователем, либо
+              при удалении пользователя*/
         }
     }
 }

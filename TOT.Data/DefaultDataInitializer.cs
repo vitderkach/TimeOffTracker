@@ -24,9 +24,42 @@ namespace TOT.Data
 
                 var userInfo = new List<UserInformation>()
                 {
-                    new UserInformation(){ FirstName = "Matthew", LastName = "Brown" },
-                    new UserInformation(){ FirstName = "Joseph", LastName = "White" },
-                    new UserInformation(){ FirstName = "Nadia", LastName = "Campbell" }
+                    new UserInformation(){ FirstName = "Matthew", LastName = "Brown",
+                        VacationPolicyInfo = new VacationPolicyInfo()
+                        {
+                            TimeOffTypes = new List<VacationType>()
+                            {
+                                new VacationType() { TimeOffType = TimeOffType.SickLeave, WastedDays = 0 },
+                                new VacationType() { TimeOffType = TimeOffType.StudyLeave, WastedDays = 0 },
+                                new VacationType() { TimeOffType = TimeOffType.Vacation, WastedDays = 0 },
+                                new VacationType() { TimeOffType = TimeOffType.UnpaidVacation, WastedDays = 0 }
+                            }
+                        }
+                    },
+                    new UserInformation(){ FirstName = "Joseph", LastName = "White",
+                        VacationPolicyInfo = new VacationPolicyInfo()
+                        {
+                            TimeOffTypes = new List<VacationType>()
+                            {
+                                new VacationType() { TimeOffType = TimeOffType.SickLeave, WastedDays = 0 },
+                                new VacationType() { TimeOffType = TimeOffType.StudyLeave, WastedDays = 0 },
+                                new VacationType() { TimeOffType = TimeOffType.Vacation, WastedDays = 0 },
+                                new VacationType() { TimeOffType = TimeOffType.UnpaidVacation, WastedDays = 0 }
+                            }
+                        }
+                    },
+                    new UserInformation(){ FirstName = "Nadia", LastName = "Campbell",
+                        VacationPolicyInfo = new VacationPolicyInfo()
+                        {
+                            TimeOffTypes = new List<VacationType>()
+                            {
+                                new VacationType() { TimeOffType = TimeOffType.SickLeave, WastedDays = 0 },
+                                new VacationType() { TimeOffType = TimeOffType.StudyLeave, WastedDays = 0 },
+                                new VacationType() { TimeOffType = TimeOffType.Vacation, WastedDays = 0 },
+                                new VacationType() { TimeOffType = TimeOffType.UnpaidVacation, WastedDays = 0 }
+                            }
+                        }
+                    }
                 };
 
                 context.UserInformations.AddRange(userInfo);
