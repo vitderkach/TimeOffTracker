@@ -55,6 +55,13 @@ namespace TOT.Business.Services
             var applicationUserListDto = _mapper.Map<IEnumerable<ApplicationUser>,
                 IEnumerable<ApplicationUserListDto>>(userList);
 
+            ApplicationUser applicationUser;
+            foreach (ApplicationUserListDto user in applicationUserListDto)
+            {
+                applicationUser = _mapper.Map<ApplicationUserListDto, ApplicationUser>(user);
+                user.RoleName = _userManager.GetRolesAsync(applicationUser).Result.FirstOrDefault();
+            }
+
             return applicationUserListDto;
         }
 
