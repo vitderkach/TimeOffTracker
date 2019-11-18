@@ -25,7 +25,7 @@ namespace TOT.Utility.AutoMapper
                 .ForMember(dest => dest.VacationType, opt => opt.MapFrom(
                     src => src.VacationType.ToEnum<TimeOffType>()));
 
-            //CreateMap<ManagerResponseDto, ManagerResponseListDto>();
+            CreateMap<ApplicationUserListDto, ApplicationUser>();
         }
     }
     public static class EnumExtensions

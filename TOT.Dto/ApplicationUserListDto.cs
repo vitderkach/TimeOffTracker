@@ -10,8 +10,8 @@ namespace TOT.Dto
         [Display(Name = "Name")]
         public string FullName { get; set; }
 
-        [Display(Name = "Login")]
-        public string UserName { get; set; }
+        [Display(Name = "Role")]
+        public string RoleName { get; set; }
 
         [DataType(DataType.Date)]
         [Display(Name = "Registered")]

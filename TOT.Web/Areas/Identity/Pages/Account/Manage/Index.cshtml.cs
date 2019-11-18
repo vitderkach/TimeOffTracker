@@ -28,8 +28,6 @@ namespace TOT.Web.Areas.Identity.Pages.Account.Manage
             _emailSender = emailSender;
         }
 
-        public string Login { get; set; }
-
         public string Role { get; set; }
 
         public bool IsEmailConfirmed { get; set; }
@@ -43,12 +41,18 @@ namespace TOT.Web.Areas.Identity.Pages.Account.Manage
         public class InputModel
         {
             [Required]
+            [StringLength(70)]
             [EmailAddress]
             public string Email { get; set; }
 
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [Required]
+            [StringLength(40)]
+            [Display(Name = "Login")]
+            public string Login { get; set; }
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -64,13 +68,13 @@ namespace TOT.Web.Areas.Identity.Pages.Account.Manage
             var userRole = await _userManager.GetRolesAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
-            Login = userName;
             Role = userRole.FirstOrDefault();
 
             Input = new InputModel
             {
                 Email = email,
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                Login = userName
             };
 
             IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
@@ -94,12 +98,20 @@ namespace TOT.Web.Areas.Identity.Pages.Account.Manage
             var email = await _userManager.GetEmailAsync(user);
             if (Input.Email != email)
             {
-                var setEmailResult = await _userManager.SetEmailAsync(user, Input.Email);
-                if (!setEmailResult.Succeeded)
+                try
+                {
+                    var setEmailResult = await _userManager.SetEmailAsync(user, Input.Email);
+                }
+                catch
+                {
+                    StatusMessage = "A user with this e-mail already exists.";
+                    return RedirectToPage();
+                }
+                /*if (!setEmailResult.Succeeded)
                 {
                     var userId = await _userManager.GetUserIdAsync(user);
                     throw new InvalidOperationException($"Unexpected error occurred setting email for user '{user.UserName}'.");
-                }
+                }*/
             }
 
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
@@ -110,6 +122,19 @@ namespace TOT.Web.Areas.Identity.Pages.Account.Manage
                 {
                     var userId = await _userManager.GetUserIdAsync(user);
                     throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{user.UserName}'.");
+                }
+            }
+
+            var login = await _userManager.GetUserNameAsync(user);
+            if (Input.Login != login)
+            {
+                var setLoginResult = await _userManager.SetUserNameAsync(user, Input.Login);
+                if (!setLoginResult.Succeeded)
+                {
+                    // var userId = await _userManager.GetUserIdAsync(user);
+                    // throw new InvalidOperationException($"Unexpected error occurred setting login for user with ID '{user.UserName}'.");
+                    StatusMessage = "A user with this login already exists.";
+                    return RedirectToPage();
                 }
             }
 

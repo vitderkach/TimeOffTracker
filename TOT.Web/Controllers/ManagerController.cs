@@ -14,7 +14,6 @@ namespace TOT.Web.Controllers {
     public class ManagerController : Controller {
         private readonly IManagerService _managerService;
         private readonly IVacationService _vacationService;
-        private readonly IMapper _mapper;
 
         public ManagerController(IManagerService managerService,
             IVacationService vacationService,
@@ -22,7 +21,6 @@ namespace TOT.Web.Controllers {
         {
             _managerService = managerService;
             _vacationService = vacationService;
-            _mapper = mapper;
         }
 
         // вывод всех активных запросов на имя менеджера

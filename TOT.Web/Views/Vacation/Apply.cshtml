@@ -39,7 +39,34 @@
             </div>
             <div class="form-group mt-5">
                 <a class="btn btn-outline-dark" asp-action="List">Back to List</a>
-                <input type="submit" id="submit-button" value="Create" class="btn btn-outline-dark" />
+                <!--<input type="submit" id="submit-button" value="Create" class="btn btn-outline-dark" />-->
+
+                <button type="button" data-target="#applyCreate" data-toggle="modal" class="btn btn-outline-dark">Create</button>
+                <!-- Create window -->
+                <div class="modal fade" id="applyCreate" tabindex="-1" role="dialog" aria-labelledby="createLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="createLabel"><span><b>Are you sure?</b></span></h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Candel">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                    Do you really want to create a vacation request? <br />
+                                    <!--Не получается добавить расширенное описание. Например, Model.SelectedTimeOffType, 
+                                        Model.StartDate и т.д. Возможно из-за JS. -->
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <!--Может дело в id="submit-button"-->
+                                <input id="submit-button" type="submit" value="Create" class="btn btn-outline-dark" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </form>
     </div>

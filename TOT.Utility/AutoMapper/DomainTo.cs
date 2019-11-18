@@ -20,7 +20,7 @@ namespace TOT.Utility.AutoMapper
 
             CreateMap<ApplicationUser, ApplicationUserDto>();
             CreateMap<UserInformation, UserInformationDto>()
-                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => $"{src.LastName} {src.FirstName}"));
+                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"));
 
             CreateMap<ManagerResponse, ManagerResponseDto>();
             CreateMap<VacationRequestListDto, VacationRequest>();
