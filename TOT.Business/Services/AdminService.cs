@@ -188,10 +188,17 @@ namespace TOT.Business.Services
             return result;
         }
 
+        /*В общем, чтобы удалить пользователя без конфликта в БД нужно поставить NULL
+          в поле UserId таблицы VacationRequest. Из-за этого использовать метод
+          DeleteVacationByUserId(userId) не получается. Можно было, конечно, удалить 
+          сначала заявки, а потом пользователя. Но, если что-то пойдет не так и 
+          result будет не Succeeded, то все заявки пользователя пропадут.       
+          Поэтому сделал вот так */
         public async Task<IdentityResult> DeleteUser(int userId)
         {
             IdentityResult result = null;
             ApplicationUser user = _userManager.FindByIdAsync(userId.ToString()).Result;
+            var userRequests = _vacationService.GetAllVacationIdsByUser(user.Id);
 
             if (user != null)
             {
@@ -199,7 +206,14 @@ namespace TOT.Business.Services
                 if (result.Succeeded)
                 {
                     _userInfoService.DeleteUserInfo(user.UserInformationId);
-                    _vacationService.DeleteVacationByUserId(userId);
+                    if (userRequests.Any())
+                    {
+                        foreach (int vacationId in userRequests)
+                        {
+                            _vacationService.DeleteVacationById(vacationId);
+                        }
+                    }
+                    //_vacationService.DeleteVacationByUserId(userId);
                 }
             }
             else

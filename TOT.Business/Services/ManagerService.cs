@@ -178,6 +178,9 @@ namespace TOT.Business.Services
         #region CaluclateVacationDays
         private void CalculateVacationDays(VacationRequest vacationRequestDto)
         {
+            /*Тут NullReferenceException. 
+             Создал заявку на 2 менеджера. Одного удалил, вторым принял заявку - ошибка
+             Еще случай. Создал заявку на 2 менеджера. Первым принял - все ок. Принял вторым - ошибка*/
             var vacationPolicy = _uow.VacationPolicyRepository.GetAll()
                 .Where(v => v.UserInformationId == vacationRequestDto.User.UserInformationId)
                 .FirstOrDefault();

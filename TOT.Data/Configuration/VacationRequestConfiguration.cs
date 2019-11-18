@@ -41,8 +41,7 @@ namespace TOT.Data.Configuration
                 .WithMany(r => r.VacationRequests)
                 .HasForeignKey(fk => fk.UserId)
                 .HasConstraintName("FK_AppUser_Requests")
-                .OnDelete(DeleteBehavior.Restrict);
-            /*Если поменять DeleteBehavior выдает ошибку */
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }
