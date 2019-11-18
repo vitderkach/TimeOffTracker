@@ -8,6 +8,7 @@ using TOT.Dto;
 using TOT.Interfaces;
 using TOT.Interfaces.Services;
 using TOT.Web.Models;
+using PagedList;
 
 namespace TOT.Web.Controllers {
     [Authorize(Roles = "Manager, Administrator")]
@@ -27,29 +28,58 @@ namespace TOT.Web.Controllers {
 
         // вывод всех активных запросов на имя менеджера
         // todo - routing
-        public IActionResult Index(int page = 1)
+        public async Task<IActionResult> Index(
+             string sortOrder,
+            string currentFilter,
+            string searchString,
+            int? pageNumber)
         {
-            var requestsByCurrentManager =
-                _managerService.GetAllCurrentManagerResponses();
-
-            var resultViewModel = _managerService
-                .GetCurrentManagerRequests(requestsByCurrentManager);
-
-            int pageSize = 3;   // количество элементов на странице
-
-            var responses = resultViewModel;
-            var count = responses.Count();
-            var items = responses.Skip((page - 1) * pageSize).Take(pageSize).ToList();
-
-            PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
-
-            ManagerResponseListViewModel viewModel = new ManagerResponseListViewModel
+            if (searchString != null)
+                ViewData["NameSortParm"] = searchString;
+            if (currentFilter != null)
+            ViewData["CurrentFilter"] = currentFilter;
+            ViewData["NameSortParm"] = searchString;
+            if (searchString != null)
             {
-                PageViewModel = pageViewModel,
-                Responses = items
-            };
-
-            return View(viewModel);
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = ViewData["CurrentFilter"] as string;
+            }
+            IEnumerable<ManagerResponseListDto> responses = new List<ManagerResponseListDto>();
+            switch (currentFilter)
+            {
+                case "In Proccess":
+                {
+                    var requestsByCurrentManager = _managerService.GetAllCurrentManagerResponses();
+                    responses = _managerService
+                        .GetCurrentManagerRequests(requestsByCurrentManager).Where(m => m.Approval == null);
+                    break;
+                }
+                case "Approved":
+                {
+                    responses = _managerService.GetAllMyManagerResponses().Where(m => m.Approval == true);
+                    break;
+                }
+                case "Declined":
+                {
+                    responses = _managerService.GetAllMyManagerResponses().Where(m => m.Approval == false);
+                    break;
+                }
+                default:
+                {
+                    var requestsByCurrentManager = _managerService.GetAllCurrentManagerResponses();
+                    responses = _managerService
+                        .GetCurrentManagerRequests(requestsByCurrentManager).Where(m => m.Approval == null);
+                    var name = ViewData["NameSortParm"] as string;
+                    if (name != null)
+                        responses = responses.Where(m => m.VacationRequest.User.UserInformation.FullName.Contains(name));
+                    break;
+                }
+            }
+            int pageSize = 3;
+            return View(await PaginatedList<ManagerResponseListDto>.CreateAsync(responses, pageNumber ?? 1, pageSize));
         }
 
         // вывод обработанных запросов менеджера

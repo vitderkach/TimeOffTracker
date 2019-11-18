@@ -1,9 +1,18 @@
-﻿@model VacationListViewModel
-
+﻿@model PaginatedList<TOT.Dto.VacationRequestListDto>
+@using PagedList.Mvc;
 @{
-    var vacations = @Model.Vacations.FirstOrDefault();
+    var vacations = @Model.FirstOrDefault();
 }
-
+<hr />
+<div class="form-group">
+    <div class="col-6">
+        <a asp-action="List" class="btn btn-outline-dark" asp-route-currentFilter="All">All</a>
+        <a asp-action="List" class="btn btn-outline-dark" asp-route-currentFilter="Approved">Approved</a>
+        <a asp-action="List" class="btn btn-outline-dark" asp-route-currentFilter="In Proccess">In Proccess</a>
+        <a asp-action="List" class="btn btn-outline-dark" asp-route-currentFilter="Declined">Declined</a>
+    </div>
+</div>
+<hr />
 <table class="table">
     <thead>
         <tr>
@@ -26,7 +35,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Vacations)
+        @foreach (var item in Model)
         {
             <tr>
                 <td>
@@ -71,20 +80,22 @@
     </tbody>
 </table>
 
-@if (Model.PageViewModel.HasPreviousPage)
-{
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
 <a asp-action="List"
-   asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
-   class="btn btn-outline-dark">
-    
-    Prev
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-outline-dark @prevDisabled">
+    Previous
 </a>
-}
-@if (Model.PageViewModel.HasNextPage)
-{
-    <a asp-action="List"
-       asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
-       class="btn btn-outline-dark">
-        Next
-    </a>
-}
+<a asp-action="List"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-outline-dark @nextDisabled">
+    Next
+</a>

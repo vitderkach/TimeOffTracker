@@ -13,6 +13,7 @@ using TOT.Entities;
 using TOT.Interfaces;
 using TOT.Interfaces.Services;
 using TOT.Web.Models;
+using PagedList;
 
 namespace TOT.Web.Controllers
 {
@@ -67,22 +68,54 @@ namespace TOT.Web.Controllers
             }
         }
         [HttpGet]
-        public IActionResult List(int page = 1)
+        public async Task<IActionResult> List(
+            string sortOrder,
+            string currentFilter,
+            string searchString,
+            int? pageNumber)
         {
-            int pageSize = 3;   // количество элементов на странице
-
-            var vacations = _vacationService.GetAllByCurrentUser();
-            var count = vacations.Count();
-            var items = vacations.Skip((page - 1) * pageSize).Take(pageSize).ToList();
-
-            PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
-
-            VacationListViewModel viewModel = new VacationListViewModel
+            ViewData["NameSortParm"] = sortOrder;
+            ViewData["CurrentFilter"] = currentFilter;
+            if (searchString != null)
             {
-                PageViewModel = pageViewModel,
-                Vacations = items
-            };
-            return View(viewModel);
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = ViewData["CurrentFilter"] as string;
+            }
+
+            IEnumerable<VacationRequestListDto> vacations = new List<VacationRequestListDto>();
+            switch (currentFilter)
+            {
+                case "All":
+                {
+                    vacations = _vacationService.GetAllByCurrentUser();
+                    break;
+                }
+                case "In Proccess":
+                {
+                    vacations = _vacationService.GetAllByCurrentUser().Where(v => v.Approval == null);
+                    break;
+                }
+                case "Approved":
+                {
+                    vacations = _vacationService.GetAllByCurrentUser().Where(v => v.Approval == true);
+                    break;
+                }
+                case "Declined":
+                {
+                    vacations = _vacationService.GetAllByCurrentUser().Where(v => v.Approval == false);
+                    break;
+                }
+                default:
+                {
+                    vacations = _vacationService.GetAllByCurrentUser();
+                    break;
+                }
+            }
+            int pageSize = 3;
+            return View(await PaginatedList<VacationRequestListDto>.CreateAsync(vacations, pageNumber ?? 1, pageSize));
         }
         [HttpGet]
         public IActionResult Edit(int id)

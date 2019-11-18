@@ -1,13 +1,28 @@
-﻿@model ManagerResponseListViewModel
-
+﻿@model PaginatedList<TOT.Dto.ManagerResponseListDto>
+@using PagedList.Mvc;
 @{
-    ViewData["Title"] = "CurrentRequests";
-    var response = Model.Responses.FirstOrDefault();
+    var response = @Model.FirstOrDefault();
 }
-
-<h3>Current requests</h3>
-<br />
-
+<hr />
+<div class="form-group">
+    <div class="col-6">
+        <a asp-action="Index" class="btn btn-outline-dark" asp-route-currentFilter="Approved">Approved</a>
+        <a asp-action="Index" class="btn btn-outline-dark" asp-route-currentFilter="In Proccess">Need to review</a>
+        <a asp-action="Index" class="btn btn-outline-dark" asp-route-currentFilter="Declined">Declined</a>
+    </div>
+    <div class="col-5">
+        <form asp-action="Index" method="get">
+            <div class="form-actions no-color">
+                <p>
+                    <label for="searchName">Find by name:</label>
+                    <input type="text" id="searchName" name="SearchString" value="@ViewData["CurrentFilter"]" class="form-control" />
+                    <input type="submit" value="Search" class="btn btn-outline-dark" />
+                    <a class="btn btn-outline-dark" asp-action="Index" >Back to Full List</a>
+                </p>
+            </div>
+        </form> </div>
+</div>
+<hr />
 <table class="table">
     <thead>
         <tr>
@@ -29,7 +44,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Responses)
+        @foreach (var item in Model)
         {
             @Html.HiddenFor(model => item.VacationRequestId)
             <tr>
@@ -52,21 +67,25 @@
         }
     </tbody>
 </table>
-@if (Model.PageViewModel.HasPreviousPage)
-{
-    <a asp-action="Index"
-       asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
-       class="btn btn-outline-dark">
 
-        Prev
-    </a>
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
 }
-@if (Model.PageViewModel.HasNextPage)
-{
-    <a asp-action="Index"
-       asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
-       class="btn btn-outline-dark">
-        Next
-    </a>
-}
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   asp-route-searchString="@ViewData["NameSortParm"]"
 
+   class="btn btn-outline-dark @prevDisabled">
+    Previous
+</a>
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   asp-route-searchString="@ViewData["NameSortParm"]"
+   class="btn btn-outline-dark @nextDisabled">
+    Next
+</a>
