@@ -32,7 +32,7 @@ namespace TOT.Business.Services {
             htmlContent += $"<a href='{host}/Manager/Index'>Follow the link</a>";
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
 
-            var response = await client.SendEmailAsync(msg);
+            //var response = await client.SendEmailAsync(msg);
         }
         public async void ExecuteToEmployeeAccept(EmailModel model)
         {
@@ -48,7 +48,7 @@ namespace TOT.Business.Services {
             htmlContent += $"<a href='{host}/Manager/Index'>Follow the link</a>";
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
 
-            var response = await client.SendEmailAsync(msg);
+            //var response = await client.SendEmailAsync(msg);
         }
         public async void ExecuteToEmployeeDecline(EmailModel model)
         {
@@ -64,7 +64,7 @@ namespace TOT.Business.Services {
             htmlContent += $"<a href='{host}/Manager/Index'>Follow the link</a>";
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
 
-            var response = await client.SendEmailAsync(msg);
+            //var response = await client.SendEmailAsync(msg);
         }
     }
 }

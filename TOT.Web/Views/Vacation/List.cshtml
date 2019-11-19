@@ -62,7 +62,7 @@
                     }
                 </td>
                 <td>
-                    <div class="row justify-content-end">
+                    <div class="row">
                         @{
                             @Html.ActionLink("Edit", "Edit", new { id = item.VacationRequestId }, new { @class = "btn btn-outline-dark form-control col-5 m-1" })
                             if (item.Approval == null)
@@ -71,7 +71,7 @@
 
                                 <!--Разметка поплыла из-за смены кнопки Delete-->
                                 <form asp-action="Delete" asp-route-id="@item.VacationRequestId" method="post">
-                                    <button type="button" class="btn btn-outline-dark form-control col-5 m-1"
+                                    <button type="button" class="btn btn-outline-dark form-control m-1"
                                         data-toggle="modal" data-target="#@deleteVacation"
                                         data-whatever="@item.VacationRequestId">
                                     Delete
