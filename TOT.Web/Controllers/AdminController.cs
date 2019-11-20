@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using TOT.Interfaces.Services;
 using TOT.Dto;
 using Microsoft.AspNetCore.Authorization;
+using TOT.Web.Models;
+using System.Linq;
+using System;
 
 namespace TOT.Web.Controllers
 {
@@ -25,11 +28,21 @@ namespace TOT.Web.Controllers
             }
         }
 
-        public IActionResult List()
+        public async Task<IActionResult> List(
+            string searchString,
+            int? pageNumber)
         {
-            var userList = _adminService.GetApplicationUserList();
+            if (searchString != null)
+            {
+                ViewData["NameSortParm"] = searchString;
+            }
 
-            return View(userList);
+            var userList = _adminService.GetApplicationUserList();
+            if (searchString != null)
+                userList = userList.Where(m => m.FullName.IndexOf(searchString, StringComparison.OrdinalIgnoreCase) >= 0);
+
+            int pageSize = 3;
+            return View(await PaginatedList<ApplicationUserListDto>.CreateAsync(userList, pageNumber ?? 1, pageSize));
         }
 
         public IActionResult Create()

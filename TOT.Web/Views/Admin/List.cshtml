@@ -1,23 +1,36 @@
-﻿@model IEnumerable<TOT.Dto.ApplicationUserListDto>
-
+﻿@model TOT.Web.Models.PaginatedList<TOT.Dto.ApplicationUserListDto>
+@using PagedList.Mvc;
 @{
-    ViewData["Title"] = "UserList";
+    var users = @Model.FirstOrDefault();
 }
 
 <h3>Users List</h3>
 <br />
-
+<div class="row justify-content-end mb-3">
+    <div class="col-6">
+        <form asp-action="List" method="get">
+            <div class="row col-12">
+                <label for="searchName" class="col-4">Find by name:</label>
+                <input type="text" id="searchName" name="SearchString" value="@ViewData["NameSortParm"]" class="form-control col" />
+            </div>
+            <div class="row col-12 justify-content-end p-2">
+                <input type="submit" value="Search" class="col-3 btn btn-outline-dark" />
+                <a class="col-4 btn btn-outline-dark ml-1" asp-action="List">Back to Full List</a>
+            </div>
+        </form>
+    </div>
+</div>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.FullName)
+                @Html.DisplayNameFor(model => users.FullName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RoleName)
+                @Html.DisplayNameFor(model => users.RoleName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RegistrationDate)
+                @Html.DisplayNameFor(model => users.RegistrationDate)
             </th>
             <th>
                 Action
@@ -72,3 +85,21 @@
         }
     </tbody>
 </table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="List"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-searchString="@ViewData["NameSortParm"]"
+   class="btn btn-outline-dark @prevDisabled">
+    Previous
+</a>
+<a asp-action="List"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-searchString="@ViewData["NameSortParm"]"
+   class="btn btn-outline-dark @nextDisabled">
+    Next
+</a>
