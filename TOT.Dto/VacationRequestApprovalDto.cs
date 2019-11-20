@@ -29,5 +29,6 @@ namespace TOT.Dto
 
         [Display(Name = "Notes to current request")]
         public string ManagerNotes { get; set; }
+        public int EmployeeId { get; set; }
     }
 }

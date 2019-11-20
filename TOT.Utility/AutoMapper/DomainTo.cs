@@ -27,6 +27,10 @@ namespace TOT.Utility.AutoMapper
             CreateMap<VacationRequest, VacationRequestListDto>()
                 .ForMember(dest => dest.VacationType, opt => opt.MapFrom(src => src.VacationType.GetDescription()));
 
+            CreateMap<VacationPolicyInfo, VacationDaysDto>()
+                .ForMember(dest => dest.TimeOffTypes, opt => opt.MapFrom(src => src.TimeOffTypes));
+            CreateMap<VacationType, VacationTypeDto>()
+                .ForMember(dest => dest.TimeOffType, opt => opt.MapFrom(src => src.TimeOffType.GetDescription()));
 
             CreateMap<VacationRequestApprovalDto, VacationRequestDto>()
                  .ForMember(dest => dest.VacationType, opt => opt.MapFrom(src => src.VacationType.Replace(" ", "")));
@@ -46,7 +50,8 @@ namespace TOT.Utility.AutoMapper
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.VacationRequest.EndDate))
                 .ForMember(dest => dest.VacationType, opt => opt.MapFrom(src => src.VacationRequest.VacationType.GetDescription()))
                 .ForMember(dest => dest.EmployeeNotes, opt => opt.MapFrom(src => src.VacationRequest.Notes))
-                .ForMember(dest => dest.ManagerResponseId, opt => opt.MapFrom(src => src.Id));
+                .ForMember(dest => dest.ManagerResponseId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.EmployeeId, opt => opt.MapFrom(src => src.VacationRequest.UserId));
 
             CreateMap<ApplicationUser, ApplicationUserListDto>()
                 .ForMember(dest => dest.FullName, opt => opt.MapFrom(src =>

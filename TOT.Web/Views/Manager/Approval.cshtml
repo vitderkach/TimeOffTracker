@@ -1,16 +1,23 @@
 ﻿@model TOT.Dto.VacationRequestApprovalDto
 
+@using Microsoft.AspNetCore.Identity
+@using TOT.Entities
+
 @{
-    ViewData["Title"] = "Approval";
+    var userId = @Model.EmployeeId;
 }
+@inject UserManager<ApplicationUser> UserManager
+
 <div class="container col-6">
     <h4>Request from @Model.Employee</h4>
     <hr />
 </div>
 
-<form asp-controller="Manager" asp-action="Approval" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="container col-6">
+<form asp-controller="Manager" asp-action="Approval" method="post" class="">
+<div class="container justify-content-between">
+    <div class="row justify-content-between">
+        <div class="col-6">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div>
             <div class="form-row">
                 <input type="checkbox" asp-for="isApproval" hidden />
@@ -99,11 +106,29 @@
             <hr />
             <button class="btn btn-outline-dark" asp-action="Index">Back to List</button>
         </div>
-    </div>
-</form>
+        </div>
+        <div class="col-3" id="partialVacationDays">
 
+        </div>
+    </div>
+</div>
+</form>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
 
+    <script>
+        $(document).ready(function () {
+        var userId = @userId;
+            $.ajax({
+                url: "/Vacation/GetVacationDays/" + +userId,
+                type: "GET",
+                dataType: "html",
+                contentType: "application/json; charset=utf-8",
+                complete: function (response) {
+                     $("#partialVacationDays").html(response.responseText);
+                },
+            });
+        });
+    </script>
+}

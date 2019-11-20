@@ -1,10 +1,18 @@
 ﻿@model TOT.Dto.ApplyForRequestGetDto
 
-@{
-    ViewData["Title"] = "Apply";
-}
+@using Microsoft.AspNetCore.Identity
+@using TOT.Entities
 
-<div class="row">
+@{
+  var userId = UserManager.GetUserId(User);
+}
+@inject UserManager<ApplicationUser> UserManager
+<style>
+    #partialVacationDays:hover {
+        opacity: 80%;
+    }
+</style>
+<div class="row justify-content-between">
     <div class="container col-6">
         <h2>Apply for vacation</h2>
         <hr />
@@ -68,13 +76,28 @@
             </div>
         </form>
     </div>
+    <div class="col-3" id="partialVacationDays">
+
+    </div>
 </div>
-
-
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
+    <script>
+    $(document).ready(function () {
+        var userId = @userId;
+            $.ajax({
+                url: "/Vacation/GetVacationDays/" + +userId,
+                type: "GET",
+                dataType: "html",
+                contentType: "application/json; charset=utf-8",
+                complete: function (response) {
+                     $("#partialVacationDays").html(response.responseText);
+                },
+            });
+        });
+    </script>
 
     <script>
         $(document).ready(function () {

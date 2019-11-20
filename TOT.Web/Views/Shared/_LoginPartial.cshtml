@@ -3,12 +3,27 @@
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+
+    <style>
+        li{
+            list-style: none;
+        }
+    </style>
     <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" id="logoutForm" class="navbar-right">
         <ul class="row">
             @if (SignInManager.IsSignedIn(User))
             {
                 <div class="row">
                     <a class="nav-link col" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Profile
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Profile</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Vacation" asp-action="List">My vacation days</a>
+                            </div>
+                        </li>
                     <button type="submit col" class="btn btn-outline-light">Log out</button>
                 </div>
             }

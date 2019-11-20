@@ -47,6 +47,7 @@ namespace TOT.Web.Controllers
             ViewBag.TimeOffTypes = apply.VacationTypes;
 
             ViewBag.Managers = selectListManagers;
+            var userId = _userService.GetCurrentUser().Result.Id;
             return View(); 
         }
         [HttpPost]
@@ -116,6 +117,11 @@ namespace TOT.Web.Controllers
             }
             int pageSize = 3;
             return View(await PaginatedList<VacationRequestListDto>.CreateAsync(vacations, pageNumber ?? 1, pageSize));
+        }
+        public IActionResult GetVacationDays(int id)
+        {
+            var vacationDays = _vacationService.GetVacationDays(id);
+            return PartialView("_VacationDaysPartial", vacationDays);
         }
         [HttpGet]
         public IActionResult Edit(int id)

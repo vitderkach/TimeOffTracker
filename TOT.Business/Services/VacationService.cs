@@ -53,16 +53,16 @@ namespace TOT.Business.Services
             };
             _vacationEmailSender.ExecuteToManager(emailModel);
         }
-        /*public void DeleteVacationByUserId(int id)
+        
+        public VacationDaysDto GetVacationDays(int userId)
         {
-            var vacationsRemoved = _uow.VacationRequestRepository
+            var vacationDays = _uow.VacationPolicyRepository
                 .GetAll()
-                .Where(v => v.UserId == id);
-            foreach(var removed in vacationsRemoved)
-            {
-                _uow.VacationRequestRepository.Delete(removed.VacationRequestId);
-            }
-        }*/
+                .Where(v => v.UserInformation.User.Id == userId)
+                .FirstOrDefault();
+            var vacationDaysDto = _mapper.Map<VacationPolicyInfo, VacationDaysDto>(vacationDays);
+            return vacationDaysDto;
+        }
 
         public List<int> GetAllVacationIdsByUser(int userId)
         {
