@@ -103,7 +103,7 @@ namespace TOT.Business.Services
 
         // получает ManagerResponse, которой был предварительно создан после
         // создания заявки, для текущего менеджера
-        public ManagerResponseDto GetResponseByVacationId(int vacationRequestId)
+        public ManagerResponseDto GetResponseActiveByVacationId(int vacationRequestId)
         {
             ManagerResponseDto managerResponseDto = default;
             var managerId = _userService.GetCurrentUser().Result.Id;
@@ -121,7 +121,24 @@ namespace TOT.Business.Services
             }
             return managerResponseDto;
         }
+        public ManagerResponseDto GetResponseByVacationId(int vacationRequestId)
+        {
+            ManagerResponseDto managerResponseDto = default;
+            var managerId = _userService.GetCurrentUser().Result.Id;
 
+            var managerResponse = _uow.ManagerResponseRepository.GetAll()
+                .Where(x => x.VacationRequestId == vacationRequestId &&
+                x.ManagerId == managerId);
+
+            ManagerResponse response = managerResponse.FirstOrDefault();
+
+            if (response != null)
+            {
+                managerResponseDto = _mapper.Map<ManagerResponse,
+                    ManagerResponseDto>(response);
+            }
+            return managerResponseDto;
+        }
         // мапит данные выбранной менеджером заявки для
         // вывода View с Approve/Reject 
         public VacationRequestApprovalDto VacationApproval(

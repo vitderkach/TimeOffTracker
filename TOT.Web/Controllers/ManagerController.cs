@@ -47,7 +47,7 @@ namespace TOT.Web.Controllers {
             if (currentFilter != null)
                 ViewData["CurrentFilter"] = currentFilter;
 
-            IEnumerable<ManagerResponseListDto> responses = new List<ManagerResponseListDto>();
+            IEnumerable<ManagerResponseListDto> responses;
             switch (currentFilter)
             {
                 case "In Proccess":
