@@ -123,7 +123,7 @@ namespace TOT.Business.Services
             }
             catch
             {
-                result = IdentityResult.Failed();
+                result = IdentityResult.Failed(result.Errors.ToArray());
                 return result;
             }
 
@@ -218,7 +218,7 @@ namespace TOT.Business.Services
             }
             else
             {
-                result = IdentityResult.Failed();
+                result = IdentityResult.Failed(result.Errors.ToArray());
             }
             return result;
         }
