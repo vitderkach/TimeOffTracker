@@ -8,6 +8,7 @@ using TOT.Web.Models;
 using System.Linq;
 using System;
 using TOT.Utility.Validation;
+using TOT.Utility.Validation.Alerts;
 
 namespace TOT.Web.Controllers
 {
@@ -29,8 +30,7 @@ namespace TOT.Web.Controllers
             }
         }
 
-        public async Task<IActionResult> List(
-            string searchString,
+        public async Task<IActionResult> List(string searchString,
             int? pageNumber)
         {
             if (searchString != null)
@@ -72,7 +72,8 @@ namespace TOT.Web.Controllers
                 return RedirectToAction("Create");
             }
 
-            return RedirectToAction("Create");
+            return RedirectToAction("Create").WithSuccess(
+                $"User {registrationForm.Name} {registrationForm.Surname} successfully created");
         }
 
         [HttpPost]
