@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TOT.Business.Services;
@@ -53,6 +53,10 @@ namespace TOT.Utility.DI
         {
             services.AddSingleton<Interfaces.IMapper, TOTAutoMapper>();
         }
+        public static void AddTempDataProvider(this IServiceCollection services)
+        {
+            services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();
+        }
         public static void AddCustomIdentity(this IServiceCollection services)
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -63,6 +67,8 @@ namespace TOT.Utility.DI
                 opts.Password.RequiredLength = 4;
                 opts.Password.RequireNonAlphanumeric = false;
                 opts.Password.RequireUppercase = false;
+
+                opts.User.RequireUniqueEmail = true;
             })
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
