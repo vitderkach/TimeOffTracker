@@ -20,7 +20,6 @@
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div>
             <div class="form-row">
-                <input type="checkbox" asp-for="isApproval" hidden />
                 <input type="text" asp-for="VacationRequestId" hidden />
                 <input type="text" asp-for="Employee" hidden />
                 <input type="text" asp-for="ManagerResponseId" hidden />
@@ -48,7 +47,9 @@
             <textarea style="resize:none" asp-for="ManagerNotes" class="form-control" rows="3" cols="1"></textarea>
             <span asp-validation-for="ManagerNotes" class="text-danger"></span>
         </div>
-        <div class="form-group">
+            @if (Model.isApproval == null)
+            {
+                <div class="form-group">
             <button type="button" data-target="#positive" data-toggle="modal" class="btn btn-outline-success">Approve</button>
             <button type="button" data-target="#negative" data-toggle="modal" class="btn btn-outline-danger">Decline</button>
             <!-- Approve window -->
@@ -102,6 +103,7 @@
                 </div>
             </div>
         </div>
+            }
         <div class="form-group mt-2">
             <hr />
             <button class="btn btn-outline-dark" asp-action="Index">Back to List</button>

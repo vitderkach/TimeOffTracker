@@ -151,7 +151,7 @@ namespace TOT.Business.Services
         }
 
         public void ApproveUserRequest(int managerResponseId,
-            string managerNotes, bool approval)
+            string managerNotes, bool? approval)
         {
             var managerResponse = _uow.ManagerResponseRepository.Get(managerResponseId);
             managerResponse.Approval = approval;

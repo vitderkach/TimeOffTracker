@@ -51,7 +51,8 @@ namespace TOT.Utility.AutoMapper
                 .ForMember(dest => dest.VacationType, opt => opt.MapFrom(src => src.VacationRequest.VacationType.GetDescription()))
                 .ForMember(dest => dest.EmployeeNotes, opt => opt.MapFrom(src => src.VacationRequest.Notes))
                 .ForMember(dest => dest.ManagerResponseId, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.EmployeeId, opt => opt.MapFrom(src => src.VacationRequest.UserId));
+                .ForMember(dest => dest.EmployeeId, opt => opt.MapFrom(src => src.VacationRequest.UserId))
+                .ForMember(dest => dest.isApproval, opt => opt.MapFrom(src => src.Approval));
 
             CreateMap<ApplicationUser, ApplicationUserListDto>()
                 .ForMember(dest => dest.FullName, opt => opt.MapFrom(src =>

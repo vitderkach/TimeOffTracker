@@ -9,7 +9,7 @@ namespace TOT.Dto
         public int ManagerResponseId { get; set; }
         //[HiddenInput]
         [Display(Name = "Status")]
-        public bool isApproval { get; set; }
+        public bool? isApproval { get; set; }
         public string Employee { get; set; }
 
 

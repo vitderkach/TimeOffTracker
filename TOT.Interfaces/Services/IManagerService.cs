@@ -7,8 +7,7 @@ namespace TOT.Interfaces.Services
     {
         IEnumerable<ManagerResponseDto> GetProcessedRequestsByCurrentManager();
         ManagerResponseDto GetResponseByVacationId(int vacationRequestId);
-        void ApproveUserRequest(int managerResponseId, string managerNotes, bool approval);
-
+        void ApproveUserRequest(int managerResponseId, string managerNotes, bool? approval);
         IEnumerable<ManagerResponseDto> GetAllCurrentManagerResponses();
         ManagerResponseDto GetResponseActiveByVacationId(int vacationRequestId);
         IEnumerable<ManagerResponseListDto> GetAllMyManagerResponses();
