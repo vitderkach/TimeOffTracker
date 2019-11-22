@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Linq;
 using TOT.Dto;
@@ -25,6 +26,24 @@ namespace TOT.Business.Services
             _userService = userService;
             _vacationEmailSender = vacationEmailSender;
         }
+
+        public SelectList GetManagersForVacationApply()
+        {
+            var userDto = _mapper.Map<ApplicationUser, 
+                ApplicationUserDto>(_userService.GetCurrentUser().Result);
+
+            var managers = _userService.GetAllByRole("Manager");
+            managers = managers.Concat(_userService.GetAllByRole("Administrator"));
+
+            // managers.Contains(userDto) don't work
+            if (managers.Where(u => u.Id == userDto.Id).Any())
+            {
+                managers = managers.Where(m => m.Id != userDto.Id);
+            }
+
+            return new SelectList(managers, "Id", "UserInformation.FullName");
+        }
+
         public void ApplyForVacation(VacationRequestDto vacationRequestDto)
         {
             var vacation = _mapper.Map<VacationRequestDto, VacationRequest>(vacationRequestDto);
