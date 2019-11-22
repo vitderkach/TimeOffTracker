@@ -11,11 +11,7 @@
 @if (SignInManager.IsSignedIn(User) && permission)
 {
     <li class="nav-item dropdown justify-content-between">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Manager
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" asp-controller="Manager" asp-action="Index">Need to consider</a>
-        </div>
+        <a class="nav-link" asp-controller="Manager" asp-action="Index">Manager</a>
+
     </li>
 }

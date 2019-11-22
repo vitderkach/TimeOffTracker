@@ -10,22 +10,14 @@
         }
     </style>
     <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" id="logoutForm" class="navbar-right">
-        <ul class="row">
+        <ul class="row justify-content-end">
             @if (SignInManager.IsSignedIn(User))
             {
-                <div class="row">
-                    <a class="nav-link col" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Profile
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Profile</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="Vacation" asp-action="List">My vacation days</a>
-                            </div>
-                        </li>
-                    <button type="submit col" class="btn btn-outline-light">Log out</button>
-                </div>
+            <div class="row container-fluid justify-content-end">
+                <a class="nav-link col-5" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+                <a class="nav-link col-3" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Profile</a>
+                <button type="submit col-3" class="btn btn-outline-light">Log out</button>
+            </div>
             }
             else
             {

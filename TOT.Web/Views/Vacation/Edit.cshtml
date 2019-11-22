@@ -33,6 +33,19 @@
                         <div class="card-body">
                             <h5 class="card-title">
                                 @Html.DisplayFor(model => response.Manager.UserInformation.FullName)
+                                @if (response.Approval == false)
+                                {
+                                    <p>Declined</p>
+                                }
+                                @if (response.Approval == true)
+                                {
+                                    <p>Approved</p>
+                                }
+                                @if (response.Approval == null)
+                                {
+                                    <p>In Proccess</p>
+                                }
+
                                 <hr />
                             </h5>
                             <p class="card-text">
@@ -51,11 +64,12 @@
                     </div>
                 }
             </div>
+            <div class="mt-3">
+                <input type="submit" value="Save" class="btn btn-outline-dark" />
+                <button class="btn btn-outline-dark" asp-action="List">Cancel</button>
+            </div>
         </div>
 
-        <div>
-            <input type="submit" value="Save" class="btn btn-outline-dark" />
-            <button class="btn btn-outline-dark" asp-action="List">Cancel</button>
-        </div>
+       
 
     </form>

@@ -49,7 +49,7 @@
                     <partial name="_MenuAdmin" />
                 </li>
             </div>
-            <div class="col-4">
+            <div class="col-6">
                 <li>
                     <partial name="_LoginPartial" />
                 </li>
@@ -60,11 +60,11 @@
     <div class="main container body-content mt-5">
         @RenderBody()
         <hr />
-        <footer>
-            <p>&copy; 2019 - Time off Tracker - Web Application</p>
-        </footer>
     </div>
 
+    <footer class="row justify-content-center">
+        <p>&copy; 2019 - Time off Tracker - Web Application</p>
+    </footer>
     <environment include="Development">
 
         <script src="~/lib/jquery/dist/jquery.js"></script>

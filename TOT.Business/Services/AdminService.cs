@@ -66,7 +66,7 @@ namespace TOT.Business.Services
         }
 
         // список ролей для DropDownList
-        public List<IdentityRole<int>> GetApplicationRoles()
+        public List<IdentityRole<int>> GetApplicationRoles()    
         {
             return _roleManager.Roles.ToList();
         }
