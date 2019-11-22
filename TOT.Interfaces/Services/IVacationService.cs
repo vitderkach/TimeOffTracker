@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using TOT.Dto;
 
@@ -16,5 +16,6 @@ namespace TOT.Interfaces.Services
         VacationDaysDto GetVacationDays(int userId);
         List<int> GetAllVacationIdsByUser(int userId);
         void DeleteVacationById(int id);
+        SelectList GetManagersForVacationApply();
     }
 }
