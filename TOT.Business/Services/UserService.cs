@@ -30,6 +30,10 @@ namespace TOT.Business.Services
         {
             var user = await _userManager.GetUserAsync(_httpContext.HttpContext.User);
             return user;
+            
+            /*var userWithInfo = _userManager.Users.Where(u => u.Id == user.Id)
+                .Include(userInfo => userInfo.UserInformation)
+                .FirstOrDefaultAsync().Result;*/
         }
         public IEnumerable<ApplicationUserDto> GetAllByRole(string role)
         {

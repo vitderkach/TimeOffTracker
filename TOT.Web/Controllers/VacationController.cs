@@ -39,15 +39,14 @@ namespace TOT.Web.Controllers
         [HttpGet]
         public ActionResult Apply() 
         {
-            var managers = _userService.GetAllByRole("Manager");
-
+            /*var managers = _userService.GetAllByRole("Manager");
             var selectListManagers = new SelectList(managers, "Id", "UserInformation.FullName");
+            var userId = _userService.GetCurrentUser().Result.Id; */
 
             ApplyForRequestGetDto apply = new ApplyForRequestGetDto();
             ViewBag.TimeOffTypes = apply.VacationTypes;
+            ViewBag.Managers = _vacationService.GetManagersForVacationApply();
 
-            ViewBag.Managers = selectListManagers;
-            var userId = _userService.GetCurrentUser().Result.Id;
             return View(); 
         }
         [HttpPost]

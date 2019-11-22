@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using TOT.Web.Models;
 using System.Linq;
 using System;
+using TOT.Utility.Validation;
+using TOT.Utility.Validation.Alerts;
 
 namespace TOT.Web.Controllers
 {
@@ -28,8 +30,7 @@ namespace TOT.Web.Controllers
             }
         }
 
-        public async Task<IActionResult> List(
-            string searchString,
+        public async Task<IActionResult> List(string searchString,
             int? pageNumber)
         {
             if (searchString != null)
@@ -45,6 +46,7 @@ namespace TOT.Web.Controllers
             return View(await PaginatedList<ApplicationUserListDto>.CreateAsync(userList, pageNumber ?? 1, pageSize));
         }
 
+        [ImportModelState]
         public IActionResult Create()
         {
             ViewData["roles"] = _adminService.GetApplicationRoles();
@@ -52,6 +54,7 @@ namespace TOT.Web.Controllers
         }
 
         [HttpPost]
+        [ExportModelState]
         public async Task<IActionResult> Create(RegistrationUserDto registrationForm)
         {
             if (ModelState.IsValid)
@@ -61,11 +64,16 @@ namespace TOT.Web.Controllers
                 if (!registrationResult.Succeeded)
                 {
                     AddErrorsFromResult(registrationResult);
-                    ViewData["roles"] = _adminService.GetApplicationRoles();
-                    return View(registrationForm);
+                    return RedirectToAction("Create");
                 }
             }
-            return RedirectToAction("Index", "Home");
+            else
+            {
+                return RedirectToAction("Create");
+            }
+
+            return RedirectToAction("Create").WithSuccess(
+                $"User {registrationForm.Name} {registrationForm.Surname} successfully created");
         }
 
         [HttpPost]
