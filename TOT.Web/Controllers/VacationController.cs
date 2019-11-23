@@ -52,8 +52,25 @@ namespace TOT.Web.Controllers
         [HttpPost]
         public ActionResult Apply([FromBody]ApplyForRequestGetDto applyForRequestGetDto)
         {
+            if (applyForRequestGetDto != null)
+            {
+                int left = (int)(applyForRequestGetDto.EndDate - applyForRequestGetDto.StartDate).TotalDays;
+                if (applyForRequestGetDto.SelectedManager.Count() == 0)
+                {
+                    ModelState.AddModelError("MyManagers", "Manager is required");
+                }
+                if (left > 30)
+                {
+                    ModelState.AddModelError("StartDate", "Maximum interval between dates is 30 days");
+                }
+                if (left < 0)
+                {
+                    ModelState.AddModelError("StartDate", "End date must be later than start date");
+                }
+            }
             if(ModelState.IsValid)
             {
+                
                 var user = _userService.GetCurrentUser().Result;
                 applyForRequestGetDto.UserId = user.Id;
 
@@ -64,7 +81,7 @@ namespace TOT.Web.Controllers
             }
             else
             {
-                return new BadRequestResult();
+                return View(applyForRequestGetDto);
             }
         }
         [HttpGet]

@@ -17,7 +17,6 @@
         <h2>Apply for vacation</h2>
         <hr />
         <form asp-action="Apply" name="form" id="form">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group row">
                 <label asp-for="StartDate" class="control-label col-4"></label>
                 <input asp-for="StartDate" class="form-control col-8" />
@@ -43,6 +42,7 @@
                 <div class="row col-12">
                     @Html.DropDownListFor(m => m.SelectedManager, ViewBag.Managers as SelectList, new { @class = "form-control col-10" })
                     <button class="btn btn-info add_form_field form-control col ">+</button>
+                    <span id="MyManagersVal"asp-validation-for="MyManagers"></span>
                 </div>
             </div>
             <div class="form-group mt-5">
@@ -113,7 +113,8 @@
             $("#SelectedManager").change(function () {
                 let id = $(this).children("option:selected").val();
                 selectedManagerId = id;
-                console.log(selectedManagerId)
+                console.log(selectedManagerId);
+
             });
             var x = 1;
             $(add_button).click(function (e) {
@@ -128,7 +129,7 @@
                         $(wrapper).append('<div class="form-row mt-2">' +
                             '<div class="col-10"><input type="text" class="form-control" disabled=true value="' + myname + '" name=ManagersId[' + (x - 2) + '] /></div> ' +
                             '<div class="col"><button class="btn btn-danger form-control col delete">x</button></div> </div>');
-                        //add input box
+                        $('#MyManagersVal').html("");
                     }
                     else { alert('This manager already exists') }
                 }
@@ -161,7 +162,9 @@
                 data["SelectedManager"] = managersId;
                 data["ManagersId"] = managersId;
                 console.log(data);
-
+                if ((x-1) == 0) {
+                    $('#MyManagersVal').append('<p style="color:red;">Required</p>');
+                }
                 $.ajax({
                     type: 'POST',
                     accepts: "application/json",

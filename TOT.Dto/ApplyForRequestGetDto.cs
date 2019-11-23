@@ -20,9 +20,11 @@ namespace TOT.Dto
         public int Id { get; set; }
         [Display(Name ="From")]
         [DataType(DataType.Date)]
+        [Required(ErrorMessage = "Required")]
         public DateTime StartDate { get; set; }
         [Display(Name = "To")]
         [DataType(DataType.Date)]
+        [Required(ErrorMessage = "Required")]
         public DateTime EndDate { get; set; }
 
         [Display(Name = "Vacation types")]
@@ -51,9 +53,9 @@ namespace TOT.Dto
         public string Notes { get; set; }
 
         [Display(Name = "Managers")]
+        [Required(ErrorMessage = "Required")]
         public IEnumerable<int> SelectedManager { get; set; }
         public IEnumerable<int> ManagersId { get; set; }
-
         [Display(Name = "Managers")]
         public SelectList MyManagers { get; set; }
         public ICollection<ManagerResponseDto> ManagersResponses { get; set; }
