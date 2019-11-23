@@ -46,6 +46,18 @@ namespace TOT.Business.Services
 
             return nextResponse;
         }
+
+        public bool CheckManagerResponsesByUserId(int userId)
+        {
+            var managerResponses = _uow.ManagerResponseRepository.GetAll()
+                .Where(u => u.ManagerId == userId && u.Approval == null);
+
+            if (managerResponses.Any())
+                return true;
+
+            return false;
+        }
+
         public IEnumerable<ManagerResponseListDto> GetAllMyManagerResponses()
         {
             var Id = _userService.GetCurrentUser().Result.Id;

@@ -40,6 +40,7 @@ namespace TOT.Business.Services
             {
                 managers = managers.Where(m => m.Id != userDto.Id);
             }
+            managers.OrderBy(n => n.UserInformation.FullName);
 
             return new SelectList(managers, "Id", "UserInformation.FullName");
         }

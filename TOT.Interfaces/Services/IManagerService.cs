@@ -14,5 +14,6 @@ namespace TOT.Interfaces.Services
         IEnumerable<ManagerResponseListDto> GetCurrentManagerRequests(
             IEnumerable<ManagerResponseDto> managerResponsesDto);
         VacationRequestApprovalDto VacationApproval(ManagerResponseDto managerResponse);
+        bool CheckManagerResponsesByUserId(int userId);
     }
 }
