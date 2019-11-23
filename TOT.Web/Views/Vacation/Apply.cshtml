@@ -19,12 +19,12 @@
         <form asp-action="Apply" name="form" id="form">
             <div class="form-group row">
                 <label asp-for="StartDate" class="control-label col-4"></label>
-                <input asp-for="StartDate" class="form-control col-8" />
-                <span asp-validation-for="StartDate" class="text-danger"></span>
+                <input id="StartDate" asp-for="StartDate" class="form-control col-8" />
+                <span id="StartDateVal" asp-validation-for="StartDate" class="text-danger"></span>
             </div>
             <div class="form-group row">
                 <label asp-for="EndDate" class="control-label col-4"></label>
-                <input asp-for="EndDate" class="form-control col-8" />
+                <input id="EndDate" asp-for="EndDate" class="form-control col-8" />
                 <span asp-validation-for="EndDate" class="text-danger"></span>
             </div>
 
@@ -162,9 +162,28 @@
                 data["SelectedManager"] = managersId;
                 data["ManagersId"] = managersId;
                 console.log(data);
-                if ((x-1) == 0) {
-                    $('#MyManagersVal').append('<p style="color:red;">Required</p>');
+                if ((x - 1) == 0) {
+                    $('#MyManagersVal').html('<p style="color:red;">Required</p>');
                 }
+                var Sdate = new Date($('#StartDate').val());
+                day = Sdate.getDate();
+                month = Sdate.getMonth() + 1;
+                year = Sdate.getFullYear();
+
+                var Edate = new Date($('#EndDate').val());
+                Eday = Edate.getDate();
+                Emonth = Edate.getMonth() + 1;
+                Eyear = Edate.getFullYear();
+
+                var DifferenceInDays = calculateDaysBetweenDates(Sdate, Edate);
+                if (DifferenceInDays > 30) {
+                    $('#StartDateVal').html('<p style="color:red">Maximum interval between dates is 30 day</p>')
+                }
+                if (DifferenceInDays < 0) {
+                    $('#StartDateVal').html('<p style="color:red">End date must be later than start date</p>')
+                }
+
+
                 $.ajax({
                     type: 'POST',
                     accepts: "application/json",
@@ -186,5 +205,10 @@
                 event.preventDefault();
             });
         });
+        function calculateDaysBetweenDates(d1, d2) {
+        var t2 = d2.getTime();
+        var t1 = d1.getTime();
+        return parseInt((t2-t1)/(24*3600*1000));
+    }
     </script>
 }
