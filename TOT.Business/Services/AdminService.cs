@@ -20,12 +20,14 @@ namespace TOT.Business.Services
         private readonly IUserService _userService;
         private readonly IUserInfoService _userInfoService;
         private readonly IVacationService _vacationService;
+        private readonly IManagerService _managerService;
 
         private readonly string defaultPassword = "user";
 
         public AdminService(RoleManager<IdentityRole<int>> roleManager,
             IMapper mapper, IUserService userService,
             UserManager<ApplicationUser> userManager,
+            IManagerService managerService,
             IUserInfoService userInfoService, IVacationService vacationService)
         {
             _userManager = userManager;
@@ -33,6 +35,7 @@ namespace TOT.Business.Services
             _userService = userService;
             _userInfoService = userInfoService;
             _vacationService = vacationService;
+            _managerService = managerService;
             _mapper = mapper;
         }
 
@@ -174,6 +177,17 @@ namespace TOT.Business.Services
 
             if (!currentRoleName.Equals(newRoleName))
             {
+                if (newRoleName == "Employee" && _managerService.CheckManagerResponsesByUserId(userId))
+                {
+                    var error = new IdentityError();
+                    error.Code = "";
+                    error.Description = "You can not change the role to \"Employee\" for current user. " +
+                        "User has unprocessed requests.";
+
+                    result = IdentityResult.Failed(error);
+                    return result;
+                }
+
                 var removeResult =  await _userManager.RemoveFromRoleAsync(user, currentRoleName);
 
                 if (removeResult.Succeeded)

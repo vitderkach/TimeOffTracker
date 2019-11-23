@@ -89,6 +89,7 @@ namespace TOT.Web.Controllers
             return RedirectToAction("List");
         }
 
+        [ImportModelState]
         public IActionResult Edit(int id)
         {
             var editUser = _adminService.EditUserData(id);
@@ -102,6 +103,7 @@ namespace TOT.Web.Controllers
         }
 
         [HttpPost]
+        [ExportModelState]
         public async Task<IActionResult> Edit(int id, int currentRoleId)
         {
             if (ModelState.IsValid)
@@ -111,8 +113,7 @@ namespace TOT.Web.Controllers
                 if (!result.Succeeded)
                 {
                     AddErrorsFromResult(result);
-                    return RedirectToAction("Index", "Home");
-                    // return RedirectToAction($"Edit/{id}");
+                    return RedirectToAction($"Edit/{id}");
                 }
             }
 
