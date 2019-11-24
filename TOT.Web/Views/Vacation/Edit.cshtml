@@ -21,14 +21,10 @@
 
                     </div>
                 </div>
-                <div class="form-row">
-                    @Html.DisplayNameFor(model => model.VacationType)
-                    @Html.EditorFor(model => model.VacationTypeString, null, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                </div>
-                <div class="form-row mt-3">
-                    @Html.DisplayNameFor(model => model.Notes)
-                    @Html.TextAreaFor(model => model.Notes, 3, 1, new { @class = "form-control", @style = "resize:none;" })
-                </div>
+                @Html.DisplayNameFor(model => model.VacationType)
+                @Html.EditorFor(model => model.VacationTypeString, null, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.DisplayNameFor(model => model.Notes)
+                @Html.TextAreaFor(model => model.Notes, 3, 1, new { @class = "form-control", @style = "resize:none;" })
             </div>
             <div>
                 @foreach (ManagerResponseDto response in Model.ManagersResponses)
@@ -70,7 +66,7 @@
             </div>
             <div class="mt-3">
                 <input type="submit" value="Save" class="btn btn-outline-dark" />
-                <button class="btn btn-outline-dark" asp-route="/Vacation/List">Cancel</button>
+                <button class="btn btn-outline-dark" asp-action="List">Cancel</button>
             </div>
         </div>
 
