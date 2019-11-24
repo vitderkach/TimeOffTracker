@@ -8,7 +8,7 @@
 }
 @inject UserManager<ApplicationUser> UserManager
 
-<div class="container col-6">
+<div class="container col-md-9">
     <h4>Request from @Model.Employee</h4>
     <hr />
 </div>
@@ -16,7 +16,7 @@
 <form asp-controller="Manager" asp-action="Approval" method="post" class="">
 <div class="container justify-content-between">
     <div class="row justify-content-between">
-        <div class="col-6">
+        <div class="container col-md-6">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div>
             <div class="form-row">

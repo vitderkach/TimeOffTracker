@@ -7,14 +7,14 @@
     var userId = Model.Id;
 }
 
-<div class="container col-6">
+<div class="container col-md-9">
     <h4>User Profile</h4>
     <hr />
 </div>
 
 <form asp-controller="Admin" asp-action="Edit" method="post">
     <div class="row justify-content-between">
-        <div class="col-6">
+        <div class="container col-md-6">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div>
                 <input type="text" asp-for="Id" hidden />
@@ -46,9 +46,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-3" id="partialVacationDays">
-
-        </div>
+        <div class="col-md-3" id="partialVacationDays"></div>
     </div>
 </form>
 
