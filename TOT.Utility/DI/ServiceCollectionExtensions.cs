@@ -64,7 +64,7 @@ namespace TOT.Utility.DI
             services.AddIdentity<ApplicationUser, IdentityRole<int>>(opts =>
             {
                 opts.Password.RequireDigit = false;
-                opts.Password.RequiredLength = 4;
+                opts.Password.RequiredLength = 6;
                 opts.Password.RequireNonAlphanumeric = false;
                 opts.Password.RequireUppercase = false;
 
