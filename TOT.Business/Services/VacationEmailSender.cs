@@ -11,7 +11,7 @@ using TOT.Interfaces.Services;
 namespace TOT.Business.Services {
     public class VacationEmailSender : IVacationEmailSender {
         private readonly IHttpContextAccessor _httpContext;
-        private const string apiKey = "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";
+        private const string apiKey = "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";
         public VacationEmailSender(IHttpContextAccessor httpContext)
         {
             _httpContext = httpContext;
@@ -32,7 +32,7 @@ namespace TOT.Business.Services {
             htmlContent += $"<a href='{host}/Manager/Index'>Follow the link</a>";
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
 
-            //var response = await client.SendEmailAsync(msg);
+            await client.SendEmailAsync(msg);
         }
         public async void ExecuteToEmployeeAccept(EmailModel model)
         {
@@ -48,7 +48,7 @@ namespace TOT.Business.Services {
             htmlContent += $"<a href='{host}/Manager/Index'>Follow the link</a>";
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
 
-            //var response = await client.SendEmailAsync(msg);
+            await client.SendEmailAsync(msg);
         }
         public async void ExecuteToEmployeeDecline(EmailModel model)
         {
@@ -64,7 +64,7 @@ namespace TOT.Business.Services {
             htmlContent += $"<a href='{host}/Manager/Index'>Follow the link</a>";
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
 
-            //var response = await client.SendEmailAsync(msg);
+            await client.SendEmailAsync(msg);
         }
     }
 }

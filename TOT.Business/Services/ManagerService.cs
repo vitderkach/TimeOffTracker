@@ -256,7 +256,7 @@ namespace TOT.Business.Services
 
                                 if (predictVacationDays <= 15)
                                 {
-                                    vacationPolicy.TimeOffTypes.ElementAt(i).WastedDays = predictVacationDays;
+                                    vacationPolicy.TimeOffTypes.Where(t => t.TimeOffType == TimeOffType.Vacation).FirstOrDefault().WastedDays = predictVacationDays;
                                 }
                                 else
                                 {
@@ -269,7 +269,7 @@ namespace TOT.Business.Services
                                         paidVacation = vacationPolicy.TimeOffTypes
                                             .Where(t => t.TimeOffType == TimeOffType.UnpaidVacation).FirstOrDefault();
 
-                                        paidVacation.WastedDays = currentWastedDays;
+                                        paidVacation.WastedDays += currentWastedDays;
                                     }
                                     vacationPolicy.TimeOffTypes
                                          .Where(t => t.TimeOffType == TimeOffType.UnpaidVacation).FirstOrDefault()
@@ -298,7 +298,7 @@ namespace TOT.Business.Services
 
                                 if (predictVacationDays <= 15)
                                 {
-                                    vacationPolicy.TimeOffTypes.ElementAt(i).WastedDays = predictVacationDays;
+                                    vacationPolicy.TimeOffTypes.Where(t => t.TimeOffType == TimeOffType.StudyLeave).FirstOrDefault().WastedDays = predictVacationDays;
                                 }
                                 else
                                 {
@@ -311,7 +311,7 @@ namespace TOT.Business.Services
                                         paidVacation = vacationPolicy.TimeOffTypes
                                             .Where(t => t.TimeOffType == TimeOffType.UnpaidVacation).FirstOrDefault();
 
-                                        paidVacation.WastedDays = currentWastedDays;
+                                        paidVacation.WastedDays += currentWastedDays;
                                     }
                                     vacationPolicy.TimeOffTypes
                                          .Where(t => t.TimeOffType == TimeOffType.UnpaidVacation).FirstOrDefault()
