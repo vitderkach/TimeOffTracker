@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using TOT.Entities;
@@ -8,6 +9,11 @@ namespace TOT.Dto
 {
     public class VacationRequestDto
     {
+        public VacationRequestDto()
+        {
+            ManagersResponses = new Collection<ManagerResponseDto>();
+            SelectedManager = new List<int>();
+        }
         public int VacationRequestId { get; set; }
         [Display(Name = "From")]
         [DataType(DataType.Date)]

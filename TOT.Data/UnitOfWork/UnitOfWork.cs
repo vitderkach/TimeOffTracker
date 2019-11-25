@@ -29,7 +29,6 @@ namespace TOT.Data.UnitOfWork
             _vacationPolicyRepository = vacationPolicyRepository;
             _vacationTypeRepository = vacationTypeRepository;
             db = context;
-            context.SaveChanges();
         }
 
         public void Save()
