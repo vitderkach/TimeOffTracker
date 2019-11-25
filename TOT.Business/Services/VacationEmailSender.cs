@@ -11,7 +11,7 @@ using TOT.Interfaces.Services;
 namespace TOT.Business.Services {
     public class VacationEmailSender : IVacationEmailSender {
         private readonly IHttpContextAccessor _httpContext;
-        private const string apiKey = "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";
+        private const string apiKey = "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";
         public VacationEmailSender(IHttpContextAccessor httpContext)
         {
             _httpContext = httpContext;
