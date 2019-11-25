@@ -22,7 +22,7 @@ namespace TOT.Business.Services
         private readonly IVacationService _vacationService;
         private readonly IManagerService _managerService;
 
-        private readonly string defaultPassword = "user";
+        private readonly string defaultPassword = "user123";
 
         public AdminService(RoleManager<IdentityRole<int>> roleManager,
             IMapper mapper, IUserService userService,
