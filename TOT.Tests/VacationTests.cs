@@ -3,9 +3,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TOT.Business.Services;
 using TOT.Data;
+using TOT.Data.Repositories;
 using TOT.Data.UnitOfWork;
 using TOT.Dto;
 using TOT.Entities;
@@ -38,20 +40,24 @@ namespace TOT.Tests {
                                             VacationType = TimeOffType.UnpaidVacation }
             };
             listVacation = new List<VacationRequest>() {
-                new VacationRequest() { VacationRequestId = 1, Notes = "test1", 
-                                        VacationType = TimeOffType.SickLeave },
+                new VacationRequest() { VacationRequestId = 1, Notes = "test1",
+                                        VacationType = TimeOffType.SickLeave,
+                UserId = 1 },
                 new VacationRequest() {VacationRequestId = 2, Notes = "test2",
-                                        VacationType = TimeOffType.StudyLeave  },
-                new VacationRequest() {VacationRequestId = 3, Notes = "test3", 
-                                        VacationType = TimeOffType.UnpaidVacation }
+                                        VacationType = TimeOffType.StudyLeave,
+                UserId = 2 },
+                new VacationRequest() {VacationRequestId = 3, Notes = "test3",
+                                        VacationType = TimeOffType.UnpaidVacation,
+                UserId = 3 }
           };
             vacationsId = new List<int>() { 1, 2, 3 };
             vacationRequest = listVacationDto[0];
         }
 
         [TestMethod]
-        public void VacationGetById()
+        public void VacationGetByIdReturnsCorrect()
         {
+            //arrange
             var expectedDto = new VacationRequestDto() { 
                 VacationRequestId = 1,
                 VacationType = TimeOffType.SickLeave
@@ -78,9 +84,81 @@ namespace TOT.Tests {
                 null
                 );
 
+            //act
             var actual = vacationService.GetVacationById(1);
+
+            //assert
+            uowMock.Verify(u => u.VacationRequestRepository.Get(It.IsAny<int>()));
             Assert.AreEqual(expectedDto.VacationRequestId, actual.VacationRequestId);
             Assert.AreEqual(expectedDto.VacationType, actual.VacationType);
+        }
+
+        [TestMethod]
+        public void GetAllVacationsByUserIdReturnsCorrect()
+        {
+            //arrange
+            int expected = 1;
+            var uowMock = new Mock<IUnitOfWork>();
+            uowMock.Setup(u => u.VacationRequestRepository.GetAll())
+                .Returns(listVacation);
+
+            var service = new VacationService(_mapper, uowMock.Object, null, null);
+
+            //act
+            var actual = service.GetAllVacationIdsByUser(1).Count;
+            
+            //assert
+            uowMock.Verify(u => u.VacationRequestRepository.GetAll());
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void DeleteVacationIsCorrect()
+        {
+            //arrange
+            var uowMock = new Mock<IUnitOfWork>();
+
+            listVacation[0].User = new ApplicationUser();
+
+            uowMock.Setup(u => u.VacationRequestRepository.Delete(It.IsAny<int>()))
+                .Verifiable();
+
+            var service = new VacationService(_mapper, uowMock.Object, null, null);
+
+            //act
+            service.DeleteVacationById(1);
+
+            //assert
+            uowMock.Verify(u => u.VacationRequestRepository.Delete(1));
+        }
+
+        [TestMethod]
+        public void UpdateVacation_UpdateVacationNotes()
+        {
+            //arrange
+            var uowMock = new Mock<IUnitOfWork>();
+
+            listVacation[0].User = new ApplicationUser();
+
+            uowMock.Setup(u => u.VacationRequestRepository.Update(It.IsAny<VacationRequest>()))
+                .Verifiable();
+
+            uowMock.Setup(u => u.VacationRequestRepository.Get(1))
+                .Returns(new VacationRequest()
+                {
+                    VacationRequestId = 1,
+                    Notes = "test1",
+                    VacationType = TimeOffType.SickLeave,
+                    UserId = 1
+                });
+
+            var service = new VacationService(_mapper, uowMock.Object, null, null);
+
+            //act
+            service.UpdateVacation(1, "changed");
+
+            //assert
+            uowMock.Verify(u => u.VacationRequestRepository.Update(It.IsAny<VacationRequest>()));
         }
     }
 }
