@@ -47,10 +47,12 @@
             </div>
             <div class="form-group mt-5">
                 <a class="btn btn-outline-dark" asp-action="List">Back to List</a>
-                <!--<input type="submit" id="submit-button" value="Create" class="btn btn-outline-dark" />-->
+                <!--<input type="submit" id="submit-button" value="Create" class="btn btn-outline-dark" /> Было до модального окна-->
+                <input id="submit-button" type="submit" value="Create" class="btn btn-outline-dark" /> <!--Так и осталось-->
 
-                <button type="button" id="buttonOpen" data-target="#applyCreate" data-toggle="modal" class="btn btn-outline-dark">Create</button>
-                <!-- Create window -->
+
+                <!--<button type="button" id="buttonOpen" data-target="#applyCreate" data-toggle="modal" class="btn btn-outline-dark">Create</button>-->                
+                <!-- Create window 
                 <div class="modal fade" id="applyCreate" tabindex="-1" role="dialog" aria-labelledby="createLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -67,12 +69,12 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                <!--Может дело в id="submit-button"-->
+                                <!--Может дело в id="submit-button"
                                 <input id="submit-button" type="submit" value="Create" class="btn btn-outline-dark" />
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>-->
             </div>
         </form>
     </div>
