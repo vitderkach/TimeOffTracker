@@ -11,7 +11,7 @@ namespace TOT.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-            //Database.EnsureDeleted();
+            Database.Migrate();
         }
 
         #region DbSets
@@ -30,8 +30,8 @@ namespace TOT.Data
             builder.ApplyConfiguration(new UserInformationConfiguration());
             builder.ApplyConfiguration(new VacationPolicyConfiguration());
             builder.ApplyConfiguration(new VacationTypeConfiguration());
-
             base.OnModelCreating(builder);
         }
+
     }
 }

@@ -10,12 +10,13 @@ namespace TOT.Data
 {
     public static class DefaultDataInitializer
     {
+
+
         public static Dictionary<string, int> SeedUsersInfo(IServiceProvider serviceProvider)
         {
             using (var context = new ApplicationDbContext(
                 serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
             {
-                context.Database.Migrate();
 
                 if (context.UserInformations.Any())
                 {

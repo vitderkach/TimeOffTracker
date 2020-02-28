@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,6 +26,7 @@ namespace TOT.Web
 
                 try
                 {
+
                     var userInfo = DefaultDataInitializer.SeedUsersInfo(serviceProvider);
 
                     if (userInfo != null)
@@ -32,12 +34,13 @@ namespace TOT.Web
                         DefaultDataInitializer.SeedData(serviceProvider, userInfo);
                     }
                 }
+                catch (SqlException ex)
+                {
+                    throw new Exception("An error occurred while executing the sql query", ex);
+                }
                 catch (Exception ex)
                 {
-                    /*  var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
-                      logger.LogError(ex, "An error occurred while seeding the database."); */
-
-                    throw new NotImplementedException("An error occurred while seeding the database" + ex.Message);
+                    throw new NotImplementedException("An error occurred while seeding the database", ex);
                 }
             }
             host.Run();
