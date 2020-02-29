@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using TOT.Data.Exceptions;
 /* Куда лучше поместить класс DefaultDataInitializer? */
 using TOT.Data;
 
@@ -26,7 +21,6 @@ namespace TOT.Web
 
                 try
                 {
-
                     var userInfo = DefaultDataInitializer.SeedUsersInfo(serviceProvider);
 
                     if (userInfo != null)
@@ -40,7 +34,7 @@ namespace TOT.Web
                 }
                 catch (Exception ex)
                 {
-                    throw new NotImplementedException("An error occurred while seeding the database", ex);
+                    throw new DatabaseSeedingFailedException("An error occurred while seeding the database", ex);
                 }
             }
             host.Run();
