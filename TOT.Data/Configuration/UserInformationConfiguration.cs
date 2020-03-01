@@ -27,6 +27,14 @@ namespace TOT.Data.Configuration
 
             entity.HasOne(u => u.VacationPolicyInfo)
                 .WithOne(u => u.UserInformation);
+
+            entity.HasOne(ui => ui.Location)
+                .WithMany(l => l.UserInformations)
+                .HasForeignKey(ui => ui.LocationId);
+
+            entity.HasOne(ui => ui.Team)
+                .WithMany(t => t.UserInformations)
+                .HasForeignKey(ui => ui.TeamId);
         }
     }
 }

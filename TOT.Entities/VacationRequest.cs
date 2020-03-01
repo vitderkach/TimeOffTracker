@@ -35,6 +35,8 @@ namespace TOT.Entities
         [Description("Unpaid vacation")]
         UnpaidVacation = 3,
         [Description("Vacation")]
-        Vacation = 4
+        Vacation = 4,
+        [Description("Administrative Vacation")]
+        AdministrativeVacation = 5
     }
 }
