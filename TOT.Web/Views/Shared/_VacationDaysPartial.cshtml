@@ -3,35 +3,23 @@
     var TimeOffTypes = Model.TimeOffTypes;
 }
 
-<style>
-    p {
-        display: inline;
-    }
 
-    .red {
-        color: red;
-    }
-
-    .green {
-        color: green;
-    }
-</style>
-<div class="card bg-light" style="width: 18rem;">
+<div class="card" style="width: 18rem;">
     <div class="card-body">
         @for (int i = 0; i < TimeOffTypes.Count; i++)
         {
             <div>
                 <h5 class="card-title">
                     @TimeOffTypes.ElementAt(i).TimeOffType:
-                <p class="green">
-                    @TimeOffTypes.ElementAt(i).WastedDays
-                @if (!TimeOffTypes.ElementAt(i).TimeOffType.Equals("Unpaid vacation"))
-                {
-                <p>/</p>
-                <p class="red">@Model.MaxWastedDays.ElementAt(i)</p>
-                }
-                </p>
-            </h5>
+                    <span class="text-danger">
+                        @TimeOffTypes.ElementAt(i).WastedDays
+                    </span>
+                    @if (!TimeOffTypes.ElementAt(i).TimeOffType.Equals("Unpaid vacation"))
+                    {
+                        <span>/</span>
+                        <span class="text-success">@Model.MaxWastedDays.ElementAt(i)</span>
+                    }
+                </h5>
         </div>
     }
 

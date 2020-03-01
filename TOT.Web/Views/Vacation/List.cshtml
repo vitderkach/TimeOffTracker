@@ -3,16 +3,12 @@
 @{
     var vacations = @Model.FirstOrDefault();
 }
-<hr />
 <div class="form-group">
-    <div class="col-6">
-        <a asp-action="List" class="btn btn-outline-dark" asp-route-currentFilter="All">All</a>
-        <a asp-action="List" class="btn btn-outline-dark" asp-route-currentFilter="Approved">Approved</a>
-        <a asp-action="List" class="btn btn-outline-dark" asp-route-currentFilter="In Proccess">In Proccess</a>
-        <a asp-action="List" class="btn btn-outline-dark" asp-route-currentFilter="Declined">Declined</a>
-    </div>
+    <a asp-action="List" class="btn btn-dark" asp-route-currentFilter="All">All</a>
+    <a asp-action="List" class="btn btn-success" asp-route-currentFilter="Approved">Approved</a>
+    <a asp-action="List" class="btn btn-info" asp-route-currentFilter="In Proccess">In Proccess</a>
+    <a asp-action="List" class="btn btn-danger" asp-route-currentFilter="Declined">Declined</a>
 </div>
-<hr />
 <table class="table">
     <thead>
         <tr>
@@ -123,13 +119,13 @@
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex - 1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"
-   class="btn btn-outline-dark @prevDisabled">
+   class="btn btn-secondary @prevDisabled">
     Previous
 </a>
 <a asp-action="List"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex + 1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"
-   class="btn btn-outline-dark @nextDisabled">
+   class="btn btn-secondary @nextDisabled">
     Next
 </a>
