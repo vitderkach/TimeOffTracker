@@ -6,14 +6,18 @@ using System.Collections.Generic;
 using System.Text;
 using TOT.Entities;
 
-namespace TOT.Data.Configuration {
-    class VacationPolicyConfiguration: IEntityTypeConfiguration<VacationPolicyInfo> {
-        public void Configure(EntityTypeBuilder<VacationPolicyInfo> entity)
+namespace TOT.Data.Configuration
+{
+    class VacationPolicyConfiguration : IEntityTypeConfiguration<VacationPolicy>
+    {
+        public void Configure(EntityTypeBuilder<VacationPolicy> entity)
         {
-            entity.HasKey(r => r.Id);
+            entity.HasKey(vp => new { vp.UserInformationId, vp.Year })
+                .HasName("PK_VacationPolicy");
 
-            entity.HasOne(v => v.UserInformation)
-                .WithOne(vi => vi.VacationPolicyInfo)
+            entity.HasOne(vp => vp.UserInformation)
+                .WithMany(ui => ui.VacationPolicies)
+                .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

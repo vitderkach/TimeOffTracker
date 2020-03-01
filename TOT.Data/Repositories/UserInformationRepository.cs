@@ -55,12 +55,12 @@ namespace TOT.Data.Repositories
         public IEnumerable<UserInformation> GetAll()
         {
             return context.UserInformations
-                .Include(u => u.VacationPolicyInfo)
-                    .ThenInclude(u => u.TimeOffTypes)
+                .Include(u => u.VacationPolicies)
+                    .ThenInclude(u => u.VacationTypes)
 
-                .Include(u => u.User)
+                .Include(u => u.ApplicationUser)
                     .ThenInclude(u => u.UserInformation)
-                        .ThenInclude(u => u.VacationPolicyInfo)
+                        .ThenInclude(u => u.VacationPolicies)
                 .ToList();
         }
 

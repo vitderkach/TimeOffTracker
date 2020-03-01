@@ -44,7 +44,7 @@ namespace TOT.Business.Services
                 for (int i = 0; i < managers.Count; i++)
                 {
                     var userInfo = userInformation
-                        .Where(u => u.UserInformationId == managers[i].UserInformationId)
+                        .Where(u => u.ApplicationUserId == managers[i].UserInformationId)
                         .FirstOrDefault();
                     if (userInfo != null)
                         managers[i].UserInformation = userInfo;

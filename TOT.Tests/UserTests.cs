@@ -29,10 +29,10 @@ namespace TOT.Tests {
         {
             listUserInfo = new List<UserInformation>()
             {
-                new UserInformation(){FirstName = "A", UserInformationId = 1},
-                new UserInformation(){FirstName = "B", UserInformationId = 2},
-                new UserInformation(){FirstName = "C", UserInformationId = 3},
-                new UserInformation(){FirstName = "D", UserInformationId = 4},
+                new UserInformation(){FirstName = "A", ApplicationUserId = 1},
+                new UserInformation(){FirstName = "B", ApplicationUserId = 2},
+                new UserInformation(){FirstName = "C", ApplicationUserId = 3},
+                new UserInformation(){FirstName = "D", ApplicationUserId = 4},
             };
         }
 
@@ -52,7 +52,7 @@ namespace TOT.Tests {
 
             //assert
             mockUow.Verify(m => m.UserInformationRepository.Get(1));
-            Assert.AreEqual(expected.UserInformationId, actual.UserInformationId);
+            Assert.AreEqual(expected.ApplicationUserId, actual.UserInformationId);
         }
 
         [TestMethod]

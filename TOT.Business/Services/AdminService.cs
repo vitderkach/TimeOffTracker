@@ -101,16 +101,20 @@ namespace TOT.Business.Services
                 {
                     FirstName = registrationForm.Name,
                     LastName = registrationForm.Surname,
-                    VacationPolicyInfo = new VacationPolicyInfo()
-                    {
-                        TimeOffTypes = new List<VacationType>()
-                        {
-                            new VacationType() { TimeOffType = TimeOffType.SickLeave, WastedDays = 0 },
-                            new VacationType() { TimeOffType = TimeOffType.StudyLeave, WastedDays = 0 },
-                            new VacationType() { TimeOffType = TimeOffType.Vacation, WastedDays = 0 },
-                            new VacationType() { TimeOffType = TimeOffType.UnpaidVacation, WastedDays = 0 }
-                        }
-                    }
+
+                    //TODO: Review the code
+
+                    //VacationPolicies = new List<VacationPolicy> {                     
+                    //new VacationPolicy()
+                    //{
+                    //    VacationTypes = new List<VacationType>()
+                    //    {
+                    //        new VacationType() { TimeOffType = TimeOffType.ConfirmedSickLeave, UsedDays = 0 },
+                    //        new VacationType() { TimeOffType = TimeOffType.StudyLeave, UsedDays = 0 },
+                    //        new VacationType() { TimeOffType = TimeOffType.PaidLeave, UsedDays = 0 },
+                    //        new VacationType() { TimeOffType = TimeOffType.AdministrativeLeave, UsedDays = 0 }
+                    //    }
+                    //}
                 }
             };
 

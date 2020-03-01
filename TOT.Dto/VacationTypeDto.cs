@@ -10,6 +10,6 @@ namespace TOT.Dto {
         public int WastedDays { get; set; }
 
         public int VacationPolicyInfoId { get; set; }
-        public VacationPolicyInfo VacationPolicyInfo { get; set; }
+        public VacationPolicy VacationPolicyInfo { get; set; }
     }
 }

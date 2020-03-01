@@ -14,7 +14,7 @@ namespace TOT.Data.Configuration
                 .HasName("PK_Location");
 
             entity.Property(l => l.Name)
-                .HasColumnType("nvarchar(50)")
+                .HasColumnType("nvarchar(60)")
                 .IsRequired();
         }
     }

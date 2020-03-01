@@ -58,7 +58,7 @@ namespace TOT.Data.Repositories
                 .Include(manager => manager.Manager)
                     .ThenInclude(info => info.UserInformation)
                 .Include(vr => vr.VacationRequest)
-                .ThenInclude(user => user.User)
+                .ThenInclude(user => user.ApplicationUser)
                     .ThenInclude(info => info.UserInformation)
                 .Where(mr => mr.Id == id)
                 .FirstOrDefault();
@@ -71,7 +71,7 @@ namespace TOT.Data.Repositories
             return context.ManagerResponses
                 .Include(manager => manager.Manager)
                 .Include(vr => vr.VacationRequest)
-                    .ThenInclude(user => user.User)
+                    .ThenInclude(user => user.ApplicationUser)
                         .ThenInclude(info => info.UserInformation)
                 .ToList();
         }

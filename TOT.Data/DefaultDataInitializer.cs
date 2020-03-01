@@ -13,62 +13,66 @@ namespace TOT.Data
 
         public static Dictionary<string, int> SeedUsersInfo(IServiceProvider serviceProvider)
         {
-            using (var context = new ApplicationDbContext(
-                serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
-            {
+            // TODO: Rewrite test data
 
-                if (context.UserInformations.Any())
-                {
-                    return default;
-                }
+            //using (var context = new ApplicationDbContext(
+            //    serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
+            //{
 
-                var userInfo = new List<UserInformation>()
-                {
-                    new UserInformation(){ FirstName = "Matthew", LastName = "Brown",
-                        VacationPolicyInfo = new VacationPolicyInfo()
-                        {
-                            TimeOffTypes = new List<VacationType>()
-                            {
-                                new VacationType() { TimeOffType = TimeOffType.SickLeave, WastedDays = 0 },
-                                new VacationType() { TimeOffType = TimeOffType.StudyLeave, WastedDays = 0 },
-                                new VacationType() { TimeOffType = TimeOffType.Vacation, WastedDays = 0 },
-                                new VacationType() { TimeOffType = TimeOffType.UnpaidVacation, WastedDays = 0 }
-                            }
-                        }
-                    },
-                    new UserInformation(){ FirstName = "Joseph", LastName = "White",
-                        VacationPolicyInfo = new VacationPolicyInfo()
-                        {
-                            TimeOffTypes = new List<VacationType>()
-                            {
-                                new VacationType() { TimeOffType = TimeOffType.SickLeave, WastedDays = 0 },
-                                new VacationType() { TimeOffType = TimeOffType.StudyLeave, WastedDays = 0 },
-                                new VacationType() { TimeOffType = TimeOffType.Vacation, WastedDays = 0 },
-                                new VacationType() { TimeOffType = TimeOffType.UnpaidVacation, WastedDays = 0 }
-                            }
-                        }
-                    },
-                    new UserInformation(){ FirstName = "Nadia", LastName = "Campbell",
-                        VacationPolicyInfo = new VacationPolicyInfo()
-                        {
-                            TimeOffTypes = new List<VacationType>()
-                            {
-                                new VacationType() { TimeOffType = TimeOffType.SickLeave, WastedDays = 0 },
-                                new VacationType() { TimeOffType = TimeOffType.StudyLeave, WastedDays = 0 },
-                                new VacationType() { TimeOffType = TimeOffType.Vacation, WastedDays = 0 },
-                                new VacationType() { TimeOffType = TimeOffType.UnpaidVacation, WastedDays = 0 }
-                            }
-                        }
-                    }
-                };
+            //    if (context.UserInformations.Any())
+            //    {
+            //        return default;
+            //    }
 
-                context.UserInformations.AddRange(userInfo);
-                context.SaveChanges();
+            //    var userInfo = new List<UserInformation>()
+            //    {
+            //        new UserInformation(){ FirstName = "Matthew", LastName = "Brown",
+            //            VacationPolicy = new VacationPolicy()
+            //            {
+            //                VacationTypes = new List<VacationType>()
+            //                {
+            //                    new VacationType() { TimeOffType = TimeOffType.ConfirmedSickLeave, UsedDays = 0 },
+            //                    new VacationType() { TimeOffType = TimeOffType.StudyLeave, UsedDays = 0 },
+            //                    new VacationType() { TimeOffType = TimeOffType.PaidLeave, UsedDays = 0 },
+            //                    new VacationType() { TimeOffType = TimeOffType.UnofficialSickLeave, UsedDays = 0 }
+            //                }
+            //            }
+            //        },
+            //        new UserInformation(){ FirstName = "Joseph", LastName = "White",
+            //            VacationPolicy = new VacationPolicy()
+            //            {
+            //                VacationTypes = new List<VacationType>()
+            //                {
+            //                    new VacationType() { TimeOffType = TimeOffType.ConfirmedSickLeave, UsedDays = 0 },
+            //                    new VacationType() { TimeOffType = TimeOffType.StudyLeave, UsedDays = 0 },
+            //                    new VacationType() { TimeOffType = TimeOffType.PaidLeave, UsedDays = 0 },
+            //                    new VacationType() { TimeOffType = TimeOffType.UnofficialSickLeave, UsedDays = 0 }
+            //                }
+            //            }
+            //        },
+            //        new UserInformation(){ FirstName = "Nadia", LastName = "Campbell",
+            //            VacationPolicy = new VacationPolicy()
+            //            {
+            //                VacationTypes = new List<VacationType>()
+            //                {
+            //                    new VacationType() { TimeOffType = TimeOffType.ConfirmedSickLeave, UsedDays = 0 },
+            //                    new VacationType() { TimeOffType = TimeOffType.StudyLeave, UsedDays = 0 },
+            //                    new VacationType() { TimeOffType = TimeOffType.PaidLeave, UsedDays = 0 },
+            //                    new VacationType() { TimeOffType = TimeOffType.UnofficialSickLeave, UsedDays = 0 }
+            //                }
+            //            }
+            //        }
+            //    };
 
-                var info = context.UserInformations
-                    .ToDictionary(pk => pk.LastName, v => v.UserInformationId);
-                return info;
-            }
+            //    context.UserInformations.AddRange(userInfo);
+            //    context.SaveChanges();
+
+            //    var info = context.UserInformations
+            //        .ToDictionary(pk => pk.LastName, v => v.UserInformationId);
+            //    return info;
+            //}
+
+            return default;
         }
 
         public static void SeedData(IServiceProvider serviceProvider, Dictionary<string, int> userInfo)

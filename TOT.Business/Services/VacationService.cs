@@ -62,7 +62,7 @@ namespace TOT.Business.Services
             var user = _userService.GetCurrentUser().Result;
             var userInfo = _uow.UserInformationRepository
                 .GetAll()
-                .Where(u => u.User.Id == user.Id)
+                .Where(u => u.ApplicationUser.Id == user.Id)
                 .FirstOrDefault();
 
             EmailModel emailModel = new EmailModel()
@@ -78,9 +78,9 @@ namespace TOT.Business.Services
         {
             var vacationDays = _uow.VacationPolicyRepository
                 .GetAll()
-                .Where(v => v.UserInformation.User.Id == userId)
+                .Where(v => v.UserInformation.ApplicationUser.Id == userId)
                 .FirstOrDefault();
-            var vacationDaysDto = _mapper.Map<VacationPolicyInfo, VacationDaysDto>(vacationDays);
+            var vacationDaysDto = _mapper.Map<VacationPolicy, VacationDaysDto>(vacationDays);
             return vacationDaysDto;
         }
 
@@ -89,7 +89,7 @@ namespace TOT.Business.Services
             List<int> vacationIds = new List<int>();
             var vacations = _uow.VacationRequestRepository
                 .GetAll()
-                .Where(v => v.UserId == userId);
+                .Where(v => v.ApplicationUserId == userId);
 
             foreach (VacationRequest request in vacations)
             {
@@ -109,7 +109,7 @@ namespace TOT.Business.Services
             var currentUserId = _userService.GetCurrentUser().Result.Id;
             var vacations = _uow.VacationRequestRepository
                 .GetAll()
-                .Where(v => v.UserId == currentUserId);
+                .Where(v => v.ApplicationUserId == currentUserId);
 
             var vacationsDto = _mapper.Map<IEnumerable<VacationRequest>, IEnumerable<VacationRequestListDto>>(vacations);
             return vacationsDto;

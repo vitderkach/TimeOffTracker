@@ -27,8 +27,8 @@ namespace TOT.Utility.AutoMapper
             CreateMap<VacationRequest, VacationRequestListDto>()
                 .ForMember(dest => dest.VacationType, opt => opt.MapFrom(src => src.VacationType.GetDescription()));
 
-            CreateMap<VacationPolicyInfo, VacationDaysDto>()
-                .ForMember(dest => dest.TimeOffTypes, opt => opt.MapFrom(src => src.TimeOffTypes));
+            CreateMap<VacationPolicy, VacationDaysDto>()
+                .ForMember(dest => dest.TimeOffTypes, opt => opt.MapFrom(src => src.VacationTypes));
             CreateMap<VacationType, VacationTypeDto>()
                 .ForMember(dest => dest.TimeOffType, opt => opt.MapFrom(src => src.TimeOffType.GetDescription()));
 

@@ -7,7 +7,7 @@ using TOT.Entities;
 using TOT.Interfaces.Repositories;
 
 namespace TOT.Data.Repositories {
-    public class VacationPolicyRepository : IRepository<VacationPolicyInfo> {
+    public class VacationPolicyRepository : IRepository<VacationPolicy> {
         private ApplicationDbContext context;
         private bool disposed = false;
 
@@ -16,7 +16,7 @@ namespace TOT.Data.Repositories {
             this.context = appcontext;
         }
 
-        public void Create(VacationPolicyInfo item)
+        public void Create(VacationPolicy item)
         {
             context.VacationPolicies.Add(item);
             context.SaveChanges();
@@ -51,28 +51,28 @@ namespace TOT.Data.Repositories {
             GC.SuppressFinalize(this);
         }
 
-        public VacationPolicyInfo Get(int id)
+        public VacationPolicy Get(int id)
         {
             var response = context.VacationPolicies
-                .Include(v => v.TimeOffTypes)
+                .Include(v => v.VacationTypes)
                 .Include(v => v.UserInformation)
                 .FirstOrDefault();
 
             return response;
         }
 
-        public IEnumerable<VacationPolicyInfo> GetAll()
+        public IEnumerable<VacationPolicy> GetAll()
         {
             return context.VacationPolicies
-                .Include(v => v.TimeOffTypes)
+                .Include(v => v.VacationTypes)
                 .Include(v => v.UserInformation)
-                    .ThenInclude(v => v.User)
+                    .ThenInclude(v => v.ApplicationUser)
                 .Include(v => v.UserInformation)
-                    .ThenInclude(v => v.VacationPolicyInfo)
+                    .ThenInclude(v => v.VacationPolicies)
                 .ToList();
         }
 
-        public void Update(VacationPolicyInfo item)
+        public void Update(VacationPolicy item)
         {
             context.Entry(item).State = EntityState.Modified;
             context.SaveChanges();

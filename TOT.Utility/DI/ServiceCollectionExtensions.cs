@@ -30,7 +30,7 @@ namespace TOT.Utility.DI
             services.AddTransient<IRepository<UserInformation>, UserInformationRepository>();
             services.AddTransient<IRepository<VacationRequest>, VacationRequestRepository>();
             services.AddTransient<IRepository<ManagerResponse>, ManagerResponseRepository>();
-            services.AddTransient<IRepository<VacationPolicyInfo>, VacationPolicyRepository>();
+            services.AddTransient<IRepository<VacationPolicy>, VacationPolicyRepository>();
             services.AddTransient<IRepository<VacationType>, VacationTypeRepository>();
 
             services.AddTransient<IUserInfoService, UserInformationService>();
