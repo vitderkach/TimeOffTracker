@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
@@ -19,6 +19,12 @@
     <ProjectReference Include="..\TOT.Interfaces\TOT.Interfaces.csproj" />
     <ProjectReference Include="..\TOT.Utility\TOT.Utility.csproj" />
     <ProjectReference Include="..\TOT.Web\TOT.Web.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="DataImport\Excel\2020.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
