@@ -27,7 +27,7 @@ namespace TOT.Data.Configuration
 
             entity.Property(ui => ui.RecruitmentDate)
                 .HasColumnType("date")
-                .HasDefaultValue(DateTime.Now.Date);
+                .HasDefaultValueSql("GETUTCDATE()"); ;
 
             entity.HasOne(ui => ui.ApplicationUser)
                 .WithOne(au => au.UserInformation)

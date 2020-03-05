@@ -13,8 +13,8 @@ namespace TOT.Data
 
         public static Dictionary<string, int> SeedUsersInfo(IServiceProvider serviceProvider)
         {
-            // TODO: Rewrite test data
-
+            /* TODO: Because new tables have been added to the database and some types among tables have been changed, test data should be rewritten.
+            AS a base use commented below code for previous version of the database */
             //using (var context = new ApplicationDbContext(
             //    serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
             //{

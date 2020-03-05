@@ -102,7 +102,8 @@ namespace TOT.Business.Services
                     FirstName = registrationForm.Name,
                     LastName = registrationForm.Surname,
 
-                    //TODO: Review the code
+                    /* TODO: Because new tables have been added to the database, some types among tables have been changed, new types  of VacationTypes have been added,    
+                    test data should be rewritten. AS a base use commented below code for previous version of the database */
 
                     //VacationPolicies = new List<VacationPolicy> {                     
                     //new VacationPolicy()

@@ -54,7 +54,7 @@ namespace TOT.Data.Repositories {
         public VacationType Get(int id)
         {
             var response = context.VacationTypes
-                .Include(v => v.VacationPolicyInfo)
+                .Include(v => v.VacationPolicy)
                 .FirstOrDefault();
 
             return response;
@@ -63,8 +63,8 @@ namespace TOT.Data.Repositories {
         public IEnumerable<VacationType> GetAll()
         {
             return context.VacationTypes
-                .Include(v => v.VacationPolicyInfo)
-                .Include(v => v.VacationPolicyInfo)
+                .Include(v => v.VacationPolicy)
+                .Include(v => v.VacationPolicy)
                     .ThenInclude(v => v.VacationTypes)
                 .ToList();
         }

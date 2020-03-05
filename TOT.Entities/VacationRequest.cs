@@ -37,16 +37,13 @@ namespace TOT.Entities
         [Description("Study Leave")]
         StudyLeave,
 
-        [Description("Truancy")]
-        Truancy,
-
         [Description("Paid Leave")]
         PaidLeave,
 
-        [Description("Administrative Leave")]
-        AdministrativeLeave,
+        [Description("Gift Leave")]
+        GiftLeave,
 
-        [Description("Unknown reason")]
-        UnknownReason
+        [Description("Administrative Leave")]
+        AdministrativeLeave
     }
 }

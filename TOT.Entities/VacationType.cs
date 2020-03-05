@@ -6,8 +6,8 @@ namespace TOT.Entities
 {
     public class VacationType
     {
-        public int VacationPolicyInfoId { get; set; }
-        public VacationPolicy VacationPolicyInfo { get; set; }
+        public int VacationPolicyId { get; set; }
+        public VacationPolicy VacationPolicy { get; set; }
 
         public TimeOffType TimeOffType { get; set; }
 

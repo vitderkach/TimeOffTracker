@@ -15,6 +15,10 @@
     <Compile Remove="Migrations\20191109121821_configureRelations.Designer.cs" />
     <Compile Remove="Migrations\20191109122316_addVacationTypesAndConfgigureRealtions.cs" />
     <Compile Remove="Migrations\20191109122316_addVacationTypesAndConfgigureRealtions.Designer.cs" />
+    <Compile Remove="Migrations\20200301230017_AddNewTablesAndColumns.cs" />
+    <Compile Remove="Migrations\20200301230017_AddNewTablesAndColumns.Designer.cs" />
+    <Compile Remove="Migrations\20200305103246_AddTablesAndFieldsRelatedWithUserInformation.cs" />
+    <Compile Remove="Migrations\20200305103246_AddTablesAndFieldsRelatedWithUserInformation.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
