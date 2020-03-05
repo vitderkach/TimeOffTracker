@@ -8,17 +8,26 @@
     <div class="card-body">
         @for (int i = 0; i < TimeOffTypes.Count; i++)
         {
+            var UsedPercentage = TimeOffTypes.ElementAt(i).WastedDays / Model.MaxWastedDays.ElementAt(i);
+
             <div>
                 <h5 class="card-title">
                     @TimeOffTypes.ElementAt(i).TimeOffType:
                     <span class="text-danger">
                         @TimeOffTypes.ElementAt(i).WastedDays
                     </span>
+
                     @if (!TimeOffTypes.ElementAt(i).TimeOffType.Equals("Unpaid vacation"))
                     {
                         <span>/</span>
                         <span class="text-success">@Model.MaxWastedDays.ElementAt(i)</span>
                     }
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped bg-info"
+                             role="progressbar"
+                             style="width: @UsedPercentage%"
+                             aria-valuenow="@UsedPercentage" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
                 </h5>
         </div>
     }

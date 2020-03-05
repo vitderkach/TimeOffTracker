@@ -57,3 +57,8 @@
     background-color: #d0520c;
     border-color: #d0520c;
 }
+
+.form-control:focus {
+    border-color: #006835;
+    box-shadow: 0 0 0 0.1rem #00683570;
+}
