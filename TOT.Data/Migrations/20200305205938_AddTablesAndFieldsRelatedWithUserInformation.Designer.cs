@@ -10,7 +10,7 @@ using TOT.Data;
 namespace TOT.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200305104143_AddTablesAndFieldsRelatedWithUserInformation")]
+    [Migration("20200305205938_AddTablesAndFieldsRelatedWithUserInformation")]
     partial class AddTablesAndFieldsRelatedWithUserInformation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -213,6 +213,8 @@ namespace TOT.Data.Migrations
                     b.HasKey("Id")
                         .HasName("PK_Location");
 
+                    b.HasAlternateKey("Name");
+
                     b.ToTable("Location");
                 });
 
@@ -263,6 +265,8 @@ namespace TOT.Data.Migrations
                     b.HasKey("Id")
                         .HasName("PK_Team");
 
+                    b.HasAlternateKey("Name");
+
                     b.ToTable("Team");
                 });
 
@@ -301,18 +305,6 @@ namespace TOT.Data.Migrations
                     b.HasIndex("FirstName", "LastName");
 
                     b.ToTable("UserInformations");
-                });
-
-            modelBuilder.Entity("TOT.Entities.VacationPolicy", b =>
-                {
-                    b.Property<int>("UserInformationId");
-
-                    b.Property<int>("Year");
-
-                    b.HasKey("UserInformationId", "Year")
-                        .HasName("PK_VacationPolicy");
-
-                    b.ToTable("VacationPolicies");
                 });
 
             modelBuilder.Entity("TOT.Entities.VacationRequest", b =>
@@ -361,7 +353,9 @@ namespace TOT.Data.Migrations
 
             modelBuilder.Entity("TOT.Entities.VacationType", b =>
                 {
-                    b.Property<int>("VacationPolicyId");
+                    b.Property<int>("UserInformationId");
+
+                    b.Property<int>("Year");
 
                     b.Property<string>("TimeOffType")
                         .HasColumnName("Name")
@@ -373,16 +367,8 @@ namespace TOT.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasDefaultValue(0);
 
-                    b.Property<int?>("VacationPolicyUserInformationId")
-                        .IsRequired();
-
-                    b.Property<int?>("VacationPolicyYear")
-                        .IsRequired();
-
-                    b.HasKey("VacationPolicyId", "TimeOffType")
+                    b.HasKey("UserInformationId", "Year", "TimeOffType")
                         .HasName("PK_ VacationType");
-
-                    b.HasIndex("VacationPolicyUserInformationId", "VacationPolicyYear");
 
                     b.ToTable("VacationTypes");
                 });
@@ -465,14 +451,6 @@ namespace TOT.Data.Migrations
                         .HasForeignKey("TeamId");
                 });
 
-            modelBuilder.Entity("TOT.Entities.VacationPolicy", b =>
-                {
-                    b.HasOne("TOT.Entities.UserInformation", "UserInformation")
-                        .WithMany("VacationPolicies")
-                        .HasForeignKey("UserInformationId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("TOT.Entities.VacationRequest", b =>
                 {
                     b.HasOne("TOT.Entities.ApplicationUser", "ApplicationUser")
@@ -484,9 +462,9 @@ namespace TOT.Data.Migrations
 
             modelBuilder.Entity("TOT.Entities.VacationType", b =>
                 {
-                    b.HasOne("TOT.Entities.VacationPolicy", "VacationPolicy")
+                    b.HasOne("TOT.Entities.UserInformation", "UserInformation")
                         .WithMany("VacationTypes")
-                        .HasForeignKey("VacationPolicyUserInformationId", "VacationPolicyYear")
+                        .HasForeignKey("UserInformationId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

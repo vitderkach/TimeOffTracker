@@ -27,10 +27,12 @@ namespace TOT.Utility.AutoMapper
             CreateMap<VacationRequest, VacationRequestListDto>()
                 .ForMember(dest => dest.VacationType, opt => opt.MapFrom(src => src.VacationType.GetDescription()));
 
-            CreateMap<VacationPolicy, VacationDaysDto>()
-                .ForMember(dest => dest.TimeOffTypes, opt => opt.MapFrom(src => src.VacationTypes));
-            CreateMap<VacationType, VacationTypeDto>()
-                .ForMember(dest => dest.TimeOffType, opt => opt.MapFrom(src => src.TimeOffType.GetDescription()));
+            // TODO: Rewrite the mehod because the database logic has been changed. As an example the commented code below
+
+            //CreateMap<VacationPolicy, VacationDaysDto>()
+            //    .ForMember(dest => dest.TimeOffTypes, opt => opt.MapFrom(src => src.VacationTypes));
+            //CreateMap<VacationType, VacationTypeDto>()
+            //    .ForMember(dest => dest.TimeOffType, opt => opt.MapFrom(src => src.TimeOffType.GetDescription()));
 
             CreateMap<VacationRequestApprovalDto, VacationRequestDto>()
                  .ForMember(dest => dest.VacationType, opt => opt.MapFrom(src => src.VacationType.Replace(" ", "")));

@@ -16,6 +16,8 @@ namespace TOT.Data.Configuration
             entity.Property(l => l.Name)
                 .HasColumnType("nvarchar(60)")
                 .IsRequired();
+
+            entity.HasAlternateKey(l => l.Name);
         }
     }
 }

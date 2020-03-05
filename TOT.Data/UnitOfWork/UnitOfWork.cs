@@ -13,20 +13,17 @@ namespace TOT.Data.UnitOfWork
         readonly IRepository<UserInformation> _userInformationRepostitory;
         readonly IRepository<VacationRequest> _vacationRequestRepository;
         readonly IRepository<ManagerResponse> _managerResponseRepository;
-        readonly IRepository<VacationPolicy> _vacationPolicyRepository;
         readonly IRepository<VacationType> _vacationTypeRepository;
 
         public UnitOfWork(ApplicationDbContext context,
             IRepository<UserInformation> userInformationRepository,
             IRepository<VacationRequest> vacationRequestRepository,
             IRepository<ManagerResponse> managerResponseRepository,
-            IRepository<VacationPolicy> vacationPolicyRepository,
             IRepository<VacationType> vacationTypeRepository)
         {
             _userInformationRepostitory = userInformationRepository;
             _vacationRequestRepository = vacationRequestRepository;
             _managerResponseRepository = managerResponseRepository;
-            _vacationPolicyRepository = vacationPolicyRepository;
             _vacationTypeRepository = vacationTypeRepository;
             db = context;
         }
@@ -59,10 +56,6 @@ namespace TOT.Data.UnitOfWork
             get { return _managerResponseRepository; }
         }
 
-        public IRepository<VacationPolicy> VacationPolicyRepository
-        {
-            get { return _vacationPolicyRepository; }
-        }
         public IRepository<VacationType> VacationTypeRepository
         {
             get { return _vacationTypeRepository; }

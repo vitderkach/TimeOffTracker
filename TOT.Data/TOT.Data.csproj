@@ -19,6 +19,8 @@
     <Compile Remove="Migrations\20200301230017_AddNewTablesAndColumns.Designer.cs" />
     <Compile Remove="Migrations\20200305103246_AddTablesAndFieldsRelatedWithUserInformation.cs" />
     <Compile Remove="Migrations\20200305103246_AddTablesAndFieldsRelatedWithUserInformation.Designer.cs" />
+    <Compile Remove="Migrations\20200305104143_AddTablesAndFieldsRelatedWithUserInformation.cs" />
+    <Compile Remove="Migrations\20200305104143_AddTablesAndFieldsRelatedWithUserInformation.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

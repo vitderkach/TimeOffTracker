@@ -21,6 +21,6 @@ namespace TOT.Entities
         public int? TeamId { get; set; }
         public Team Team { get; set; }
 
-        public ICollection<VacationPolicy> VacationPolicies { get; set; }
+        public ICollection<VacationType> VacationTypes { get; set; }
     }
 }

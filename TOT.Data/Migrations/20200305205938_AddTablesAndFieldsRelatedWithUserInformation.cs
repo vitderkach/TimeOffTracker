@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TOT.Data.Migrations
 {
     // This code has been generated automatically using 'add-migration  AddTablesAndFieldsRelatedWithUserInformation' command in PM manager
-    /* A short explanation: this migration adds new tables Location and Team, new IsFired, RecruitmentDate fields for UserInformation table add Year for VacationPolicy, 
-       default value for UsedDays column  from VacationType table, changes relation between UserInformation and VacationPolicy as one-to-many instead one-to-one
-       adds some cosmetics changes, which connected with names of tables and fileds(VacationPolicyInfo instead VacationPolicy, UsedDays instead WastedDays etc.)*/
+    /* A short explanation: this migration adds Location and Team tables, IsFired, RecruitmentDate fields for UserInformation table, Year field for VacationTypes table, 
+       default value 0 for UsedDays column  from VacationType table, deletes VacationPolicies table, changes relation between UserInformation and VacationTypes tables 
+       as one-to-many, adds some cosmetics changes, which connected with names of fileds(UsedDays instead WastedDays etc.)*/
     public partial class AddTablesAndFieldsRelatedWithUserInformation : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,44 +24,35 @@ namespace TOT.Data.Migrations
                 name: "IX_VacationTypes_VacationPolicyInfoId",
                 table: "VacationTypes");
 
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_VacationPolicies",
-                table: "VacationPolicies");
-
-            migrationBuilder.DropIndex(
-                name: "IX_VacationPolicies_UserInformationId",
-                table: "VacationPolicies");
-
             migrationBuilder.DropColumn(
                 name: "Id",
                 table: "VacationTypes");
-
-            migrationBuilder.DropColumn(
-                name: "Id",
-                table: "VacationPolicies");
 
             migrationBuilder.RenameColumn(
                 name: "TimeOffType",
                 table: "VacationTypes",
                 newName: "Name");
 
-            // This part of code has been changed manually: the value of name is UsedDays instead StatutoryDays
             migrationBuilder.RenameColumn(
                 name: "WastedDays",
                 table: "VacationTypes",
                 newName: "UsedDays");
 
-            // This part of code has been added manually: add a default value is '0' for column UsedDays 
+            // Adds UserInformationId value from VacationPolicyInfoId table to a new UserInformationId value in VacationTypes table
             migrationBuilder.Sql(
-                @"ALTER TABLE VacationTypes
-                ADD CONSTRAINT DF_UsedDays
-                DEFAULT 0 FOR UsedDays;"
-                );
+                @"UPDATE VacationTypes
+                SET VacationPolicyInfoId = VP.UserInformationId
+                FROM VacationTypes AS VT
+                INNER JOIN VacationPolicies AS VP
+                ON VT.VacationPolicyInfoId = VP.Id;");
 
             migrationBuilder.RenameColumn(
                 name: "VacationPolicyInfoId",
                 table: "VacationTypes",
-                newName: "VacationPolicyId");
+                newName: "UserInformationId");
+
+            migrationBuilder.DropTable(
+                name: "VacationPolicies");
 
             migrationBuilder.RenameColumn(
                 name: "UserId",
@@ -78,27 +69,15 @@ namespace TOT.Data.Migrations
                 table: "UserInformations",
                 newName: "ApplicationUserId");
 
-            // This part of code has been changed manually: the value of name StatutoryDays instead UsedDays
+            migrationBuilder.AddColumn<int>(
+                name: "Year",
+                table: "VacationTypes",
+                nullable: false,
+                defaultValue: 0);
+
             migrationBuilder.AddColumn<int>(
                 name: "StatutoryDays",
                 table: "VacationTypes",
-                nullable: false);
-
-            migrationBuilder.AddColumn<int>(
-                name: "VacationPolicyUserInformationId",
-                table: "VacationTypes",
-                nullable: false,
-                defaultValue: 0);
-
-            migrationBuilder.AddColumn<int>(
-                name: "VacationPolicyYear",
-                table: "VacationTypes",
-                nullable: false,
-                defaultValue: 0);
-
-            migrationBuilder.AddColumn<int>(
-                name: "Year",
-                table: "VacationPolicies",
                 nullable: false,
                 defaultValue: 0);
 
@@ -128,12 +107,7 @@ namespace TOT.Data.Migrations
             migrationBuilder.AddPrimaryKey(
                 name: "PK_ VacationType",
                 table: "VacationTypes",
-                columns: new[] { "VacationPolicyId", "Name" });
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_VacationPolicy",
-                table: "VacationPolicies",
-                columns: new[] { "UserInformationId", "Year" });
+                columns: new[] { "UserInformationId", "Year", "Name" });
 
             migrationBuilder.CreateTable(
                 name: "Location",
@@ -145,6 +119,7 @@ namespace TOT.Data.Migrations
                 },
                 constraints: table =>
                 {
+                    table.UniqueConstraint("AK_Location_Name", x => x.Name);
                     table.PrimaryKey("PK_Location", x => x.Id);
                 });
 
@@ -158,13 +133,9 @@ namespace TOT.Data.Migrations
                 },
                 constraints: table =>
                 {
+                    table.UniqueConstraint("AK_Team_Name", x => x.Name);
                     table.PrimaryKey("PK_Team", x => x.Id);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_VacationTypes_VacationPolicyUserInformationId_VacationPolicyYear",
-                table: "VacationTypes",
-                columns: new[] { "VacationPolicyUserInformationId", "VacationPolicyYear" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserInformations_LocationId",
@@ -193,11 +164,11 @@ namespace TOT.Data.Migrations
                 onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_VacationTypes_VacationPolicies_VacationPolicyUserInformationId_VacationPolicyYear",
+                name: "FK_VacationTypes_UserInformations_UserInformationId",
                 table: "VacationTypes",
-                columns: new[] { "VacationPolicyUserInformationId", "VacationPolicyYear" },
-                principalTable: "VacationPolicies",
-                principalColumns: new[] { "UserInformationId", "Year" },
+                column: "UserInformationId",
+                principalTable: "UserInformations",
+                principalColumn: "ApplicationUserId",
                 onDelete: ReferentialAction.Cascade);
         }
 
@@ -212,7 +183,7 @@ namespace TOT.Data.Migrations
                 table: "UserInformations");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_VacationTypes_VacationPolicies_VacationPolicyUserInformationId_VacationPolicyYear",
+                name: "FK_VacationTypes_UserInformations_UserInformationId",
                 table: "VacationTypes");
 
             migrationBuilder.DropTable(
@@ -226,14 +197,6 @@ namespace TOT.Data.Migrations
                 table: "VacationTypes");
 
             migrationBuilder.DropIndex(
-                name: "IX_VacationTypes_VacationPolicyUserInformationId_VacationPolicyYear",
-                table: "VacationTypes");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_VacationPolicy",
-                table: "VacationPolicies");
-
-            migrationBuilder.DropIndex(
                 name: "IX_UserInformations_LocationId",
                 table: "UserInformations");
 
@@ -241,22 +204,9 @@ namespace TOT.Data.Migrations
                 name: "IX_UserInformations_TeamId",
                 table: "UserInformations");
 
-            // This part of code has been changed manually: the value of name is StatutoryDays instead UsedDays
             migrationBuilder.DropColumn(
                 name: "StatutoryDays",
                 table: "VacationTypes");
-
-            migrationBuilder.DropColumn(
-                name: "VacationPolicyUserInformationId",
-                table: "VacationTypes");
-
-            migrationBuilder.DropColumn(
-                name: "VacationPolicyYear",
-                table: "VacationTypes");
-
-            migrationBuilder.DropColumn(
-                name: "Year",
-                table: "VacationPolicies");
 
             migrationBuilder.DropColumn(
                 name: "IsFired",
@@ -279,22 +229,10 @@ namespace TOT.Data.Migrations
                 table: "VacationTypes",
                 newName: "TimeOffType");
 
-            // This part of code has been added manually: delete the default constraint from column UsedDays
-            migrationBuilder.Sql(
-                @"ALTER TABLE VacationTypes
-                DROP CONSTRAINT DF_UsedDays;"
-                );
-
-            // This part of code has been changed manually: the value of name is UsedDays instead StatutoryDays
             migrationBuilder.RenameColumn(
                 name: "UsedDays",
                 table: "VacationTypes",
                 newName: "WastedDays");
-
-            migrationBuilder.RenameColumn(
-                name: "VacationPolicyId",
-                table: "VacationTypes",
-                newName: "VacationPolicyInfoId");
 
             migrationBuilder.RenameColumn(
                 name: "ApplicationUserId",
@@ -318,22 +256,60 @@ namespace TOT.Data.Migrations
                 defaultValue: 0)
                 .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AddColumn<int>(
-                name: "Id",
-                table: "VacationPolicies",
-                nullable: false,
-                defaultValue: 0)
-                .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
             migrationBuilder.AddPrimaryKey(
                 name: "PK_VacationTypes",
                 table: "VacationTypes",
                 column: "Id");
 
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_VacationPolicies",
-                table: "VacationPolicies",
-                column: "Id");
+            migrationBuilder.CreateTable(
+                name: "VacationPolicies",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    UserInformationId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VacationPolicies", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_VacationPolicies_UserInformations_UserInformationId",
+                        column: x => x.UserInformationId,
+                        principalTable: "UserInformations",
+                        principalColumn: "UserInformationId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            // Creates new VacationPolicies records for users, who had them before updating the database
+            migrationBuilder.Sql(
+                @"INSERT INTO dbo.VacationPolicies
+                SELECT UserInformationId 
+                FROM dbo.VacationTypes
+                WHERE Year = 0
+                GROUP BY UserInformationId;");
+
+            migrationBuilder.RenameColumn(
+                name: "UserInformationId",
+                table: "VacationTypes",
+                newName: "VacationPolicyInfoId");
+
+            // Attaches new VacationTypes records to corresponding VacationPolicies records for users, who had them before updating the database
+            migrationBuilder.Sql(
+                @"UPDATE dbo.VacationTypes
+                SET VacationPolicyInfoId = VP.Id
+                FROM dbo.VacationTypes AS VT
+                INNER JOIN dbo.VacationPolicies AS VP
+                ON VT.VacationPolicyInfoId = VP.UserInformationId
+                WHERE VT.Year = 0;");
+
+            // Deletes records from VacationTypes table, which were been added after updating the database
+            migrationBuilder.Sql(
+                @"DELETE FROM dbo.VacationTypes
+                WHERE Year <> 0;");
+
+            migrationBuilder.DropColumn(
+                name: "Year",
+                table: "VacationTypes");
 
             migrationBuilder.CreateIndex(
                 name: "IX_VacationTypes_VacationPolicyInfoId",

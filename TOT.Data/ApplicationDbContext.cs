@@ -18,7 +18,6 @@ namespace TOT.Data
         public DbSet<UserInformation> UserInformations { get; set; }
         public DbSet<VacationRequest> VacationRequests { get; set; }
         public DbSet<ManagerResponse> ManagerResponses { get; set; }
-        public DbSet<VacationPolicy> VacationPolicies { get; set; }
         public DbSet<VacationType> VacationTypes { get; set; }
         #endregion
 
@@ -30,7 +29,6 @@ namespace TOT.Data
             builder.ApplyConfiguration(new TeamConfiguration());
             builder.ApplyConfiguration(new ManagerResponseConfiguration());
             builder.ApplyConfiguration(new UserInformationConfiguration());
-            builder.ApplyConfiguration(new VacationPolicyConfiguration());
             builder.ApplyConfiguration(new VacationTypeConfiguration());
             base.OnModelCreating(builder);
         }

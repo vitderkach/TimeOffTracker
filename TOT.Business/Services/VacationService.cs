@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TOT.Dto;
@@ -73,16 +74,23 @@ namespace TOT.Business.Services
             };
             _vacationEmailSender.ExecuteToManager(emailModel);
         }
-        
+
         public VacationDaysDto GetVacationDays(int userId)
         {
-            var vacationDays = _uow.VacationPolicyRepository
-                .GetAll()
-                .Where(v => v.UserInformation.ApplicationUser.Id == userId)
-                .FirstOrDefault();
-            var vacationDaysDto = _mapper.Map<VacationPolicy, VacationDaysDto>(vacationDays);
-            return vacationDaysDto;
+            throw new NotImplementedException();
         }
+
+        // TODO: Rewrite the mehod because the database logic has been changed. As an example the commented code below
+
+        //public VacationDaysDto GetVacationDays(int userId)
+        //{
+        //    var vacationDays = _uow.VacationPolicyRepository
+        //        .GetAll()
+        //        .Where(v => v.UserInformation.ApplicationUser.Id == userId)
+        //        .FirstOrDefault();
+        //    var vacationDaysDto = _mapper.Map<VacationPolicy, VacationDaysDto>(vacationDays);
+        //    return vacationDaysDto;
+        //}
 
         public List<int> GetAllVacationIdsByUser(int userId)
         {

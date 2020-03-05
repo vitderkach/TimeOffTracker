@@ -12,7 +12,7 @@ namespace TOT.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<VacationType> entity)
         {
-            entity.HasKey(vt => new { vt.VacationPolicyId, vt.TimeOffType })
+            entity.HasKey(vt => new { vt.UserInformationId, vt.Year, vt.TimeOffType })
                 .HasName("PK_ VacationType");
 
             var converter = new EnumToStringConverter<TimeOffType>();
@@ -29,8 +29,8 @@ namespace TOT.Data.Configuration
                 .IsRequired()
                 .HasDefaultValue(0);
 
-            entity.HasOne(vt => vt.VacationPolicy)
-                .WithMany(vp => vp.VacationTypes)
+            entity.HasOne(vt => vt.UserInformation)
+                .WithMany(ui => ui.VacationTypes)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
         }
