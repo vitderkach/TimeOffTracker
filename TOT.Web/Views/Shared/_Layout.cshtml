@@ -1,10 +1,27 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <link rel="icon" type="image/png" href="~/calendar.ico" sizes="32x32">
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Time Off Tracker</title>
 
     <style>
@@ -32,24 +49,39 @@
             padding-top: 3px;
         }
     </style>
+
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/lib/fontawesome-free-5.12.1-web/css/fontawesome.css">
+        <link rel="stylesheet" href="~/lib/fontawesome-free-5.12.1-web/css/brands.css">
+        <link rel="stylesheet" href="~/lib/fontawesome-free-5.12.1-web/css/solid.css" />
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/lib/fontawesome-free-5.12.1-web/css/fontawesome.min.css">
+        <link rel="stylesheet" href="~/lib/fontawesome-free-5.12.1-web/css/brands.min.css">
+        <link rel="stylesheet" href="~/lib/fontawesome-free-5.12.1-web/css/solid.min.css" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
         <link rel="stylesheet" href="~/lib/jquery/dist/jquery.min.js" />
     </environment>
 </head>
 <body class="pt-0">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <ul class="nav col justify-content-between">
-            <div class="col-6 row">
-                <li class="nav-item active">
-                    <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link active">Home</a>
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+            <img src="~/images/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+            Time<b>OFF</b>Tracker
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link">Home</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -60,31 +92,17 @@
                         <a class="dropdown-item" asp-area="" asp-controller="Vacation" asp-action="List">My Requests</a>
                     </div>
                 </li>
-                <li class="nav-item">
-                    <partial name="_MenuManager" />
-                </li>
-                <li class="nav-item">
-                    <partial name="_MenuAdmin" />
-                </li>
-            </div>
-            <div class="col-6">
-                <li>
-                    <partial name="_LoginPartial" />
-                </li>
-            </div>
-        </ul>
+                <partial name="_MenuManager" />
+                <partial name="_MenuAdmin" />
+            </ul>
+            <partial name="_LoginPartial" />
+        </div>
     </nav>
 
     <div class="main container body-content mt-5">
         @RenderBody()
-        <hr />
     </div>
 
-    <div style="margin-top: 100px">
-        <footer class="footer container-fluid justify-content-center">
-            <p>&copy; 2019 - Time off Tracker - Web Application</p>
-        </footer>
-    </div>
     <environment include="Development">
 
         <script src="~/lib/jquery/dist/jquery.js"></script>
@@ -106,11 +124,7 @@
                 integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd">
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
-        <script src="~/lib/jquery/dist/jquery.min.js"></script>
         <script src="~/lib/tooltip.js/dist/tooltip.min.js"></script>
-
-        <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-
     </environment>
     @RenderSection("Scripts", required: false)
 </body>
