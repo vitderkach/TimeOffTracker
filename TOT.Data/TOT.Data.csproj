@@ -5,25 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20191107114028_addedVacationUserInfo.cs" />
-    <Compile Remove="Migrations\20191107114028_addedVacationUserInfo.Designer.cs" />
-    <Compile Remove="Migrations\20191107192735_policyFix.cs" />
-    <Compile Remove="Migrations\20191107192735_policyFix.Designer.cs" />
-    <Compile Remove="Migrations\20191109112600_VacationOnClientSetNull.cs" />
-    <Compile Remove="Migrations\20191109112600_VacationOnClientSetNull.Designer.cs" />
-    <Compile Remove="Migrations\20191109121821_configureRelations.cs" />
-    <Compile Remove="Migrations\20191109121821_configureRelations.Designer.cs" />
-    <Compile Remove="Migrations\20191109122316_addVacationTypesAndConfgigureRealtions.cs" />
-    <Compile Remove="Migrations\20191109122316_addVacationTypesAndConfgigureRealtions.Designer.cs" />
-    <Compile Remove="Migrations\20200301230017_AddNewTablesAndColumns.cs" />
-    <Compile Remove="Migrations\20200301230017_AddNewTablesAndColumns.Designer.cs" />
-    <Compile Remove="Migrations\20200305103246_AddTablesAndFieldsRelatedWithUserInformation.cs" />
-    <Compile Remove="Migrations\20200305103246_AddTablesAndFieldsRelatedWithUserInformation.Designer.cs" />
-    <Compile Remove="Migrations\20200305104143_AddTablesAndFieldsRelatedWithUserInformation.cs" />
-    <Compile Remove="Migrations\20200305104143_AddTablesAndFieldsRelatedWithUserInformation.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.11" />
