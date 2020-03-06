@@ -5,11 +5,15 @@ using TOT.Entities;
 
 namespace TOT.Dto {
     public class VacationTypeDto {
-        public int Id { get; set; }
-        public string TimeOffType { get; set; }
-        public int WastedDays { get; set; }
+        public int UserInformationId { get; set; }
+        public UserInformation UserInformation { get; set; }
 
-        public int VacationPolicyInfoId { get; set; }
-        public VacationPolicyInfo VacationPolicyInfo { get; set; }
+        public TimeOffType TimeOffType { get; set; }
+
+        public int Year { get; set; }
+
+        public int StatutoryDays { get; set; }
+
+        public int UsedDays { get; set; }
     }
 }

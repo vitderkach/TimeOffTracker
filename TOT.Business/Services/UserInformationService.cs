@@ -59,7 +59,7 @@ namespace TOT.Business.Services
 
             if (userInfo != null)
             {
-                Database.UserInformationRepository.Delete(userInfo.UserInformationId);
+                Database.UserInformationRepository.Delete(userInfo.ApplicationUserId);
                 Database.Save();
             }
         }

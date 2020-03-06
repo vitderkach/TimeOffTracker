@@ -5,7 +5,7 @@ using TOT.Entities;
 
 namespace TOT.Data.Configuration
 {
-    public class VacationRequestConfiguration: IEntityTypeConfiguration<VacationRequest>
+    public class VacationRequestConfiguration : IEntityTypeConfiguration<VacationRequest>
     {
         public void Configure(EntityTypeBuilder<VacationRequest> entity)
         {
@@ -36,10 +36,10 @@ namespace TOT.Data.Configuration
                 .HasConversion(converter)
                 .IsRequired();
             entity.HasIndex(t => t.VacationType);
-           
-            entity.HasOne(u => u.User)
+
+            entity.HasOne(u => u.ApplicationUser)
                 .WithMany(r => r.VacationRequests)
-                .HasForeignKey(fk => fk.UserId)
+                .HasForeignKey(fk => fk.ApplicationUserId)
                 .HasConstraintName("FK_AppUser_Requests")
                 .OnDelete(DeleteBehavior.SetNull);
         }

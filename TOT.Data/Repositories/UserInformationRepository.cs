@@ -52,17 +52,24 @@ namespace TOT.Data.Repositories
             return context.UserInformations.Find(id);
         }
 
+        // TODO: Rewrite the method because the database logic has been changed. As an example the commented code below
+
         public IEnumerable<UserInformation> GetAll()
         {
-            return context.UserInformations
-                .Include(u => u.VacationPolicyInfo)
-                    .ThenInclude(u => u.TimeOffTypes)
-
-                .Include(u => u.User)
-                    .ThenInclude(u => u.UserInformation)
-                        .ThenInclude(u => u.VacationPolicyInfo)
-                .ToList();
+            throw new NotImplementedException();
         }
+
+        //    public IEnumerable<UserInformation> GetAll()
+        //{
+        //    return context.UserInformations
+        //        .Include(u => u.VacationPolicies)
+        //            .ThenInclude(u => u.VacationTypes)
+
+        //        .Include(u => u.ApplicationUser)
+        //            .ThenInclude(u => u.UserInformation)
+        //                .ThenInclude(u => u.VacationPolicies)
+        //        .ToList();
+        //}
 
         public void Update(UserInformation item)
         {

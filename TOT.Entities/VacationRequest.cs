@@ -22,19 +22,28 @@ namespace TOT.Entities
 
         public ICollection<ManagerResponse> ManagersResponses { get; set; }
 
-        public int? UserId { get; set; }
-        public ApplicationUser User { get; set; }
+        public int? ApplicationUserId { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
     }
 
     public enum TimeOffType
     {
-        [Description("Sick Leave")]
-        SickLeave = 1,
+        [Description("Confirmed Sick Leave")]
+        ConfirmedSickLeave,
+
+        [Description("Unofficial Sick Leave")]
+        UnofficialSickLeave,
+
         [Description("Study Leave")]
-        StudyLeave = 2,
-        [Description("Unpaid vacation")]
-        UnpaidVacation = 3,
-        [Description("Vacation")]
-        Vacation = 4
+        StudyLeave,
+
+        [Description("Paid Leave")]
+        PaidLeave,
+
+        [Description("Gift Leave")]
+        GiftLeave,
+
+        [Description("Administrative Leave")]
+        AdministrativeLeave
     }
 }

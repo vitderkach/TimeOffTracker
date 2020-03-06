@@ -11,7 +11,6 @@ namespace TOT.Interfaces
         IRepository<VacationRequest> VacationRequestRepository { get; }
         IRepository<UserInformation> UserInformationRepository { get; }
         IRepository<ManagerResponse> ManagerResponseRepository { get; }
-        IRepository<VacationPolicyInfo> VacationPolicyRepository { get; }
         IRepository<VacationType> VacationTypeRepository { get; }
         void Save();
     }

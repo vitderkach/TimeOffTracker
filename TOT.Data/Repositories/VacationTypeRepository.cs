@@ -51,23 +51,37 @@ namespace TOT.Data.Repositories {
             GC.SuppressFinalize(this);
         }
 
-        public VacationType Get(int id)
-        {
-            var response = context.VacationTypes
-                .Include(v => v.VacationPolicyInfo)
-                .FirstOrDefault();
+        // TODO: Rewrite the method because the database logic has been changed. As an example the commented code below
 
-            return response;
+         public VacationType Get(int id)
+        {
+            throw new NotImplementedException();
         }
+
+        //public VacationType Get(int id)
+        //{
+        //    var response = context.VacationTypes
+        //        .Include(v => v.VacationPolicy)
+        //        .FirstOrDefault();
+
+        //    return response;
+        //}
+
+        // TODO: Rewrite the method because the database logic has been changed. As an example the commented code below
 
         public IEnumerable<VacationType> GetAll()
         {
-            return context.VacationTypes
-                .Include(v => v.VacationPolicyInfo)
-                .Include(v => v.VacationPolicyInfo)
-                    .ThenInclude(v => v.TimeOffTypes)
-                .ToList();
+            throw new NotImplementedException();
         }
+
+        //public IEnumerable<VacationType> GetAll()
+        //{
+        //    return context.VacationTypes
+        //        .Include(v => v.VacationPolicy)
+        //        .Include(v => v.VacationPolicy)
+        //            .ThenInclude(v => v.VacationTypes)
+        //        .ToList();
+        //}
 
         public void Update(VacationType item)
         {

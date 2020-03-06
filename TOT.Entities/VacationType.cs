@@ -2,13 +2,19 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TOT.Entities {
-    public class VacationType {
-        public int Id { get; set; }
-        public TimeOffType TimeOffType { get; set; }
-        public int WastedDays { get; set; }
+namespace TOT.Entities
+{
+    public class VacationType
+    {
+        public int UserInformationId { get; set; }
+        public UserInformation UserInformation { get; set; }
 
-        public int VacationPolicyInfoId { get; set; }
-        public VacationPolicyInfo VacationPolicyInfo { get; set; }
+        public TimeOffType TimeOffType { get; set; }
+
+        public int Year { get; set; }
+
+        public int StatutoryDays { get; set; }
+
+        public int UsedDays { get; set; }
     }
 }
