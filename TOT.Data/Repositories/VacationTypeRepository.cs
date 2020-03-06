@@ -51,7 +51,7 @@ namespace TOT.Data.Repositories {
             GC.SuppressFinalize(this);
         }
 
-        // TODO: Rewrite the mehod because the database logic has been changed. As an example the commented code below
+        // TODO: Rewrite the method because the database logic has been changed. As an example the commented code below
 
          public VacationType Get(int id)
         {
@@ -67,7 +67,7 @@ namespace TOT.Data.Repositories {
         //    return response;
         //}
 
-        // TODO: Rewrite the mehod because the database logic has been changed. As an example the commented code below
+        // TODO: Rewrite the method because the database logic has been changed. As an example the commented code below
 
         public IEnumerable<VacationType> GetAll()
         {

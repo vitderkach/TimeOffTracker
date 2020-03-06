@@ -80,7 +80,7 @@ namespace TOT.Business.Services
             throw new NotImplementedException();
         }
 
-        // TODO: Rewrite the mehod because the database logic has been changed. As an example the commented code below
+        // TODO: Rewrite the method because the database logic has been changed. As an example the commented code below
 
         //public VacationDaysDto GetVacationDays(int userId)
         //{

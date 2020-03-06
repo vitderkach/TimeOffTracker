@@ -27,7 +27,7 @@ namespace TOT.Utility.AutoMapper
             CreateMap<VacationRequest, VacationRequestListDto>()
                 .ForMember(dest => dest.VacationType, opt => opt.MapFrom(src => src.VacationType.GetDescription()));
 
-            // TODO: Rewrite the mehod because the database logic has been changed. As an example the commented code below
+            // TODO: Rewrite the method because the database logic has been changed. As an example the commented code below
 
             //CreateMap<VacationPolicy, VacationDaysDto>()
             //    .ForMember(dest => dest.TimeOffTypes, opt => opt.MapFrom(src => src.VacationTypes));
