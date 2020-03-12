@@ -8,7 +8,7 @@ namespace TOT.DataImport.StorageProviders
 {
     class DbStorageProvider : IStorageProvider
     {
-        public int AddEmployeeIfNotExists(string name, DateTime? employmentDate = null, string teamName = null, string workPlace = null)
+        public IEmployeeStorageProvider AddEmployeeIfNotExists(string name, DateTime? employmentDate = null, string teamName = null, string workPlace = null)
         {
             throw new NotImplementedException();
         }

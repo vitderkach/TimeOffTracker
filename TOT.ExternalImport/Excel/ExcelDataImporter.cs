@@ -36,7 +36,7 @@ namespace TOT.DataImport.Excel
         {
             var workbook = new XSSFWorkbook(input);
 
-            storageProvider.AddEmployeeIfNotExists().
+            //storageProvider.AddEmployeeIfNotExists();
             Console.WriteLine(workbook.NumberOfSheets);
             Console.WriteLine(workbook.GetSheetAt(0).SheetName);
             var sheet1 = workbook.GetSheetAt(0);

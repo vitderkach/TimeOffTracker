@@ -42,7 +42,7 @@ namespace TOT.DataImport.StorageProviders
             public List<Vacation> Vacations { get; set; } = new List<Vacation>();
         }
 
-        class Vacation
+        public class Vacation
         {
             public DateTime From { get; set; }
             public DateTime To { get; set; }
