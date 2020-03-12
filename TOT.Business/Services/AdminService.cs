@@ -101,16 +101,21 @@ namespace TOT.Business.Services
                 {
                     FirstName = registrationForm.Name,
                     LastName = registrationForm.Surname,
-                    VacationPolicyInfo = new VacationPolicyInfo()
-                    {
-                        TimeOffTypes = new List<VacationType>()
-                        {
-                            new VacationType() { TimeOffType = TimeOffType.SickLeave, WastedDays = 0 },
-                            new VacationType() { TimeOffType = TimeOffType.StudyLeave, WastedDays = 0 },
-                            new VacationType() { TimeOffType = TimeOffType.Vacation, WastedDays = 0 },
-                            new VacationType() { TimeOffType = TimeOffType.UnpaidVacation, WastedDays = 0 }
-                        }
-                    }
+
+                    /* TODO: Because new tables have been added to the database, some types among tables have been changed, new types  of VacationTypes have been added,    
+                    test data should be rewritten. AS a base use commented below code for previous version of the database */
+
+                    //VacationPolicies = new List<VacationPolicy> {                     
+                    //new VacationPolicy()
+                    //{
+                    //    VacationTypes = new List<VacationType>()
+                    //    {
+                    //        new VacationType() { TimeOffType = TimeOffType.ConfirmedSickLeave, UsedDays = 0 },
+                    //        new VacationType() { TimeOffType = TimeOffType.StudyLeave, UsedDays = 0 },
+                    //        new VacationType() { TimeOffType = TimeOffType.PaidLeave, UsedDays = 0 },
+                    //        new VacationType() { TimeOffType = TimeOffType.AdministrativeLeave, UsedDays = 0 }
+                    //    }
+                    //}
                 }
             };
 

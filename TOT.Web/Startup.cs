@@ -40,7 +40,6 @@ namespace TOT.Web
             services.AddTempDataProvider();
             services.AddCustomIdentity();
 
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 

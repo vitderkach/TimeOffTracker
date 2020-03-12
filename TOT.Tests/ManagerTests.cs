@@ -26,10 +26,10 @@ namespace TOT.Tests {
 
             managerResponses = new List<ManagerResponse>()
             {
-                new ManagerResponse() {Id = 1, ManagerId = 1, isRequested = false, Approval = true, VacationRequestId = 10,  VacationRequest = new VacationRequest() { VacationType = TimeOffType.SickLeave }  },
-                new ManagerResponse() {Id = 2, ManagerId = 1, isRequested = true , Approval = null, VacationRequestId = 5,  VacationRequest = new VacationRequest() { VacationType = TimeOffType.SickLeave }},
-                new ManagerResponse() {Id = 3, ManagerId = 2, isRequested = true , Approval = null, VacationRequestId = 11,  VacationRequest = new VacationRequest() { VacationType = TimeOffType.SickLeave }},
-                new ManagerResponse() {Id = 4, ManagerId = 3, isRequested = true , Approval = null, VacationRequestId = 12,  VacationRequest = new VacationRequest() { VacationType = TimeOffType.SickLeave }},
+                new ManagerResponse() {Id = 1, ManagerId = 1, isRequested = false, Approval = true, VacationRequestId = 10,  VacationRequest = new VacationRequest() { VacationType = TimeOffType.ConfirmedSickLeave }  },
+                new ManagerResponse() {Id = 2, ManagerId = 1, isRequested = true , Approval = null, VacationRequestId = 5,  VacationRequest = new VacationRequest() { VacationType = TimeOffType.ConfirmedSickLeave }},
+                new ManagerResponse() {Id = 3, ManagerId = 2, isRequested = true , Approval = null, VacationRequestId = 11,  VacationRequest = new VacationRequest() { VacationType = TimeOffType.ConfirmedSickLeave }},
+                new ManagerResponse() {Id = 4, ManagerId = 3, isRequested = true , Approval = null, VacationRequestId = 12,  VacationRequest = new VacationRequest() { VacationType = TimeOffType.ConfirmedSickLeave }},
             };
 
         }

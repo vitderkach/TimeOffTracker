@@ -2,19 +2,17 @@
 
 @using Microsoft.AspNetCore.Identity
 @using TOT.Entities
+@using TOT.Interfaces.Services
 
 @{
-  var userId = UserManager.GetUserId(User);
+    var userId = UserManager.GetUserId(User);
 }
 @inject UserManager<ApplicationUser> UserManager
-<style>
-    #partialVacationDays:hover {
-        opacity: 80%;
-    }
-</style>
+@inject IVacationService VacationService
+
 <div class="row justify-content-between">
     <div class="container col-6">
-        <h2>Apply for vacation</h2>
+        <h2 class="text-center">Apply for vacation</h2>
         <hr />
         <form asp-action="Apply" name="form" id="form">
             <div class="form-group row">
@@ -28,27 +26,29 @@
                 <span asp-validation-for="EndDate" class="text-danger"></span>
             </div>
 
-            <div class="form-row row">
+            <div class="form-group row">
                 <label class="control-label col-4" for="EndDate">Vacation types</label>
                 @Html.DropDownListFor(m => m.SelectedTimeOffType, ViewBag.TimeOffTypes as SelectList, new { @class = "form-control col-8" })
             </div>
-            <div class="form-group mt-2">
-                <label asp-for="Notes" class="control-label col-4"></label>
-                <textarea style="resize:none" asp-for="Notes" class="form-control col-12" rows="3"></textarea>
+            <div class="form-group">
+                <label asp-for="Notes" class="control-label"></label>
+                <textarea style="resize:none" asp-for="Notes" class="form-control" rows="3"></textarea>
                 <span asp-validation-for="Notes" class="text-danger"></span>
             </div>
             <div class="container_selectedManagers form-group">
                 <label class="control-label" for="EndDate">Managers</label>
-                <div class="row col-12">
-                    @Html.DropDownListFor(m => m.SelectedManager, ViewBag.Managers as SelectList, new { @class = "form-control col-10" })
-                    <button class="btn btn-info add_form_field form-control col ">+</button>
-                    <span id="MyManagersVal"asp-validation-for="MyManagers"></span>
+                <div class="input-group">
+                    @Html.DropDownListFor(m => m.SelectedManager, ViewBag.Managers as SelectList, new { @class = "form-control " })
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary btn-add-manager form-control"><i class="fas fa-plus-square"></i></button>
+                    </div>
                 </div>
+                <span id="MyManagersVal" asp-validation-for="MyManagers"></span>
             </div>
-            <div class="form-group mt-5">
-                <a class="btn btn-outline-dark" asp-action="List">Back to List</a>
+            <div class="form-group mt-5 text-center">
+                <a class="btn btn-secondary" asp-action="List">Back to List</a>
                 <!--<input type="submit" id="submit-button" value="Create" class="btn btn-outline-dark" /> Было до модального окна-->
-                <input id="submit-button" type="submit" value="Create" class="btn btn-outline-dark" /> <!--Так и осталось-->
+                <input id="submit-button" type="submit" value="Create" class="btn btn-primary" /> <!--Так и осталось-->
 
 
                 <!--<button type="button" id="buttonOpen" data-target="#applyCreate" data-toggle="modal" class="btn btn-outline-dark">Create</button>-->                
@@ -78,19 +78,22 @@
             </div>
         </form>
     </div>
-    <div class="col-3" id="partialVacationDays">
-
+    <div class="col-3 d-flex flex-column align-items-center justify-content-center">
+        @{
+            var vacationDays = VacationService.GetVacationDays(int.Parse(userId));
+        }
+        <partial name="_VacationDaysPartial" model="vacationDays" />
     </div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <partial  name="_ValidationScriptsPartial" />
 
     <script>
     $(document).ready(function () {
         var userId = @userId;
             $.ajax({
-                url: "/Vacation/GetVacationDays/" + +userId,
+                url: "/Vacation/GetVacationDays/" + userId,
                 type: "GET",
                 dataType: "html",
                 contentType: "application/json; charset=utf-8",
@@ -101,11 +104,11 @@
         });
     </script>
 
-    <script>
+    <script> // TODO: remove this shit
         $(document).ready(function () {
             var max_fields = 10;
             var wrapper = $(".container_selectedManagers");
-            var add_button = $(".add_form_field");
+            var add_button = $(".btn-add-manager");
             var select_tag = $("#SelectedManager").children("option:selected");
             var selectedManagerId;
             var selectedManagerObject = [];
@@ -128,9 +131,14 @@
                         selectedManagerObject.push({ Id: id, name: text });
                         x++;
                         var myname = selectedManagerObject.find(obj => { return obj.Id === selectedManagerId }).name;
-                        $(wrapper).append('<div class="form-row mt-2">' +
-                            '<div class="col-10"><input type="text" class="form-control" disabled=true value="' + myname + '" name=ManagersId[' + (x - 2) + '] /></div> ' +
-                            '<div class="col"><button class="btn btn-danger form-control col delete">x</button></div> </div>');
+                        $(wrapper).append(`
+                            <div class="input-group">
+                                <input type="text" class="form-control" disabled=true value="${myname}" name="ManagersId[${x - 2}]" />
+                                <div class="input-group-append">
+                                   <button class="btn btn-danger form-control col delete"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        `);
                         $('#MyManagersVal').html("");
                     }
                     else { alert('This manager already exists') }

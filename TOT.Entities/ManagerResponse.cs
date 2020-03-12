@@ -15,8 +15,8 @@ namespace TOT.Entities
         public bool isRequested { get; set; }
 
         public int VacationRequestId { get; set; }
-        public  VacationRequest VacationRequest { get; set; }
-                                                              
+        public VacationRequest VacationRequest { get; set; }
+
         public int ManagerId { get; set; }
         public ApplicationUser Manager { get; set; }
     }

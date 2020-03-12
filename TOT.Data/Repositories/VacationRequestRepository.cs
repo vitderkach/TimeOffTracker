@@ -40,7 +40,7 @@ namespace TOT.Data.Repositories
                     .ThenInclude(manager => manager.Manager)
                         .ThenInclude(user => user.UserInformation)
 
-                .Include(v => v.User)
+                .Include(v => v.ApplicationUser)
                     .ThenInclude(user => user.UserInformation)
                 .Where(v => v.VacationRequestId == id)
                 .FirstOrDefault();
@@ -52,7 +52,7 @@ namespace TOT.Data.Repositories
         {
             return db.VacationRequests
                 .Include(v => v.ManagersResponses)
-                .Include(v => v.User)
+                .Include(v => v.ApplicationUser)
                     .ThenInclude(user => user.UserInformation);
         }
 

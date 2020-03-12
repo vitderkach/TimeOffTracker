@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 using TOT.Entities;
 
 namespace TOT.Data.Configuration
@@ -8,25 +9,36 @@ namespace TOT.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<UserInformation> entity)
         {
-            entity.HasKey(pk => pk.UserInformationId).HasName("PK_UserInformation");
+            entity.HasKey(ui => ui.ApplicationUserId)
+                .HasName("PK_UserInformation");
 
-            entity.Property(n => n.FirstName)
+            entity.Property(ui => ui.FirstName)
                 .HasColumnType("nvarchar(70)")
                 .IsRequired();
 
-            entity.Property(l => l.LastName)
+            entity.Property(ui => ui.LastName)
                 .HasColumnType("nvarchar(70)")
                 .IsRequired();
 
-            entity.HasIndex(fn => new { fn.FirstName, fn.LastName });
+            entity.HasIndex(ui => new { ui.FirstName, ui.LastName });
 
-            entity.HasOne(u => u.User)
-                .WithOne(i => i.UserInformation)
-                .HasForeignKey<ApplicationUser>(ui => ui.UserInformationId)
+            entity.Property(ui => ui.IsFired)
+                .IsRequired();
+
+            entity.Property(ui => ui.RecruitmentDate)
+                .HasColumnType("date")
+                .HasDefaultValueSql("GETUTCDATE()"); ;
+
+            entity.HasOne(ui => ui.ApplicationUser)
+                .WithOne(au => au.UserInformation)
+                .HasForeignKey<ApplicationUser>(au => au.UserInformationId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasOne(u => u.VacationPolicyInfo)
-                .WithOne(u => u.UserInformation);
+            entity.HasOne(ui => ui.Location)
+                .WithMany(l => l.UserInformations);
+
+            entity.HasOne(ui => ui.Team)
+                .WithMany(t => t.UserInformations);
         }
     }
 }
