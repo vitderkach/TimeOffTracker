@@ -47,29 +47,22 @@ namespace TOT.Data.Repositories
             GC.SuppressFinalize(this);
         }
 
-        public UserInformation Get(int id)
-        {
-            return context.UserInformations.Find(id);
-        }
+        public UserInformation GetOne(int id)
+            => context.UserInformations
+            .Where(ui => ui.ApplicationUserId == id)
+                .Include(ui => ui.ApplicationUser)
+                .Include(ui => ui.Team)
+                .Include(ui => ui.Location)
+                .Include(ui => ui.VacationTypes).FirstOrDefault();
 
         // TODO: Rewrite the method because the database logic has been changed. As an example the commented code below
 
         public IEnumerable<UserInformation> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        //    public IEnumerable<UserInformation> GetAll()
-        //{
-        //    return context.UserInformations
-        //        .Include(u => u.VacationPolicies)
-        //            .ThenInclude(u => u.VacationTypes)
-
-        //        .Include(u => u.ApplicationUser)
-        //            .ThenInclude(u => u.UserInformation)
-        //                .ThenInclude(u => u.VacationPolicies)
-        //        .ToList();
-        //}
+            => context.UserInformations
+                .Include(ui => ui.ApplicationUser)
+                .Include(ui => ui.Team)
+                .Include(ui => ui.Location)
+                .Include(ui => ui.VacationTypes).ToList();
 
         public void Update(UserInformation item)
         {

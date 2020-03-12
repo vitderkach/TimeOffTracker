@@ -13,15 +13,20 @@ namespace TOT.Dto
     public class ApplyForRequestGetDto {
         public ApplyForRequestGetDto()
         {
-            ManagersResponses = new Collection<ManagerResponseDto>();
-            SelectedManager = new List<int>();
-            ManagersId = new List<int>();
+            RequiredManagers = new List<int>();
+            ExsistingManagers = new Dictionary<string, string>();
         }
         public int Id { get; set; }
-        [Display(Name ="From")]
+
+        [Display(Name = "Vacation type")]
+        [Required(ErrorMessage = "Required")]
+        public TimeOffType  TimeOffType { get; set; }
+
+        [Display(Name = "From")]
         [DataType(DataType.Date)]
         [Required(ErrorMessage = "Required")]
         public DateTime StartDate { get; set; }
+
         [Display(Name = "To")]
         [DataType(DataType.Date)]
         [Required(ErrorMessage = "Required")]
@@ -49,16 +54,14 @@ namespace TOT.Dto
                 return list;
             } 
         }
+
         [Display(Name = "Notes")]
         public string Notes { get; set; }
 
         [Display(Name = "Managers")]
         [Required(ErrorMessage = "Required")]
-        public IEnumerable<int> SelectedManager { get; set; }
-        public IEnumerable<int> ManagersId { get; set; }
-        [Display(Name = "Managers")]
-        public SelectList MyManagers { get; set; }
-        public ICollection<ManagerResponseDto> ManagersResponses { get; set; }
+        public IEnumerable<int> RequiredManagers { get; set; }
+        public IEnumerable<KeyValuePair<string, string>> ExsistingManagers { get; set; }
         public int UserId { get; set; }
     }
     public static class ExtensionMethods

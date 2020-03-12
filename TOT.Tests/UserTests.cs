@@ -42,7 +42,7 @@ namespace TOT.Tests {
             //arrange
             var expected = listUserInfo[0];
             var mockUow = new Mock<IUnitOfWork>();
-            mockUow.Setup(m => m.UserInformationRepository.Get(1))
+            mockUow.Setup(m => m.UserInformationRepository.GetOne(1))
                 .Returns(listUserInfo[0]);
 
             var userInfoService = new UserInformationService(mockUow.Object, _mapper);
@@ -51,7 +51,7 @@ namespace TOT.Tests {
             var actual = userInfoService.GetUserInfo(1);
 
             //assert
-            mockUow.Verify(m => m.UserInformationRepository.Get(1));
+            mockUow.Verify(m => m.UserInformationRepository.GetOne(1));
             Assert.AreEqual(expected.ApplicationUserId, actual.UserInformationId);
         }
 
@@ -61,7 +61,7 @@ namespace TOT.Tests {
             //arrange
             var expected = listUserInfo[0];
             var mockUow = new Mock<IUnitOfWork>();
-            mockUow.Setup(m => m.UserInformationRepository.Get(5));
+            mockUow.Setup(m => m.UserInformationRepository.GetOne(5));
                 
             var userInfoService = new UserInformationService(mockUow.Object, _mapper);
 
@@ -87,7 +87,7 @@ namespace TOT.Tests {
             //arrange
             var expected = listUserInfo[0];
             var mockUow = new Mock<IUnitOfWork>();
-            mockUow.Setup(m => m.UserInformationRepository.Get(5));
+            mockUow.Setup(m => m.UserInformationRepository.GetOne(5));
 
             var userInfoService = new UserInformationService(mockUow.Object, _mapper);
 

@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="MailKit" Version="2.3.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="2.1.1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="2.2.5" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
     <ProjectReference Include="..\TOT.Business\TOT.Business.csproj" />
     <ProjectReference Include="..\TOT.Data\TOT.Data.csproj" />
     <ProjectReference Include="..\TOT.Interfaces\TOT.Interfaces.csproj" />

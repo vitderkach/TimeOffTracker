@@ -166,14 +166,14 @@ namespace TOT.Business.Services
         public void ApproveUserRequest(int managerResponseId,
             string managerNotes, bool? approval)
         {
-            var managerResponse = _uow.ManagerResponseRepository.Get(managerResponseId);
+            var managerResponse = _uow.ManagerResponseRepository.GetOne(managerResponseId);
             managerResponse.Approval = approval;
             managerResponse.Notes = managerNotes;
             managerResponse.isRequested = false;
             managerResponse.DateResponse = System.DateTime.UtcNow;
 
             _uow.ManagerResponseRepository.Update(managerResponse);
-            var vacation = _uow.VacationRequestRepository.Get(managerResponse.VacationRequestId);
+            var vacation = _uow.VacationRequestRepository.GetOne(managerResponse.VacationRequestId);
 
             EmailModel emailModel = new EmailModel()
             {
@@ -212,7 +212,7 @@ namespace TOT.Business.Services
                 }
                 else
                 {
-                    vacation = _uow.VacationRequestRepository.Get(managerResponse.VacationRequestId);
+                    vacation = _uow.VacationRequestRepository.GetOne(managerResponse.VacationRequestId);
                     vacation.Approval = false;
                     _vacationEmailSender.ExecuteToEmployeeDecline(emailModel);
                     _uow.VacationRequestRepository.Update(vacation);

@@ -33,7 +33,7 @@ namespace TOT.Data.Repositories
             }
         }
 
-        public VacationRequest Get(int id)
+        public VacationRequest GetOne(int id)
         {
             var vacation = db.VacationRequests
                 .Include(v => v.ManagersResponses)

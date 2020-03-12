@@ -27,7 +27,7 @@ namespace TOT.Business.Services
             if (id == null)
                 throw new NullReferenceException("id = null");
 
-            var userInfo = Database.UserInformationRepository.Get(id.Value);
+            var userInfo = Database.UserInformationRepository.GetOne(id.Value);
 
             if (userInfo == null)
                 throw new NullReferenceException("userInfo not found");
@@ -55,7 +55,7 @@ namespace TOT.Business.Services
             if (id == null)
                 throw new NullReferenceException("id = null");
 
-            var userInfo = Database.UserInformationRepository.Get(id.Value);
+            var userInfo = Database.UserInformationRepository.GetOne(id.Value);
 
             if (userInfo != null)
             {

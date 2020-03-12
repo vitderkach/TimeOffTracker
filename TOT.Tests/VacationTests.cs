@@ -74,7 +74,7 @@ namespace TOT.Tests {
                 .Returns(expectedDto);
 
             var uowMock = new Mock<IUnitOfWork>();
-            uowMock.Setup(u => u.VacationRequestRepository.Get(1))
+            uowMock.Setup(u => u.VacationRequestRepository.GetOne(1))
                 .Returns(expected);
 
             VacationService vacationService = new VacationService(
@@ -88,7 +88,7 @@ namespace TOT.Tests {
             var actual = vacationService.GetVacationById(1);
 
             //assert
-            uowMock.Verify(u => u.VacationRequestRepository.Get(It.IsAny<int>()));
+            uowMock.Verify(u => u.VacationRequestRepository.GetOne(It.IsAny<int>()));
             Assert.AreEqual(expectedDto.VacationRequestId, actual.VacationRequestId);
             Assert.AreEqual(expectedDto.VacationType, actual.VacationType);
         }
@@ -143,7 +143,7 @@ namespace TOT.Tests {
             uowMock.Setup(u => u.VacationRequestRepository.Update(It.IsAny<VacationRequest>()))
                 .Verifiable();
 
-            uowMock.Setup(u => u.VacationRequestRepository.Get(1))
+            uowMock.Setup(u => u.VacationRequestRepository.GetOne(1))
                 .Returns(new VacationRequest()
                 {
                     VacationRequestId = 1,

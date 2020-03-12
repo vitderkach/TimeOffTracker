@@ -52,7 +52,7 @@ namespace TOT.Data.Repositories
             GC.SuppressFinalize(this);
         }
 
-        public ManagerResponse Get(int id)
+        public ManagerResponse GetOne(int id)
         {
             var response = context.ManagerResponses
                 .Include(manager => manager.Manager)

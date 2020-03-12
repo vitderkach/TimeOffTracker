@@ -77,20 +77,10 @@ namespace TOT.Business.Services
 
         public VacationDaysDto GetVacationDays(int userId)
         {
-            throw new NotImplementedException();
+            var vacationDays = _uow.UserInformationRepository.GetOne(userId).VacationTypes.Where(vt => vt.Year == DateTime.Now.Year).ToList();
+            var vacationDaysDto = _mapper.Map<ICollection<VacationType>, VacationDaysDto>(vacationDays);
+            return vacationDaysDto;
         }
-
-        // TODO: Rewrite the method because the database logic has been changed. As an example the commented code below
-
-        //public VacationDaysDto GetVacationDays(int userId)
-        //{
-        //    var vacationDays = _uow.VacationPolicyRepository
-        //        .GetAll()
-        //        .Where(v => v.UserInformation.ApplicationUser.Id == userId)
-        //        .FirstOrDefault();
-        //    var vacationDaysDto = _mapper.Map<VacationPolicy, VacationDaysDto>(vacationDays);
-        //    return vacationDaysDto;
-        //}
 
         public List<int> GetAllVacationIdsByUser(int userId)
         {
@@ -125,14 +115,14 @@ namespace TOT.Business.Services
 
         public VacationRequestDto GetVacationById(int id)
         {
-            var vacation = _uow.VacationRequestRepository.Get(id);
+            var vacation = _uow.VacationRequestRepository.GetOne(id);
             var vacationDto = _mapper.Map<VacationRequest, VacationRequestDto>(vacation);
 
             return vacationDto;
         }
         public void UpdateVacation(int id, string notes)
         {
-            var vacation = _uow.VacationRequestRepository.Get(id);
+            var vacation = _uow.VacationRequestRepository.GetOne(id);
             if (vacation != null)
             {
                 vacation.Notes = notes;
@@ -142,7 +132,7 @@ namespace TOT.Business.Services
 
         public bool DeleteVacation(int id)
         {
-            var vacation = _uow.VacationRequestRepository.Get(id);
+            var vacation = _uow.VacationRequestRepository.GetOne(id);
             if(vacation.Approval == null)
             {
                 _uow.VacationRequestRepository.Delete(id);

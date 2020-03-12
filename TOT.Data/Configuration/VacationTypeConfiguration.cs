@@ -12,8 +12,11 @@ namespace TOT.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<VacationType> entity)
         {
-            entity.HasKey(vt => new { vt.UserInformationId, vt.Year, vt.TimeOffType })
+            entity.HasKey(vt => vt.Id)
                 .HasName("PK_ VacationType");
+
+            entity.HasAlternateKey(vt => new { vt.UserInformationId, vt.Year, vt.TimeOffType })
+                .HasName("PK_ VacationType_UserInformationId_Year_TimeOffType");
 
             var converter = new EnumToStringConverter<TimeOffType>();
 

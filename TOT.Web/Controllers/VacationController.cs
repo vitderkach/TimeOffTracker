@@ -55,9 +55,9 @@ namespace TOT.Web.Controllers
             if (applyForRequestGetDto != null)
             {
                 int left = (int)(applyForRequestGetDto.EndDate - applyForRequestGetDto.StartDate).TotalDays;
-                if (applyForRequestGetDto.SelectedManager.Count() == 0)
+                if (applyForRequestGetDto.RequiredManagers.Count() == 0)
                 {
-                    ModelState.AddModelError("MyManagers", "Manager is required");
+                    ModelState.AddModelError("RequiredManagers", "At least 1 manager is required");
                 }
                 if (left > 30)
                 {

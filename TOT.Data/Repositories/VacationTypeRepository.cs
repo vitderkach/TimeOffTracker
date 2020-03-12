@@ -6,8 +6,10 @@ using System.Text;
 using TOT.Entities;
 using TOT.Interfaces.Repositories;
 
-namespace TOT.Data.Repositories {
-    public class VacationTypeRepository : IRepository<VacationType> {
+namespace TOT.Data.Repositories
+{
+    public class VacationTypeRepository : IRepository<VacationType>
+    {
         private ApplicationDbContext context;
         private bool disposed = false;
 
@@ -51,37 +53,9 @@ namespace TOT.Data.Repositories {
             GC.SuppressFinalize(this);
         }
 
-        // TODO: Rewrite the method because the database logic has been changed. As an example the commented code below
+        public VacationType GetOne(int id) => context.VacationTypes.Where(vt => vt.UserInformationId == id).Include(vt => vt.UserInformation).FirstOrDefault();
 
-         public VacationType Get(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        //public VacationType Get(int id)
-        //{
-        //    var response = context.VacationTypes
-        //        .Include(v => v.VacationPolicy)
-        //        .FirstOrDefault();
-
-        //    return response;
-        //}
-
-        // TODO: Rewrite the method because the database logic has been changed. As an example the commented code below
-
-        public IEnumerable<VacationType> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        //public IEnumerable<VacationType> GetAll()
-        //{
-        //    return context.VacationTypes
-        //        .Include(v => v.VacationPolicy)
-        //        .Include(v => v.VacationPolicy)
-        //            .ThenInclude(v => v.VacationTypes)
-        //        .ToList();
-        //}
+        public IEnumerable<VacationType> GetAll() => context.VacationTypes.ToList();
 
         public void Update(VacationType item)
         {
