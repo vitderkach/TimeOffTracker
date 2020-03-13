@@ -77,8 +77,10 @@ namespace TOT.Business.Services
 
         public VacationDaysDto GetVacationDays(int userId)
         {
-            var vacationDays = _uow.UserInformationRepository.GetOne(userId).VacationTypes.Where(vt => vt.Year == DateTime.Now.Year).ToList();
-            var vacationDaysDto = _mapper.Map<ICollection<VacationType>, VacationDaysDto>(vacationDays);
+            var vacationDays = _uow.UserInformationRepository.GetOneWithVacationRequests(userId).VacationTypes.Where(vt => vt.Year == DateTime.Now.Year).ToList();
+
+            VacationDaysDto vacationDaysDto = new VacationDaysDto(); 
+            _mapper.Map<IEnumerable<VacationType>, VacationDaysDto>(vacationDays, vacationDaysDto);
             return vacationDaysDto;
         }
 
@@ -95,11 +97,6 @@ namespace TOT.Business.Services
             }
 
             return vacationIds;
-        }
-
-        public void DeleteVacationById(int id)
-        {
-            _uow.VacationRequestRepository.Delete(id);
         }
 
         public IEnumerable<VacationRequestListDto> GetAllByCurrentUser()
@@ -130,12 +127,11 @@ namespace TOT.Business.Services
             }
         }
 
-        public bool DeleteVacation(int id)
+        public bool DeactivateVacation(int id)
         {
-            var vacation = _uow.VacationRequestRepository.GetOne(id);
-            if(vacation.Approval == null)
+            if(_uow.VacationRequestRepository.GetOne(id) is VacationRequest vacationRequest && vacationRequest.Approval == null)
             {
-                _uow.VacationRequestRepository.Delete(id);
+                _uow.VacationRequestRepository.TransferToHistory(id);
                 return true;
             }
             else

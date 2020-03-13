@@ -93,6 +93,19 @@ namespace TOT.Business.Services
             var userRole = _roleManager.FindByIdAsync(
                 registrationForm.RoleId.ToString()).Result;
 
+            List<VacationType> vacationTypes = new List<VacationType>();
+
+            foreach (TimeOffType type in Enum.GetValues(typeof(TimeOffType)))
+            {
+                vacationTypes.Add(new VacationType
+                {
+                    StatutoryDays = 0,
+                    TimeOffType = type,
+                    UsedDays = 0,
+                    Year = DateTime.Now.Year
+                });
+            }
+
             ApplicationUser user = new ApplicationUser()
             {
                 UserName = registrationForm.UserName,
@@ -101,21 +114,7 @@ namespace TOT.Business.Services
                 {
                     FirstName = registrationForm.Name,
                     LastName = registrationForm.Surname,
-
-                    /* TODO: Because new tables have been added to the database, some types among tables have been changed, new types  of VacationTypes have been added,    
-                    test data should be rewritten. AS a base use commented below code for previous version of the database */
-
-                    //VacationPolicies = new List<VacationPolicy> {                     
-                    //new VacationPolicy()
-                    //{
-                    //    VacationTypes = new List<VacationType>()
-                    //    {
-                    //        new VacationType() { TimeOffType = TimeOffType.ConfirmedSickLeave, UsedDays = 0 },
-                    //        new VacationType() { TimeOffType = TimeOffType.StudyLeave, UsedDays = 0 },
-                    //        new VacationType() { TimeOffType = TimeOffType.PaidLeave, UsedDays = 0 },
-                    //        new VacationType() { TimeOffType = TimeOffType.AdministrativeLeave, UsedDays = 0 }
-                    //    }
-                    //}
+                    VacationTypes = vacationTypes
                 }
             };
 
@@ -207,39 +206,24 @@ namespace TOT.Business.Services
             return result;
         }
 
-        /*В общем, чтобы удалить пользователя без конфликта в БД нужно поставить NULL
-          в поле UserId таблицы VacationRequest. Из-за этого использовать метод
-          DeleteVacationByUserId(userId) не получается. Можно было, конечно, удалить 
-          сначала заявки, а потом пользователя. Но, если что-то пойдет не так и 
-          result будет не Succeeded, то все заявки пользователя пропадут.       
-          Поэтому сделал вот так */
-        public async Task<IdentityResult> DeleteUser(int userId)
-        {
-            IdentityResult result = null;
-            ApplicationUser user = _userManager.FindByIdAsync(userId.ToString()).Result;
-            var userRequests = _vacationService.GetAllVacationIdsByUser(user.Id);
 
-            if (user != null)
+        public bool FireUser(int userId)
+        {
+            if (_userInfoService.GetUserInfo(userId) is UserInformationDto userInformation)
             {
-                result = await _userManager.DeleteAsync(user);
-                if (result.Succeeded)
+                _userInfoService.FireUserInfo(userInformation.UserInformationId);
+
+                var vacantionIds = _vacationService.GetAllVacationIdsByUser(userId);
+
+                foreach (int vacationId in vacantionIds)
                 {
-                    _userInfoService.DeleteUserInfo(user.UserInformationId);
-                    if (userRequests.Any())
-                    {
-                        foreach (int vacationId in userRequests)
-                        {
-                            _vacationService.DeleteVacationById(vacationId);
-                        }
-                    }
-                    //_vacationService.DeleteVacationByUserId(userId);
+                    _vacationService.DeactivateVacation(vacationId);
                 }
+
+                return true;
             }
-            else
-            {
-                result = IdentityResult.Failed(result.Errors.ToArray());
-            }
-            return result;
+
+            return false;
         }
     }
 }

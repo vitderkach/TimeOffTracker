@@ -8,7 +8,7 @@ namespace TOT.Interfaces.Services
         UserInformationDto GetUserInfo(int? id);
         IEnumerable<UserInformationDto> GetUsersInfo();
         void SaveUserInfo(UserInformationDto userInfoDTO);
-        void DeleteUserInfo(int? id);
+        void FireUserInfo(int? id);
         void Dispose();
     }
 }

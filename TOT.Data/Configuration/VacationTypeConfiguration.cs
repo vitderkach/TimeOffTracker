@@ -30,7 +30,8 @@ namespace TOT.Data.Configuration
 
             entity.Property(vt => vt.UsedDays)
                 .IsRequired()
-                .HasDefaultValue(0);
+                .HasDefaultValue(0)
+                .ValueGeneratedNever();
 
             entity.HasOne(vt => vt.UserInformation)
                 .WithMany(ui => ui.VacationTypes)

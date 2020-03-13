@@ -50,16 +50,14 @@ namespace TOT.Business.Services
             }
         }
 
-        public void DeleteUserInfo(int? id)
+        public void FireUserInfo(int? id)
         {
             if (id == null)
-                throw new NullReferenceException("id = null");
+                throw new ArgumentNullException("id = null");
 
-            var userInfo = Database.UserInformationRepository.GetOne(id.Value);
-
-            if (userInfo != null)
+            if (Database.UserInformationRepository.GetOne(id.Value) is UserInformation userInformation)
             {
-                Database.UserInformationRepository.Delete(userInfo.ApplicationUserId);
+                Database.UserInformationRepository.Fire(userInformation.ApplicationUserId);
                 Database.Save();
             }
         }

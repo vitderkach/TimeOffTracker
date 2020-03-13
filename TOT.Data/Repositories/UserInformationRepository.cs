@@ -7,67 +7,87 @@ using TOT.Interfaces.Repositories;
 
 namespace TOT.Data.Repositories
 {
-    public class UserInformationRepository : IRepository<UserInformation>
+    public class UserInformationRepository : IUserInformationRepository<UserInformation>
     {
-        private ApplicationDbContext context;
-        private bool disposed = false;
-
-        public UserInformationRepository(ApplicationDbContext appcontext)
+        private readonly ApplicationDbContext _context;
+        public UserInformationRepository(ApplicationDbContext context)
         {
-            this.context = appcontext;
+            _context = context;
         }
 
-        public void Create(UserInformation item)
-        {
-            context.UserInformations.Add(item);
-        }
+        public void Create(UserInformation item) => _context.UserInformations.Add(item);
 
-        public void Delete(int id)
-        {
-            UserInformation info = context.UserInformations.Find(id);
-            if (info != null)
-                context.UserInformations.Remove(info);
-        }
+        public UserInformation GetOne(int id) 
+            => _context.UserInformations
+            .Where(ui => ui.IsFired == false && ui.ApplicationUserId == id)
+            .FirstOrDefault();
 
-        public virtual void Dispose(bool disposing)
+        public IEnumerable<UserInformation> GetAll()
+            => _context.UserInformations
+            .Where(ui => ui.IsFired == false)
+            .ToList();
+
+        public void Update(UserInformation item) => _context.Entry<UserInformation>(item).State = EntityState.Modified;
+
+        public void Fire(int id)
         {
-            if (!this.disposed)
-            {
-                if (disposing)
-                {
-                    context.Dispose();
-                }
-                this.disposed = true;
+            if (_context.UserInformations.Find(id) is UserInformation userInformation)
+            {            
+                var d = _context.UserInformations.Attach(userInformation).Property("IsFired");
+                userInformation.IsFired = true;
             }
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+        public UserInformation GetFiredOne(int id)
+            => _context.UserInformations
+            .Where(ui => ui.IsFired == false && ui.ApplicationUserId == id)
+            .FirstOrDefault();
 
-        public UserInformation GetOne(int id)
-            => context.UserInformations
-            .Where(ui => ui.ApplicationUserId == id)
-                .Include(ui => ui.ApplicationUser)
-                .Include(ui => ui.Team)
-                .Include(ui => ui.Location)
-                .Include(ui => ui.VacationTypes).FirstOrDefault();
+        public IEnumerable<UserInformation> GetFiredAll()
+            => _context.UserInformations
+            .Where(ui => ui.IsFired == false)
+            .ToList();
 
-        // TODO: Rewrite the method because the database logic has been changed. As an example the commented code below
+        public UserInformation GetOneWithVacationRequests(int id)
+            => _context.UserInformations
+            .Where(ui => ui.ApplicationUserId == id && ui.IsFired == false)
+            .Include(ui => ui.VacationTypes)
+            .FirstOrDefault();
 
-        public IEnumerable<UserInformation> GetAll()
-            => context.UserInformations
-                .Include(ui => ui.ApplicationUser)
-                .Include(ui => ui.Team)
-                .Include(ui => ui.Location)
-                .Include(ui => ui.VacationTypes).ToList();
+        public IEnumerable<UserInformation> GetAllWithVacationsRequests()
+            => _context.UserInformations
+            .Where(ui => ui.IsFired == false)
+            .Include(ui => ui.VacationTypes)
+            .ToList();
 
-        public void Update(UserInformation item)
-        {
-            context.Entry(item).State = Microsoft.
-                EntityFrameworkCore.EntityState.Modified;
-        }
+        public UserInformation GetOneWithTeamAndLocation(int id)
+            => _context.UserInformations
+            .Where(ui => ui.ApplicationUserId == id && ui.IsFired == false)
+            .Include(ui => ui.Team)
+            .Include(ui => ui.Location)
+            .FirstOrDefault();
+
+        public IEnumerable<UserInformation> GetAllWithTeamAndLocation()
+            => _context.UserInformations
+            .Where(ui => ui.IsFired == false)
+            .Include(ui => ui.Team)
+            .Include(ui => ui.Location)
+            .ToList();
+
+        public UserInformation GetOneWithAllProperties(int id)
+            => _context.UserInformations
+            .Where(ui => ui.ApplicationUserId == id && ui.IsFired == false)
+            .Include(ui => ui.VacationTypes)
+            .Include(ui => ui.Team)
+            .Include(ui => ui.Location)
+            .FirstOrDefault();
+
+        public IEnumerable<UserInformation> GetAllWithAllProperties()
+            => _context.UserInformations
+            .Where(ui => ui.IsFired == false)
+            .Include(ui => ui.VacationTypes)
+            .Include(ui => ui.Team)
+            .Include(ui => ui.Location)
+            .ToList();
     }
 }

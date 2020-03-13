@@ -26,6 +26,12 @@ namespace TOT.Utility.AutoMapper
                     src => src.VacationType.ToEnum<TimeOffType>()));
 
             CreateMap<ApplicationUserListDto, ApplicationUser>();
+
+            CreateMap<VacationType, VacationTypeDto>();
+            CreateMap<ICollection<VacationType>, VacationDaysDto>()
+                .ForMember(dest => dest.TimeOffTypes, opt => opt.MapFrom(src => src));
+
+
         }
     }
     public static class EnumExtensions

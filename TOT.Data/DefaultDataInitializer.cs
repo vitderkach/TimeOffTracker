@@ -27,35 +27,35 @@ namespace TOT.Data
                     new UserInformation(){ FirstName = "Matthew", LastName = "Brown",
                     VacationTypes = new List<VacationType>()
                     {
-                        //new VacationType() {TimeOffType = TimeOffType.AdministrativeLeave, StatutoryDays = 20, UsedDays = 1, Year = DateTime.Now.Year },
-                        //new VacationType() {TimeOffType = TimeOffType.StudyLeave, StatutoryDays = 10, UsedDays = 2, Year = DateTime.Now.Year },
-                        //new VacationType() {TimeOffType = TimeOffType.ConfirmedSickLeave, StatutoryDays = 30, UsedDays = 3, Year = DateTime.Now.Year },
-                        //new VacationType() {TimeOffType = TimeOffType.UnofficialSickLeave, StatutoryDays = 3, UsedDays = 4, Year = DateTime.Now.Year },
-                        //new VacationType() {TimeOffType = TimeOffType.GiftLeave, StatutoryDays = 5, UsedDays = 5, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.AdministrativeLeave, StatutoryDays = 20, UsedDays = 1, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.StudyLeave, StatutoryDays = 10, UsedDays = 2, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.ConfirmedSickLeave, StatutoryDays = 30, UsedDays = 3, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.UnofficialSickLeave, StatutoryDays = 3, UsedDays = 4, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.GiftLeave, StatutoryDays = 5, UsedDays = 5, Year = DateTime.Now.Year },
                         new VacationType() {TimeOffType = TimeOffType.PaidLeave, StatutoryDays = 5, UsedDays = 0, Year = DateTime.Now.Year }
                     }
                     },
                     new UserInformation(){ FirstName = "Joseph", LastName = "White",
-                    //VacationTypes = new List<VacationType>()
-                    //{
-                    //    new VacationType() {TimeOffType = TimeOffType.AdministrativeLeave, StatutoryDays = 20, UsedDays = 1, Year = DateTime.Now.Year },
-                    //    new VacationType() {TimeOffType = TimeOffType.StudyLeave, StatutoryDays = 10, UsedDays = 2, Year = DateTime.Now.Year },
-                    //    new VacationType() {TimeOffType = TimeOffType.ConfirmedSickLeave, StatutoryDays = 30, UsedDays = 3, Year = DateTime.Now.Year },
-                    //    new VacationType() {TimeOffType = TimeOffType.UnofficialSickLeave, StatutoryDays = 3, UsedDays = 4, Year = DateTime.Now.Year },
-                    //    new VacationType() {TimeOffType = TimeOffType.GiftLeave, StatutoryDays = 5, UsedDays = 5, Year = DateTime.Now.Year },
-                    //    new VacationType() {TimeOffType = TimeOffType.PaidLeave, StatutoryDays = 5, UsedDays = 0, Year = DateTime.Now.Year }
-                    //}
+                    VacationTypes = new List<VacationType>()
+                    {
+                        new VacationType() {TimeOffType = TimeOffType.AdministrativeLeave, StatutoryDays = 20, UsedDays = 1, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.StudyLeave, StatutoryDays = 10, UsedDays = 2, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.ConfirmedSickLeave, StatutoryDays = 30, UsedDays = 3, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.UnofficialSickLeave, StatutoryDays = 3, UsedDays = 4, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.GiftLeave, StatutoryDays = 5, UsedDays = 5, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.PaidLeave, StatutoryDays = 5, UsedDays = 0, Year = DateTime.Now.Year }
+                    }
                     },
                     new UserInformation(){ FirstName = "Nadia", LastName = "Campbell",
-                    //VacationTypes = new List<VacationType>()
-                    //{
-                    //    new VacationType() {TimeOffType = TimeOffType.AdministrativeLeave, StatutoryDays = 20, UsedDays = 1, Year = DateTime.Now.Year },
-                    //    new VacationType() {TimeOffType = TimeOffType.StudyLeave, StatutoryDays = 10, UsedDays = 2, Year = DateTime.Now.Year },
-                    //    new VacationType() {TimeOffType = TimeOffType.ConfirmedSickLeave, StatutoryDays = 30, UsedDays = 3, Year = DateTime.Now.Year },
-                    //    new VacationType() {TimeOffType = TimeOffType.UnofficialSickLeave, StatutoryDays = 3, UsedDays = 4, Year = DateTime.Now.Year },
-                    //    new VacationType() {TimeOffType = TimeOffType.GiftLeave, StatutoryDays = 5, UsedDays = 5, Year = DateTime.Now.Year },
-                    //    new VacationType() {TimeOffType = TimeOffType.PaidLeave, StatutoryDays = 5, UsedDays = 0, Year = DateTime.Now.Year }
-                    //}
+                    VacationTypes = new List<VacationType>()
+                    {
+                        new VacationType() {TimeOffType = TimeOffType.AdministrativeLeave, StatutoryDays = 20, UsedDays = 1, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.StudyLeave, StatutoryDays = 10, UsedDays = 2, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.ConfirmedSickLeave, StatutoryDays = 30, UsedDays = 3, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.UnofficialSickLeave, StatutoryDays = 3, UsedDays = 4, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.GiftLeave, StatutoryDays = 5, UsedDays = 5, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.PaidLeave, StatutoryDays = 5, UsedDays = 0, Year = DateTime.Now.Year }
+                    }
                     }
                 };
 

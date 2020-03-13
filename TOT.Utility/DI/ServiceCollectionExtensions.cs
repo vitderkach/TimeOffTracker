@@ -27,10 +27,12 @@ namespace TOT.Utility.DI
         }
         public static void RegisterRepositoriesAndServices(this IServiceCollection services)
         {
-            services.AddTransient<IRepository<UserInformation>, UserInformationRepository>();
-            services.AddTransient<IRepository<VacationRequest>, VacationRequestRepository>();
-            services.AddTransient<IRepository<ManagerResponse>, ManagerResponseRepository>();
-            services.AddTransient<IRepository<VacationType>, VacationTypeRepository>();
+            services.AddTransient<IUserInformationRepository<UserInformation>, UserInformationRepository>();
+            services.AddTransient<IVacationRequestRepository<VacationRequest>, VacationRequestRepository>();
+            services.AddTransient<IManagerResponseRepository<ManagerResponse>, ManagerResponseRepository>();
+            services.AddTransient<IVacationTypeRepository<VacationType>, VacationTypeRepository>();
+            services.AddTransient<ILocationRepository<Location>, LocationRepository>();
+            services.AddTransient<ITeamRepository<Team>, TeamRepository>();
 
             services.AddTransient<IUserInfoService, UserInformationService>();
             services.AddTransient<IVacationService, VacationService>();

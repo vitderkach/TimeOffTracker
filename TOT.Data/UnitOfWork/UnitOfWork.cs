@@ -9,89 +9,58 @@ namespace TOT.Data.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
-        readonly ApplicationDbContext db;
-        readonly IRepository<UserInformation> _userInformationRepostitory;
-        readonly IRepository<VacationRequest> _vacationRequestRepository;
-        readonly IRepository<ManagerResponse> _managerResponseRepository;
-        readonly IRepository<VacationType> _vacationTypeRepository;
+        readonly ApplicationDbContext _context;
+        private bool disposed = false;
 
-        public UnitOfWork(ApplicationDbContext context,
-            IRepository<UserInformation> userInformationRepository,
-            IRepository<VacationRequest> vacationRequestRepository,
-            IRepository<ManagerResponse> managerResponseRepository,
-            IRepository<VacationType> vacationTypeRepository)
+        public IUserInformationRepository<UserInformation> UserInformationRepository { get; }
+
+        public IVacationRequestRepository<VacationRequest> VacationRequestRepository { get; }
+
+        public IManagerResponseRepository<ManagerResponse> ManagerResponseRepository { get; }
+
+        public IVacationTypeRepository<VacationType> VacationTypeRepository { get; }
+
+        public ITeamRepository<Team> TeamRepository { get; }
+
+        public ILocationRepository<Location> LocationRepository { get; }
+
+        public UnitOfWork(ApplicationDbContext context)
         {
-            _userInformationRepostitory = userInformationRepository;
-            _vacationRequestRepository = vacationRequestRepository;
-            _managerResponseRepository = managerResponseRepository;
-            _vacationTypeRepository = vacationTypeRepository;
-            db = context;
+            UserInformationRepository = new UserInformationRepository(context);
+            VacationRequestRepository = new VacationRequestRepository(context);
+            ManagerResponseRepository = new ManagerResponseRepository(context);
+            VacationTypeRepository = new VacationTypeRepository(context);
+            LocationRepository = new LocationRepository(context);
+            TeamRepository = new TeamRepository(context);
+            _context = context;
         }
 
         public void Save()
         {
-            db.SaveChanges();
+            _context.SaveChanges();
         }
 
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        public IRepository<UserInformation> UserProfiles
+        public virtual void CleanUp(bool disposing)
         {
-            get { return _userInformationRepostitory; }
-        }
-
-        public IRepository<VacationRequest> VacationRequestRepository
-        {
-            get { return _vacationRequestRepository; }
-        }
-
-        public IRepository<UserInformation> UserInformationRepository
-        {
-            get { return _userInformationRepostitory; }
-        }
-
-        public IRepository<ManagerResponse> ManagerResponseRepository
-        {
-            get { return _managerResponseRepository; }
-        }
-
-        public IRepository<VacationType> VacationTypeRepository
-        {
-            get { return _vacationTypeRepository; }
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
+            if (!this.disposed)
             {
-                if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects).
-                }
+                if (disposing) { }
 
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
+                _context.Dispose();
 
-                disposedValue = true;
+                this.disposed = true;
             }
         }
 
-        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~UnitOfWork()
-        // {
-        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-        //   Dispose(false);
-        // }
-
-        // This code added to correctly implement the disposable pattern.
         public void Dispose()
         {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-            // TODO: uncomment the following line if the finalizer is overridden above.
-            // GC.SuppressFinalize(this);
+            CleanUp(true);
+            GC.SuppressFinalize(this);
         }
-        #endregion
+
+        ~UnitOfWork()
+        {
+            CleanUp(false);
+        }
     }
 }

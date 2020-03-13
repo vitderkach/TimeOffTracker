@@ -77,13 +77,13 @@ namespace TOT.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Fire(int id)
         {
-            var result = await _adminService.DeleteUser(id);
+            bool isSuccessful =  _adminService.FireUser(id);
 
-            if (!result.Succeeded)
+            if (!isSuccessful)
             {
-                AddErrorsFromResult(result);
+                ModelState.AddModelError("", "Oops, the user hasn't been found.");
             }
 
             return RedirectToAction("List");

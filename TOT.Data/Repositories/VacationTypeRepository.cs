@@ -8,59 +8,28 @@ using TOT.Interfaces.Repositories;
 
 namespace TOT.Data.Repositories
 {
-    public class VacationTypeRepository : IRepository<VacationType>
+    public class VacationTypeRepository : IVacationTypeRepository<VacationType>
     {
-        private ApplicationDbContext context;
-        private bool disposed = false;
-
-        public VacationTypeRepository(ApplicationDbContext appcontext)
+        private readonly ApplicationDbContext _context;
+        public VacationTypeRepository(ApplicationDbContext context)
         {
-            this.context = appcontext;
-        }
-
-        public void Create(VacationType item)
-        {
-            context.VacationTypes.Add(item);
-            context.SaveChanges();
+            _context = context;
         }
 
         public void Delete(int id)
         {
-            var response = context.VacationTypes
-                   .Find(id);
-            if (response != null)
+            if (_context.VacationTypes.Find(id) is VacationType vacationType)
             {
-                context.VacationTypes.Remove(response);
-                context.SaveChanges();
+                _context.VacationTypes.Remove(vacationType);
             }
         }
 
-        public virtual void Dispose(bool disposing)
-        {
-            if (!this.disposed)
-            {
-                if (disposing)
-                {
-                    context.Dispose();
-                }
-                this.disposed = true;
-            }
-        }
+        public VacationType GetOne(int id) => _context.VacationTypes.Find(id);
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+        public IEnumerable<VacationType> GetAll() => _context.VacationTypes.ToList();
+       
+        public void Update(VacationType item) =>_context.Entry<VacationType>(item).State = EntityState.Modified;
 
-        public VacationType GetOne(int id) => context.VacationTypes.Where(vt => vt.UserInformationId == id).Include(vt => vt.UserInformation).FirstOrDefault();
-
-        public IEnumerable<VacationType> GetAll() => context.VacationTypes.ToList();
-
-        public void Update(VacationType item)
-        {
-            context.Entry(item).State = EntityState.Modified;
-            context.SaveChanges();
-        }
+        public void Create(VacationType item) => _context.VacationTypes.Add(item);
     }
 }

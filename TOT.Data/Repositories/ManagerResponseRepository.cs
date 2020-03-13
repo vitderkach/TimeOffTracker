@@ -7,79 +7,29 @@ using TOT.Interfaces.Repositories;
 
 namespace TOT.Data.Repositories
 {
-    public class ManagerResponseRepository : IRepository<ManagerResponse>
+
+    public class ManagerResponseRepository : IManagerResponseRepository<ManagerResponse>
     {
-        private ApplicationDbContext context;
-        private bool disposed = false;
-
-        public ManagerResponseRepository(ApplicationDbContext appcontext)
+        private readonly ApplicationDbContext _context;
+        public ManagerResponseRepository (ApplicationDbContext context)
         {
-            this.context = appcontext;
+            _context = context;
         }
 
-        public void Create(ManagerResponse item)
-        {
-            context.ManagerResponses.Add(item);
-            context.SaveChanges();
-        }
+        public void Create(ManagerResponse item) => _context.ManagerResponses.Add(item);
 
-        public void Delete(int id)
+        public ManagerResponse GetOne(int id) => _context.ManagerResponses.Find(id);
+
+        public IEnumerable<ManagerResponse> GetAll() => _context.ManagerResponses.ToList();
+
+        public void Update(ManagerResponse item) => _context.Entry<ManagerResponse>(item).State = EntityState.Modified;
+
+        public void TransferToHistory(int id)
         {
-            var response = context.ManagerResponses
-                   .Find(id);
-            if (response != null)
+            if (_context.ManagerResponses.Find(id) is ManagerResponse managerResponse)
             {
-                context.ManagerResponses.Remove(response);
-                context.SaveChanges();
+                _context.Remove(managerResponse);
             }
-        }
-
-        public virtual void Dispose(bool disposing)
-        {
-            if (!this.disposed)
-            {
-                if (disposing)
-                {
-                    context.Dispose();
-                }
-                this.disposed = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        public ManagerResponse GetOne(int id)
-        {
-            var response = context.ManagerResponses
-                .Include(manager => manager.Manager)
-                    .ThenInclude(info => info.UserInformation)
-                .Include(vr => vr.VacationRequest)
-                .ThenInclude(user => user.ApplicationUser)
-                    .ThenInclude(info => info.UserInformation)
-                .Where(mr => mr.Id == id)
-                .FirstOrDefault();
-
-            return response;
-        }
-
-        public IEnumerable<ManagerResponse> GetAll()
-        {
-            return context.ManagerResponses
-                .Include(manager => manager.Manager)
-                .Include(vr => vr.VacationRequest)
-                    .ThenInclude(user => user.ApplicationUser)
-                        .ThenInclude(info => info.UserInformation)
-                .ToList();
-        }
-
-        public void Update(ManagerResponse item)
-        {
-            context.Entry(item).State = EntityState.Modified;
-            context.SaveChanges();
         }
     }
 }

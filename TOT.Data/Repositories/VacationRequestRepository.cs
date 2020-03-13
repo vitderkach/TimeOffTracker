@@ -8,93 +8,29 @@ using TOT.Interfaces.Repositories;
 
 namespace TOT.Data.Repositories
 {
-    public class VacationRequestRepository : IRepository<VacationRequest>
+    public class VacationRequestRepository : IVacationRequestRepository<VacationRequest>
     {
-        ApplicationDbContext db;
-        public VacationRequestRepository(ApplicationDbContext db)
+        private readonly ApplicationDbContext _context;
+        public VacationRequestRepository(ApplicationDbContext context)
         {
-            this.db = db;
+            _context = context;
         }
 
-        public void Create(VacationRequest item)
-        {
-            db.VacationRequests.Add(item);
-            db.SaveChanges();
-        }
+        public void Create(VacationRequest item) =>_context.VacationRequests.Add(item);
 
-        public void Delete(int id)
+
+        public VacationRequest GetOne(int id) => _context.VacationRequests.Find(id);
+
+        public IEnumerable<VacationRequest> GetAll() => _context.VacationRequests.ToList();
+
+        public void Update(VacationRequest item) => _context.Entry<VacationRequest>(item).State = EntityState.Modified;
+
+        public void TransferToHistory(int id)
         {
-            var vacation = db.VacationRequests
-                .Find(id);
-            if (vacation != null)
+            if (_context.VacationRequests.Find(id) is VacationRequest vacationRequest)
             {
-                db.VacationRequests.Remove(vacation);
-                db.SaveChanges();
+                _context.Remove(vacationRequest);
             }
         }
-
-        public VacationRequest GetOne(int id)
-        {
-            var vacation = db.VacationRequests
-                .Include(v => v.ManagersResponses)
-                    .ThenInclude(manager => manager.Manager)
-                        .ThenInclude(user => user.UserInformation)
-
-                .Include(v => v.ApplicationUser)
-                    .ThenInclude(user => user.UserInformation)
-                .Where(v => v.VacationRequestId == id)
-                .FirstOrDefault();
-
-            return vacation;
-        }
-
-        public IEnumerable<VacationRequest> GetAll()
-        {
-            return db.VacationRequests
-                .Include(v => v.ManagersResponses)
-                .Include(v => v.ApplicationUser)
-                    .ThenInclude(user => user.UserInformation);
-        }
-
-        public void Update(VacationRequest item)
-        {
-            db.Entry(item).State = EntityState.Modified;
-            db.SaveChanges();
-        }
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects).
-                }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
-
-                disposedValue = true;
-            }
-        }
-
-        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~UserInformationRepository()
-        // {
-        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-        //   Dispose(false);
-        // }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-            // TODO: uncomment the following line if the finalizer is overridden above.
-            // GC.SuppressFinalize(this);
-        }
-        #endregion
     }
 }

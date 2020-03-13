@@ -1,14 +1,14 @@
 ﻿@model TOT.Dto.ApplyForRequestGetDto
-
 @using Microsoft.AspNetCore.Identity
 @using TOT.Entities
 @using TOT.Interfaces.Services
-
 @{
     var userId = UserManager.GetUserId(User);
 }
 @inject UserManager<ApplicationUser> UserManager
 @inject IVacationService VacationService
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
 
 <div class="row justify-content-between">
     <div class="container col-6">
@@ -18,7 +18,7 @@
 
             <div class="form-group row">
                 <label asp-for="TimeOffType" class="control-label col-4"></label>
-                <select asp-for="TimeOffType" asp-items="Model.VacationTypes" class="form-control col-8"></select>
+                <select asp-for="TimeOffType" asp-items="@ViewBag.TimeOffTypeList" class="form-control col-8"></select>
                 <span asp-validation-for="TimeOffType" class="text-danger"></span>
             </div>
 
@@ -40,23 +40,11 @@
                 <span asp-validation-for="Notes" class="text-danger"></span>
             </div>
 
-<div class="form-group">
-    <table name="add_manager_table" id="add_manager_table">
-        <tr id="add_manager_row_1">
-            <td>
-                <label class="control-label">Manager 1</label>
-                <select class="selectpicker" data-live-search="true">
-                    <option data-subtext="">jkljg</option>
-                </select>
-            </td>
-            <td>
-                <button type="button" class="btn btn-success">+</button>
-                <button type="button" class="btn btn-warning" disabled>-</button>
-            </td>
-        </tr>
-    </table>
-</div>
-
+            <div class="form-group">
+                <label class="control-label">Managers</label>
+                <select class="selectpicker" data-live-search="true" asp-items="ViewBag.ExcitingManagers" multiple></select>
+                <span asp-validation-for="RequiredManagers" class="text-danger"></span>
+            </div>
         </form>
     </div>
     <div class="col-3 d-flex flex-column align-items-center justify-content-center">
@@ -68,71 +56,6 @@
 </div>
 
 @section Scripts {
-    <partial  name="_ValidationScriptsPartial" />
-
-
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
 }
-<script>
-    window.addEventListener("DOMContentLoaded", AddManagerTableSelect, false);
-    let table = document.getElementById("add_manager_table");
-    let managerSelectCount = 0;
-    let managerList = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ExsistingManagers, Newtonsoft.Json.Formatting.Indented));
-    function addManagerTableSelect() {
-        managerSelectCount++;
-        let currentMngNumber = managerSelectCount;
-        var nonSelectedValues = getNonSelectedValues(managerList, getSelectedValues())
-        var tr = document.createElement("tr");
-        var td1 = document.createElement("td");
-        var td2 = document.createElement("td");
-
-        var select = document.createElement("select");
-        select.classList.add("selectpicker");
-        select.setAttribute("data-live-search", "true");
-        for (var nsyv in nonSelectedValues) {
-            select.insertAdjacentHTML("afterbegin", `<option data-subtext="${nsyv}">${nonSelectedValues[nsyv]}/option>`);
-        }
-
-        td1.insertAdjacentHTML("afterbegin", `<label class="control-label">Manager ${currentMngNumber}</label>`);
-        td1.insertAdjacentElement("beforeend", select);
-        td2.insertAdjacentHTML("afterbegin", '<button type="button" class="btn btn-success">+</button>');
-        td2.insertAdjacentHTML("beforeend", '<button type="button" class="btn btn-warning" disabled>-</button>');
-        td2.children[0].addEventListener('click', addManagerTableSelect, false);
-        td2.children[1].addEventListener('click', deleteManagerTableSelect(currentMngNumber));
-        tr.setAttribute("id", `add_manager_row_${currentMngNumber}`);
-
-        tr.insertAdjacentElement("afterbegin", td1);
-        tr.insertAdjacentElement("afterend", td2);
-
-        table.append(tr);
-    }
-
-        function deleteManagerTableSelect(id) {
-
-    }
-
-    function SelectManagerTableSelect(id) {
-        window.alert(id);
-    }
-
-    //Get the array, which consists on the managers, which have been already selected by user
-    function getSelectedValues() {
-        let selectedValues = [];
-        for (let row in table.children) {
-            let select = row.children[0].children[1];
-            selectedValues.push(select.options[e.selectedIndex].value);
-        }
-        return selectedValues;
-    }
-
-    function getNonSelectedValues(jsonObj, arrayObj)
-    {
-        let ret = {};
-        for (let i in arrayObj) {
-            if (!jsonObj.hasOwnProperty(i)) {
-                ret[i] = jsonObj[i];
-            }
-        }
-
-        return ret;
-    }
-</script>
