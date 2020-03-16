@@ -25,7 +25,7 @@ namespace TOT.Data.Repositories
             }
         }
 
-        public IEnumerable<Team> GetAll() => _context.Teams.ToList();
+        public ICollection<Team> GetAll() => _context.Teams.ToList();
 
         public Team GetOne(int id) => _context.Teams.Find(id);
 

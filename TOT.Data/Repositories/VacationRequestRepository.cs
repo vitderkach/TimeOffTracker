@@ -21,7 +21,7 @@ namespace TOT.Data.Repositories
 
         public VacationRequest GetOne(int id) => _context.VacationRequests.Find(id);
 
-        public IEnumerable<VacationRequest> GetAll() => _context.VacationRequests.ToList();
+        public ICollection<VacationRequest> GetAll() => _context.VacationRequests.ToList();
 
         public void Update(VacationRequest item) => _context.Entry<VacationRequest>(item).State = EntityState.Modified;
 
@@ -32,5 +32,16 @@ namespace TOT.Data.Repositories
                 _context.Remove(vacationRequest);
             }
         }
+
+        public VacationRequest GetOneWithManagerResponcesAndUserInfo(int id)
+            => _context.VacationRequests
+            .Where(vr => vr.VacationRequestId == id)
+            .Include(vr => vr.ManagersResponses)
+            .ThenInclude(mr => mr.Manager).FirstOrDefault();
+
+        public  ICollection<VacationRequest> GetAllWithManagerResponcesAndUserInfo()
+            => _context.VacationRequests
+            .Include(vr => vr.ManagersResponses)
+            .ThenInclude(mr => mr.Manager).ToList();
     }
 }

@@ -20,7 +20,7 @@ namespace TOT.Data.Repositories
 
         public ManagerResponse GetOne(int id) => _context.ManagerResponses.Find(id);
 
-        public IEnumerable<ManagerResponse> GetAll() => _context.ManagerResponses.ToList();
+        public ICollection<ManagerResponse> GetAll() => _context.ManagerResponses.ToList();
 
         public void Update(ManagerResponse item) => _context.Entry<ManagerResponse>(item).State = EntityState.Modified;
 
@@ -31,5 +31,16 @@ namespace TOT.Data.Repositories
                 _context.Remove(managerResponse);
             }
         }
+
+        public ManagerResponse GetOneWithUserInfoAndVacationRequest(int id)
+            => _context.ManagerResponses
+            .Where(mr => mr.Id == id)
+            .Include(mr => mr.VacationRequest)
+            .Include(mr => mr.Manager).FirstOrDefault();
+
+        public ICollection<ManagerResponse> GetAllWithUserInfoAndVacationRequest()
+            => _context.ManagerResponses
+            .Include(mr => mr.VacationRequest)
+            .Include(mr => mr.Manager).ToList();
     }
 }

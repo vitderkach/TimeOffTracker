@@ -26,10 +26,75 @@ namespace TOT.Data.Repositories
 
         public VacationType GetOne(int id) => _context.VacationTypes.Find(id);
 
-        public IEnumerable<VacationType> GetAll() => _context.VacationTypes.ToList();
+        public ICollection<VacationType> GetAll() => _context.VacationTypes.ToList();
        
         public void Update(VacationType item) =>_context.Entry<VacationType>(item).State = EntityState.Modified;
 
         public void Create(VacationType item) => _context.VacationTypes.Add(item);
+
+        public bool СhargeVacationDays(int userId, int count, TimeOffType vacationType, bool isAlreadyCharged)
+        {
+            if (count < 0)
+            {
+                throw new ArgumentException("The count of vacation days cannot be less than 0!");
+            }
+            var vacation = _context.VacationTypes.Where(vt => vt.UserInformationId == userId && vt.TimeOffType == vacationType).FirstOrDefault();
+            if (isAlreadyCharged)
+            {
+                _context.VacationTypes.Attach(vacation).Property(gv => gv.StatutoryDays);
+                vacation.StatutoryDays = count;
+                return true;
+            }
+            else
+            {
+                if (vacation.StatutoryDays != 0)
+                {
+                    return false;
+                }
+                else
+                {
+                    _context.VacationTypes.Attach(vacation).Property(gv => gv.StatutoryDays);
+                    vacation.StatutoryDays = count;
+                    return true;
+                }
+            }
+        }
+
+        public void UseVacationDays(int userId, int count, TimeOffType vacationType)
+        {
+            if (count < 0)
+            {
+                throw new ArgumentException("The count of used days cannot be less than 0!");
+            }
+
+            var vacation = _context.VacationTypes.Where(vt => vt.UserInformationId == userId && vt.TimeOffType == vacationType).FirstOrDefault();
+            _context.VacationTypes.Attach(vacation).Property(gv => gv.UsedDays);
+            vacation.UsedDays += count;
+        }
+
+        public void ChangeCountOfGiftdays(int userId, int count)
+        {
+            var giftVacation = _context.VacationTypes.Where(vt => vt.UserInformationId == userId && vt.TimeOffType == TimeOffType.GiftLeave).FirstOrDefault();
+            _context.VacationTypes.Attach(giftVacation).Property(gv => gv.StatutoryDays);
+            giftVacation.StatutoryDays += count;
+
+        }
+
+        public ICollection<VacationType> GetAllWithUserInformationTeamAndLocation()
+            => _context.VacationTypes
+            .Include(vt => vt.UserInformation)
+            .ThenInclude(ui => ui.Team)
+            .Include(vt =>vt.UserInformation)
+            .ThenInclude(vt => vt.Location)
+            .ToList();
+
+        public VacationType GetOneWithUserInformationTeamAndLocation(int id)
+            => _context.VacationTypes
+            .Where(vt => vt.Id == id)
+            .Include(vt => vt.UserInformation)
+            .ThenInclude(ui => ui.Team)
+            .Include(vt => vt.UserInformation)
+            .ThenInclude(vt => vt.Location)
+            .FirstOrDefault();
     }
 }

@@ -21,7 +21,7 @@ namespace TOT.Data.Repositories
             }
         }
 
-        public IEnumerable<Location> GetAll() => _context.Locations.ToList();
+        public ICollection<Location> GetAll() => _context.Locations.ToList();
 
         public Location GetOne(int id) => _context.Locations.Where(l => l.Id == id).FirstOrDefault();
 

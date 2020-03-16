@@ -46,17 +46,22 @@ namespace TOT.Business.Services
             return new SelectList(managers, "Id", "UserInformation.FullName");
         }
 
+        //TODO: Fix the method
+
         public void ApplyForVacation(VacationRequestDto vacationRequestDto)
         {
             var vacation = _mapper.Map<VacationRequestDto, VacationRequest>(vacationRequestDto);
             for (int i=0; i < vacationRequestDto.SelectedManager.Count; i++)
             {
+                ManagerResponse managerResponse =
+                    new ManagerResponse()
+                    {
+                        ManagerId = vacationRequestDto.SelectedManager[i],
+                        isRequested = i == 0 ? true : false,
+                        VacationRequestId = vacation.VacationRequestId
 
-                vacation.ManagersResponses.Add(new ManagerResponse()
-                {
-                    ManagerId = vacationRequestDto.SelectedManager[i],
-                    isRequested = i == 0 ? true : false,
-                });
+                    };
+                _uow.ManagerResponseRepository.Create(managerResponse);
             }
             _uow.VacationRequestRepository.Create(vacation);
 
@@ -68,7 +73,7 @@ namespace TOT.Business.Services
 
             EmailModel emailModel = new EmailModel()
             {
-                To = vacation.ManagersResponses.ElementAt(0).Manager.Email,
+                To = vacation.ManagersResponses.ElementAt(0).Manager.ApplicationUser.Email,
                 FullName = $"{userInfo.LastName} {userInfo.FirstName}",
                 Body = vacation.Notes
             };
@@ -89,7 +94,7 @@ namespace TOT.Business.Services
             List<int> vacationIds = new List<int>();
             var vacations = _uow.VacationRequestRepository
                 .GetAll()
-                .Where(v => v.ApplicationUserId == userId);
+                .Where(v => v.UserInformationId== userId);
 
             foreach (VacationRequest request in vacations)
             {
@@ -104,7 +109,7 @@ namespace TOT.Business.Services
             var currentUserId = _userService.GetCurrentUser().Result.Id;
             var vacations = _uow.VacationRequestRepository
                 .GetAll()
-                .Where(v => v.ApplicationUserId == currentUserId);
+                .Where(v => v.UserInformationId == currentUserId);
 
             var vacationsDto = _mapper.Map<IEnumerable<VacationRequest>, IEnumerable<VacationRequestListDto>>(vacations);
             return vacationsDto;

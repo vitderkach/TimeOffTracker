@@ -22,7 +22,7 @@ namespace TOT.Data.Repositories
             .Where(ui => ui.IsFired == false && ui.ApplicationUserId == id)
             .FirstOrDefault();
 
-        public IEnumerable<UserInformation> GetAll()
+        public ICollection<UserInformation> GetAll()
             => _context.UserInformations
             .Where(ui => ui.IsFired == false)
             .ToList();
@@ -43,7 +43,7 @@ namespace TOT.Data.Repositories
             .Where(ui => ui.IsFired == false && ui.ApplicationUserId == id)
             .FirstOrDefault();
 
-        public IEnumerable<UserInformation> GetFiredAll()
+        public ICollection<UserInformation> GetFiredAll()
             => _context.UserInformations
             .Where(ui => ui.IsFired == false)
             .ToList();
@@ -54,7 +54,7 @@ namespace TOT.Data.Repositories
             .Include(ui => ui.VacationTypes)
             .FirstOrDefault();
 
-        public IEnumerable<UserInformation> GetAllWithVacationsRequests()
+        public ICollection<UserInformation> GetAllWithVacationsRequests()
             => _context.UserInformations
             .Where(ui => ui.IsFired == false)
             .Include(ui => ui.VacationTypes)
@@ -67,7 +67,7 @@ namespace TOT.Data.Repositories
             .Include(ui => ui.Location)
             .FirstOrDefault();
 
-        public IEnumerable<UserInformation> GetAllWithTeamAndLocation()
+        public ICollection<UserInformation> GetAllWithTeamAndLocation()
             => _context.UserInformations
             .Where(ui => ui.IsFired == false)
             .Include(ui => ui.Team)
@@ -82,7 +82,7 @@ namespace TOT.Data.Repositories
             .Include(ui => ui.Location)
             .FirstOrDefault();
 
-        public IEnumerable<UserInformation> GetAllWithAllProperties()
+        public ICollection<UserInformation> GetAllWithAllProperties()
             => _context.UserInformations
             .Where(ui => ui.IsFired == false)
             .Include(ui => ui.VacationTypes)

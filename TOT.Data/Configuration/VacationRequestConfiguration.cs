@@ -37,11 +37,11 @@ namespace TOT.Data.Configuration
                 .IsRequired();
             entity.HasIndex(t => t.VacationType);
 
-            entity.HasOne(u => u.ApplicationUser)
-                .WithMany(r => r.VacationRequests)
-                .HasForeignKey(fk => fk.ApplicationUserId)
-                .HasConstraintName("FK_AppUser_Requests")
-                .OnDelete(DeleteBehavior.SetNull);
+            entity.HasOne(vr => vr.UserInformation)
+                .WithMany(ui => ui.VacationRequests)
+                .HasForeignKey(vr => vr.UserInformationId)
+                .HasConstraintName("FK_VacationRequest_UserInformation")
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

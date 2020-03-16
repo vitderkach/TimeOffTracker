@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TOT.Entities;
 
 namespace TOT.Interfaces.Repositories
 {
@@ -22,7 +23,7 @@ namespace TOT.Interfaces.Repositories
 
     public interface ICanGetEntity<TEntity> where TEntity : class
     {
-        IEnumerable<TEntity> GetAll();
+        ICollection<TEntity> GetAll();
         TEntity GetOne(int id);
     }
 
@@ -30,6 +31,9 @@ namespace TOT.Interfaces.Repositories
         where TEntity : class
     {
         void TransferToHistory(int id);
+
+        TEntity GetOneWithUserInfoAndVacationRequest(int id);
+        ICollection<TEntity> GetAllWithUserInfoAndVacationRequest();
     }
 
     public interface ITeamRepository<TEntity> : ICanDeleteEntity<TEntity>, ICanUpdateEntity<TEntity>, ICanCreateEntity<TEntity>, ICanGetEntity<TEntity>
@@ -43,16 +47,16 @@ namespace TOT.Interfaces.Repositories
     {
         void Fire(int id);
         TEntity GetFiredOne(int id);
-        IEnumerable<TEntity> GetFiredAll();
+        ICollection<TEntity> GetFiredAll();
 
         TEntity GetOneWithVacationRequests(int id);
-        IEnumerable<TEntity> GetAllWithVacationsRequests();
+        ICollection<TEntity> GetAllWithVacationsRequests();
 
         TEntity GetOneWithTeamAndLocation(int id);
-        IEnumerable<TEntity> GetAllWithTeamAndLocation();
+        ICollection<TEntity> GetAllWithTeamAndLocation();
 
         TEntity GetOneWithAllProperties(int id);
-        IEnumerable<TEntity> GetAllWithAllProperties();
+        ICollection<TEntity> GetAllWithAllProperties();
     }
 
     public interface ILocationRepository<TEntity> : ICanDeleteEntity<TEntity>, ICanUpdateEntity<TEntity>, ICanCreateEntity<TEntity>, ICanGetEntity<TEntity>
@@ -65,12 +69,23 @@ namespace TOT.Interfaces.Repositories
         where TEntity : class
     {
         void TransferToHistory(int id);
+
+        TEntity GetOneWithManagerResponcesAndUserInfo(int vacationRequestId);
+
+        ICollection<TEntity> GetAllWithManagerResponcesAndUserInfo();
     }
 
     public interface IVacationTypeRepository<TEntity> : ICanDeleteEntity<TEntity>, ICanUpdateEntity<TEntity>, ICanCreateEntity<TEntity>, ICanGetEntity<TEntity>
         where TEntity : class
     {
+        bool СhargeVacationDays(int userId, int count, TimeOffType vacationType, bool isAlreadyCharged);
+        void ChangeCountOfGiftdays(int userId, int count);
 
+        void UseVacationDays(int userId, int count, TimeOffType vacationType);
+
+        ICollection<TEntity> GetAllWithUserInformationTeamAndLocation();
+
+        TEntity GetOneWithUserInformationTeamAndLocation(int id);
     }
 
 

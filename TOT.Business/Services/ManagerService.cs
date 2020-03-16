@@ -162,7 +162,7 @@ namespace TOT.Business.Services
 
             return approval;
         }
-
+        //TODO: Fix the method
         public void ApproveUserRequest(int managerResponseId,
             string managerNotes, bool? approval)
         {
@@ -178,8 +178,8 @@ namespace TOT.Business.Services
             EmailModel emailModel = new EmailModel()
             {
                 Body = vacation.Notes,
-                FullName = $"{vacation.ApplicationUser.UserInformation.LastName} {vacation.ApplicationUser.UserInformation.FirstName}",
-                To = vacation.ApplicationUser.Email
+                FullName = $"{vacation.UserInformation.LastName} {vacation.UserInformation.FirstName}",
+                To = vacation.UserInformation.ApplicationUser.Email
             };
             //All managers reviewed vacation
             if (!CheckManagerResponsesForVacation(managerResponse.VacationRequestId))
@@ -205,7 +205,7 @@ namespace TOT.Business.Services
                 if (approval != false)
                 {
                     var nextResponse = SelectNextManager(managerResponse.VacationRequestId);
-                    emailModel.To = nextResponse.Manager.Email;
+                    emailModel.To = nextResponse.Manager.ApplicationUser.Email;
                     nextResponse.isRequested = true;
                     _vacationEmailSender.ExecuteToManager(emailModel);
                     _uow.ManagerResponseRepository.Update(nextResponse);
