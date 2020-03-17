@@ -223,16 +223,43 @@ namespace TOT.Business.Services
             _uow.Save();
         }
 
-        // TODO: Rewrite the method because the database logic has been changed. As an example the commented code below
-
         private bool CalculateVacationDays(VacationRequest vacationRequest, bool overflowIsAllowed)
         {
             int requestedUsedDays = (vacationRequest.EndDate - vacationRequest.StartDate).Days;
+
+            if (requestedUsedDays < 0)
+            {
+                throw new ArgumentException("The count of used days cannot be less than 0!");
+            }
+
             int userId = vacationRequest.UserInformationId;
             TimeOffType vacationType = vacationRequest.VacationType;
-            bool result = _uow.VacationTypeRepository.UseVacationDays(userId, requestedUsedDays, vacationType, overflowIsAllowed);
-            _uow.Save();
-            return result;
+            var vacation = _uow.VacationTypeRepository.GetOne(vt => vt.Id == userId && vt.TimeOffType == vacationType);
+
+            if (overflowIsAllowed)
+            {
+                vacation.UsedDays += requestedUsedDays;
+                _uow.VacationTypeRepository.Update(vacation, v => v.UsedDays);
+                _uow.Save();
+
+                return true;
+            }
+            else
+            {
+                int allowedToUseDays = vacation.StatutoryDays - vacation.UsedDays;
+                if (allowedToUseDays < requestedUsedDays)
+                {
+                    return false;
+                }
+                else
+                {
+                    vacation.UsedDays += requestedUsedDays;
+                    _uow.VacationTypeRepository.Update(vacation, v => v.UsedDays);
+                    _uow.Save();
+
+                    return true;
+                }
+            }
         }
 
         private void CleanUp(bool disposing)

@@ -30,7 +30,7 @@ namespace TOT.Business.Services
             IMapper mapper, IUserService userService,
             UserManager<ApplicationUser> userManager,
             IManagerService managerService,
-            IUserInfoService userInfoService, IVacationService vacationService)
+            IUserInfoService userInfoService, IVacationService vacationService, IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -39,6 +39,7 @@ namespace TOT.Business.Services
             _vacationService = vacationService;
             _managerService = managerService;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
         // Список всех пользователей, кроме самого админа
@@ -68,7 +69,7 @@ namespace TOT.Business.Services
         }
 
         // список ролей для DropDownList
-        public List<IdentityRole<int>> GetApplicationRoles()    
+        public List<IdentityRole<int>> GetApplicationRoles()
         {
             return _roleManager.Roles.ToList();
         }
@@ -191,7 +192,7 @@ namespace TOT.Business.Services
                     return result;
                 }
 
-                var removeResult =  await _userManager.RemoveFromRoleAsync(user, currentRoleName);
+                var removeResult = await _userManager.RemoveFromRoleAsync(user, currentRoleName);
 
                 if (removeResult.Succeeded)
                 {
@@ -205,23 +206,51 @@ namespace TOT.Business.Services
             return result;
         }
 
-
-        public bool FireUser(int userId)
+        public bool СhargeVacationDays(int userId, int count, TimeOffType vacationType, bool isAlreadyCharged)
         {
-            if (_userInfoService.GetUserInfo(userId) is UserInformationDto userInformation)
+            if (count < 0)
             {
-                _userInfoService.FireUserInfo(userInformation.Id);
-
-                var vacantionIds = _vacationService.GetAllVacationIdsByUser(userId);
-
-                foreach (int vacationId in vacantionIds)
+                throw new ArgumentException("The count of vacation days cannot be less than 0!");
+            }
+            var vacation = _unitOfWork.VacationTypeRepository.GetOne(vt => vt.UserInformationId == userId && vt.TimeOffType == vacationType);
+            if (isAlreadyCharged)
+            {
+                vacation.StatutoryDays = count;
+                _unitOfWork.VacationTypeRepository.Update(vacation, v => v.StatutoryDays);
+                return true;
+            }
+            else
+            {
+                if (vacation.StatutoryDays != 0)
                 {
-                    _vacationService.DeactivateVacation(vacationId);
+                    return false;
                 }
+                else
+                {
+                    vacation.StatutoryDays = count;
+                    _unitOfWork.VacationTypeRepository.Update(vacation, v => v.StatutoryDays);
+                    return true;
+                }
+            }
+        }
+
+        public void ChangeCountOfGiftdays(int userId, int count)
+        {
+            var giftVacation = _unitOfWork.VacationTypeRepository.GetOne(vt => vt.UserInformationId == userId && vt.TimeOffType == TimeOffType.GiftLeave);
+            giftVacation.StatutoryDays += count;
+            _unitOfWork.VacationTypeRepository.Update(giftVacation, gv => gv.StatutoryDays);
+        }
+
+        public bool FireEmployee(int id)
+        {
+            var user = _unitOfWork.UserInformationRepository.GetOne(id);
+            if (user is UserInformation)
+            {
+                user.IsFired = true;
+                _unitOfWork.UserInformationRepository.Update(user, u => u.IsFired);
 
                 return true;
             }
-
             return false;
         }
 

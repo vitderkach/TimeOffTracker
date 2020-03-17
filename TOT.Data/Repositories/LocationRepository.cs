@@ -5,6 +5,7 @@ using TOT.Entities;
 using TOT.Interfaces.Repositories;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace TOT.Data.Repositories
 {
@@ -30,6 +31,48 @@ namespace TOT.Data.Repositories
             _context.Locations.Add(item);
         }
 
-        public void Update(Location item) => _context.Entry<Location>(item).State = EntityState.Modified;
+        public void Update(Location item, params Expression<Func<Location, object>>[] updatedProperties)
+        {
+            var entry = _context.Entry<Location>(item);
+            if (updatedProperties.Any())
+            {
+                foreach (var property in updatedProperties)
+                {
+                    entry.Property(property).IsModified = true;
+                }
+            }
+            else
+            {
+                foreach (var property in entry.OriginalValues.Properties)
+                {
+                    var original = entry.OriginalValues.GetValue<object>(property);
+                    var current = entry.CurrentValues.GetValue<object>(property);
+                    if (original != null && !original.Equals(current))
+                        entry.Property(property.Name).IsModified = true;
+                }
+            }
+        }
+
+        public Location GetOne(Expression<Func<Location, bool>> filterExpression)
+        {
+            IQueryable<Location> query = _context.Locations;
+            if (filterExpression != null)
+            {
+                query = query.Where(filterExpression);
+            }
+
+            return query.FirstOrDefault();
+        }
+
+        public ICollection<Location> GetAll(Expression<Func<Location, bool>> filterExpression)
+        {
+            IQueryable<Location> query = _context.Locations;
+            if (filterExpression != null)
+            {
+                query = query.Where(filterExpression);
+            }
+
+            return query.ToList();
+        }
     }
 }

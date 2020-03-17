@@ -17,14 +17,14 @@ namespace TOT.Web.Controllers
     {
         private IAdminService _adminService;
 
-        public AdminController( IAdminService adminService)
+        public AdminController(IAdminService adminService)
         {
             _adminService = adminService;
         }
 
         private void AddErrorsFromResult(IdentityResult result)
         {
-            foreach(IdentityError error in result.Errors)
+            foreach (IdentityError error in result.Errors)
             {
                 ModelState.AddModelError("", error.Description);
             }
@@ -79,7 +79,7 @@ namespace TOT.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Fire(int id)
         {
-            bool isSuccessful =  _adminService.FireUser(id);
+            bool isSuccessful = _adminService.FireEmployee(id);
 
             if (!isSuccessful)
             {

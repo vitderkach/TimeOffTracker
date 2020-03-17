@@ -34,7 +34,7 @@ namespace TOT.Tests {
             listVacationDto = new List<VacationRequestDto>() {
                 new VacationRequestDto() { VacationRequestId = 1, Notes = "test1",
                                             VacationType = TimeOffType.ConfirmedSickLeave },
-                new VacastionRequestDto() {VacationRequestId = 2, Notes = "test2",
+                new VacationRequestDto() {VacationRequestId = 2, Notes = "test2",
                                             VacationType = TimeOffType.StudyLeave },
                 new VacationRequestDto() {VacationRequestId = 3, Notes = "test3",
                                             VacationType = TimeOffType.AdministrativeLeave }

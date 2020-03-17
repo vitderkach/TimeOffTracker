@@ -5,6 +5,7 @@ using System.Text;
 using TOT.Entities;
 using TOT.Interfaces.Repositories;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace TOT.Data.Repositories
 {
@@ -34,6 +35,48 @@ namespace TOT.Data.Repositories
             _context.Teams.Add(item);
         }
 
-        public void Update(Team item) => _context.Entry<Team>(item).State = EntityState.Modified;
+        public void Update(Team item, params Expression<Func<Team, object>>[] updatedProperties)
+        {
+            var entry = _context.Entry<Team>(item);
+            if (updatedProperties.Any())
+            {
+                foreach (var property in updatedProperties)
+                {
+                    entry.Property(property).IsModified = true;
+                }
+            }
+            else
+            {
+                foreach (var property in entry.OriginalValues.Properties)
+                {
+                    var original = entry.OriginalValues.GetValue<object>(property);
+                    var current = entry.CurrentValues.GetValue<object>(property);
+                    if (original != null && !original.Equals(current))
+                        entry.Property(property.Name).IsModified = true;
+                }
+            }
+        }
+
+        public Team GetOne(Expression<Func<Team, bool>> filterExpression)
+        {
+            IQueryable<Team> query = _context.Teams;
+            if (filterExpression != null)
+            {
+                query = query.Where(filterExpression);
+            }
+
+            return query.FirstOrDefault();
+        }
+
+        public ICollection<Team> GetAll(Expression<Func<Team, bool>> filterExpression)
+        {
+            IQueryable<Team> query = _context.Teams;
+            if (filterExpression != null)
+            {
+                query = query.Where(filterExpression);
+            }
+
+            return query.ToList();
+        }
     }
 }

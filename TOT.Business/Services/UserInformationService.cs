@@ -54,18 +54,6 @@ namespace TOT.Business.Services
             }
         }
 
-        public void FireUserInfo(int? id)
-        {
-            if (id == null)
-                throw new ArgumentNullException("id = null");
-
-            if (_unitOfWork.UserInformationRepository.GetOne(id.Value) is UserInformation userInformation)
-            {
-                _unitOfWork.UserInformationRepository.Fire(userInformation.ApplicationUserId);
-                _unitOfWork.Save();
-            }
-        }
-
         private void CleanUp(bool disposing)
         {
             if (!disposed)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 using TOT.Entities;
 
@@ -13,7 +14,7 @@ namespace TOT.Interfaces.Repositories
 
     public interface ICanUpdateEntity<TEntity> where TEntity : class
     {
-        void Update(TEntity item);
+        void Update(TEntity item, params Expression<Func<TEntity, object>>[] updatedProperties);
     }
 
     public interface ICanCreateEntity<TEntity> where TEntity : class
@@ -25,6 +26,8 @@ namespace TOT.Interfaces.Repositories
     {
         ICollection<TEntity> GetAll();
         TEntity GetOne(int id);
+        TEntity GetOne(Expression<Func<TEntity, bool>> filterExpression);
+        ICollection<TEntity> GetAll(Expression<Func<TEntity, bool>> filterExpression);
     }
 
     public interface IManagerResponseRepository<TEntity> : ICanUpdateEntity<TEntity>, ICanCreateEntity<TEntity>, ICanGetEntity<TEntity>
@@ -45,10 +48,6 @@ namespace TOT.Interfaces.Repositories
     public interface IUserInformationRepository<TEntity> : ICanUpdateEntity<TEntity>, ICanCreateEntity<TEntity>, ICanGetEntity<TEntity>
         where TEntity : class
     {
-        void Fire(int id);
-        TEntity GetFiredOne(int id);
-        ICollection<TEntity> GetFiredAll();
-
         TEntity GetOneWithVacationRequests(int id);
         ICollection<TEntity> GetAllWithVacationsRequests();
 
@@ -71,20 +70,14 @@ namespace TOT.Interfaces.Repositories
         void TransferToHistory(int id);
 
         TEntity GetOneWithManagerResponcesAndUserInfo(int vacationRequestId);
-
         ICollection<TEntity> GetAllWithManagerResponcesAndUserInfo();
     }
 
     public interface IVacationTypeRepository<TEntity> : ICanDeleteEntity<TEntity>, ICanUpdateEntity<TEntity>, ICanCreateEntity<TEntity>, ICanGetEntity<TEntity>
         where TEntity : class
     {
-        bool СhargeVacationDays(int userId, int count, TimeOffType vacationType, bool isAlreadyCharged);
-        void ChangeCountOfGiftdays(int userId, int count);
-
-        bool UseVacationDays(int userId, int count, TimeOffType vacationType, bool overflowIsAllowed);
 
         ICollection<TEntity> GetAllWithUserInformationTeamAndLocation();
-
         TEntity GetOneWithUserInformationTeamAndLocation(int id);
     }
 

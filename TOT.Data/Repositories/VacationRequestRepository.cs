@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using TOT.Entities;
 using TOT.Interfaces.Repositories;
@@ -23,7 +24,27 @@ namespace TOT.Data.Repositories
 
         public ICollection<VacationRequest> GetAll() => _context.VacationRequests.ToList();
 
-        public void Update(VacationRequest item) => _context.Entry<VacationRequest>(item).State = EntityState.Modified;
+        public void Update(VacationRequest item, params Expression<Func<VacationRequest, object>>[] updatedProperties)
+        {
+            var entry = _context.Entry<VacationRequest>(item);
+            if (updatedProperties.Any())
+            {
+                foreach (var property in updatedProperties)
+                {
+                    entry.Property(property).IsModified = true;
+                }
+            }
+            else
+            {
+                foreach (var property in entry.OriginalValues.Properties)
+                {
+                    var original = entry.OriginalValues.GetValue<object>(property);
+                    var current = entry.CurrentValues.GetValue<object>(property);
+                    if (original != null && !original.Equals(current))
+                        entry.Property(property.Name).IsModified = true;
+                }
+            }
+        }
 
         public void TransferToHistory(int id)
         {
@@ -43,5 +64,27 @@ namespace TOT.Data.Repositories
             => _context.VacationRequests
             .Include(vr => vr.ManagersResponses)
             .ThenInclude(mr => mr.Manager).ToList();
+
+        public VacationRequest GetOne(Expression<Func<VacationRequest, bool>> filterExpression)
+        {
+            IQueryable<VacationRequest> query = _context.VacationRequests;
+            if (filterExpression != null)
+            {
+                query = query.Where(filterExpression);
+            }
+
+            return query.FirstOrDefault();
+        }
+
+        public ICollection<VacationRequest> GetAll(Expression<Func<VacationRequest, bool>> filterExpression)
+        {
+            IQueryable<VacationRequest> query = _context.VacationRequests;
+            if (filterExpression != null)
+            {
+                query = query.Where(filterExpression);
+            }
+
+            return query.ToList();
+        }
     }
 }
