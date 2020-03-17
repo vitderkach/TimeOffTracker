@@ -7,7 +7,7 @@ using TOT.Interfaces.Repositories;
 
 namespace TOT.Data.Repositories
 {
-    public class UserInformationRepository : IUserInformationRepository<UserInformation>
+    internal class UserInformationRepository : IUserInformationRepository<UserInformation>
     {
         private readonly ApplicationDbContext _context;
         public UserInformationRepository(ApplicationDbContext context)

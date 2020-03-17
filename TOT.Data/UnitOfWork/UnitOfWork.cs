@@ -40,15 +40,14 @@ namespace TOT.Data.UnitOfWork
             _context.SaveChanges();
         }
 
-        public virtual void CleanUp(bool disposing)
+        private void CleanUp(bool disposing)
         {
-            if (!this.disposed)
+            if (!disposed)
             {
                 if (disposing) { }
 
                 _context.Dispose();
-
-                this.disposed = true;
+                disposed = true;
             }
         }
 

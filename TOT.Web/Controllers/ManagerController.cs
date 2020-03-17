@@ -74,7 +74,7 @@ namespace TOT.Web.Controllers {
                         .GetCurrentManagerRequests(requestsByCurrentManager).Where(m => m.Approval == null);
                     var name = ViewData["NameSortParm"] as string;
                     if (name != null)
-                        responses = responses.Where(m => m.VacationRequest.User.UserInformation.FullName.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0);
+                        responses = responses.Where(m => m.VacationRequest.User.FullName.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0);
                     break;
                 }
             }
@@ -126,7 +126,7 @@ namespace TOT.Web.Controllers {
             if (response.ManagerResponseId != 0)
             {
                 _managerService.ApproveUserRequest(response.ManagerResponseId,
-                    response.ManagerNotes, response.isApproval);
+                    response.ManagerNotes, response.isApproval, response.OverflowIsAllowed);
             }
 
             return RedirectToAction("Index");

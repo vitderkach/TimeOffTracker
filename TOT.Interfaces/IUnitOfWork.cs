@@ -20,6 +20,8 @@ namespace TOT.Interfaces
 
         ITeamRepository<Team> TeamRepository { get; }
 
+        void Dispose();
+
         void Save();
     }
 }

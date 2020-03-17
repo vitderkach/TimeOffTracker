@@ -8,7 +8,7 @@ using TOT.Interfaces.Repositories;
 
 namespace TOT.Data.Repositories
 {
-    public class VacationRequestRepository : IVacationRequestRepository<VacationRequest>
+    internal class VacationRequestRepository : IVacationRequestRepository<VacationRequest>
     {
         private readonly ApplicationDbContext _context;
         public VacationRequestRepository(ApplicationDbContext context)

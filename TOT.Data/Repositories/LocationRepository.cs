@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TOT.Data.Repositories
 {
-    public class LocationRepository : ILocationRepository<Location>
+    internal class LocationRepository : ILocationRepository<Location>
     {
         private readonly ApplicationDbContext _context;
         public LocationRepository(ApplicationDbContext context) => _context = context;

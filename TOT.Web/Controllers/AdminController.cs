@@ -43,7 +43,7 @@ namespace TOT.Web.Controllers
                 userList = userList.Where(m => m.FullName.IndexOf(searchString, StringComparison.OrdinalIgnoreCase) >= 0);
 
             int pageSize = 3;
-            return View(await PaginatedList<ApplicationUserListDto>.CreateAsync(userList, pageNumber ?? 1, pageSize));
+            return View(await PaginatedList<UserInformationListDto>.CreateAsync(userList, pageNumber ?? 1, pageSize));
         }
 
         [ImportModelState]

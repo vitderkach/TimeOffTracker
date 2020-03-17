@@ -7,13 +7,18 @@ using TOT.Entities;
 
 namespace TOT.Utility.AutoMapper
 {
-    public class DTOTo: Profile
+    public class DTOTo : Profile
     {
         public DTOTo()
         {
             CreateMap<VacationRequestDto, VacationRequest>();
 
-            CreateMap<ApplicationUserDto, ApplicationUser>();
+
+            CreateMap<UserInformationDto, ApplicationUser>();
+
+            CreateMap<UserInformationDto, UserInformation>()
+                .ForMember(dest => dest.ApplicationUserId, opt => opt.MapFrom(src => src.Id));
+
             CreateMap<UserInformationDto, UserInformation>();
 
             CreateMap<ManagerResponseDto, ManagerResponse>();
@@ -25,12 +30,9 @@ namespace TOT.Utility.AutoMapper
                 .ForMember(dest => dest.VacationType, opt => opt.MapFrom(
                     src => src.VacationType.ToEnum<TimeOffType>()));
 
-            CreateMap<ApplicationUserListDto, ApplicationUser>();
-
-            CreateMap<VacationType, VacationTypeDto>();
-            CreateMap<ICollection<VacationType>, VacationDaysDto>()
-                .ForMember(dest => dest.TimeOffTypes, opt => opt.MapFrom(src => src));
-
+            CreateMap<UserInformationListDto, ApplicationUser>();
+            CreateMap<UserInformationListDto, UserInformation>()
+                .ForMember(dest => dest.ApplicationUserId, opt => opt.MapFrom(src => src.Id));
 
         }
     }

@@ -8,7 +8,7 @@ using TOT.Interfaces.Repositories;
 
 namespace TOT.Data.Repositories
 {
-    public class VacationTypeRepository : IVacationTypeRepository<VacationType>
+    internal class VacationTypeRepository : IVacationTypeRepository<VacationType>
     {
         private readonly ApplicationDbContext _context;
         public VacationTypeRepository(ApplicationDbContext context)
@@ -27,8 +27,8 @@ namespace TOT.Data.Repositories
         public VacationType GetOne(int id) => _context.VacationTypes.Find(id);
 
         public ICollection<VacationType> GetAll() => _context.VacationTypes.ToList();
-       
-        public void Update(VacationType item) =>_context.Entry<VacationType>(item).State = EntityState.Modified;
+
+        public void Update(VacationType item) => _context.Entry<VacationType>(item).State = EntityState.Modified;
 
         public void Create(VacationType item) => _context.VacationTypes.Add(item);
 
@@ -60,7 +60,7 @@ namespace TOT.Data.Repositories
             }
         }
 
-        public void UseVacationDays(int userId, int count, TimeOffType vacationType)
+        public bool UseVacationDays(int userId, int count, TimeOffType vacationType, bool overflowIsAllowed)
         {
             if (count < 0)
             {
@@ -68,8 +68,28 @@ namespace TOT.Data.Repositories
             }
 
             var vacation = _context.VacationTypes.Where(vt => vt.UserInformationId == userId && vt.TimeOffType == vacationType).FirstOrDefault();
-            _context.VacationTypes.Attach(vacation).Property(gv => gv.UsedDays);
-            vacation.UsedDays += count;
+
+            if (overflowIsAllowed)
+            {
+
+                _context.VacationTypes.Attach(vacation).Property(gv => gv.UsedDays);
+                vacation.UsedDays += count;
+                return true;
+            }
+            else
+            {
+                int allowedToUseDays = vacation.StatutoryDays - vacation.UsedDays;
+                if (allowedToUseDays < count)
+                {
+                    return false;
+                }
+                else
+                {
+                    _context.VacationTypes.Attach(vacation).Property(gv => gv.UsedDays);
+                    vacation.UsedDays += count;
+                    return true;
+                }
+            }
         }
 
         public void ChangeCountOfGiftdays(int userId, int count)
@@ -84,7 +104,7 @@ namespace TOT.Data.Repositories
             => _context.VacationTypes
             .Include(vt => vt.UserInformation)
             .ThenInclude(ui => ui.Team)
-            .Include(vt =>vt.UserInformation)
+            .Include(vt => vt.UserInformation)
             .ThenInclude(vt => vt.Location)
             .ToList();
 

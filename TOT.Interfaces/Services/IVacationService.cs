@@ -16,5 +16,6 @@ namespace TOT.Interfaces.Services
         VacationDaysDto GetVacationDays(int userId);
         List<int> GetAllVacationIdsByUser(int userId);
         SelectList GetManagersForVacationApply();
+        void Dispose();
     }
 }

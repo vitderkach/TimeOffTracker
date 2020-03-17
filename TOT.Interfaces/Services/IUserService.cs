@@ -9,7 +9,8 @@ namespace TOT.Interfaces.Services
 {
     public interface IUserService
     {
-        IEnumerable<ApplicationUserDto> GetAllByRole(string role);
+        IEnumerable<UserInformationDto> GetAllByRole(string role);
         Task<ApplicationUser> GetCurrentUser();
+        void Dispose();
     }
 }

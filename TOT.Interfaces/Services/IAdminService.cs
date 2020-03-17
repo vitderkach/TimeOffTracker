@@ -7,11 +7,12 @@ namespace TOT.Interfaces.Services
 {
     public interface IAdminService
     {
-        IEnumerable<ApplicationUserListDto> GetApplicationUserList();
+        IEnumerable<UserInformationListDto> GetApplicationUserList();
         List<IdentityRole<int>> GetApplicationRoles();
         Task<IdentityResult> RegistrationNewUser(RegistrationUserDto registrationForm);
         EditApplicationUserDto EditUserData(int userId);
         Task<IdentityResult> UserDataManipulation(int userId, int userRoleId);
         bool FireUser(int userId);
+        void Dispose();
     }
 }

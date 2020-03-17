@@ -8,7 +8,7 @@ using TOT.Interfaces.Repositories;
 namespace TOT.Data.Repositories
 {
 
-    public class ManagerResponseRepository : IManagerResponseRepository<ManagerResponse>
+    internal class ManagerResponseRepository : IManagerResponseRepository<ManagerResponse>
     {
         private readonly ApplicationDbContext _context;
         public ManagerResponseRepository (ApplicationDbContext context)

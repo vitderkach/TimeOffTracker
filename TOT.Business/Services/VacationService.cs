@@ -13,10 +13,12 @@ namespace TOT.Business.Services
 {
     public class VacationService: IVacationService
     {
-        private IMapper _mapper;
-        private IUnitOfWork _uow; 
+        private readonly IMapper _mapper;
+        private readonly IUnitOfWork _uow; 
         private readonly IVacationEmailSender _vacationEmailSender;
         private readonly IUserService _userService;
+
+        private bool disposed = false;
 
         public VacationService(IMapper mapper, IUnitOfWork uow,
             IVacationEmailSender vacationEmailSender,
@@ -30,18 +32,18 @@ namespace TOT.Business.Services
 
         public SelectList GetManagersForVacationApply()
         {
-            var userDto = _mapper.Map<ApplicationUser, 
-                ApplicationUserDto>(_userService.GetCurrentUser().Result);
+            var currentUser = _userService.GetCurrentUser().Result;
+            //var userDto = _mapper.MergeInto<UserInformationDto>(currentUser, _uow.UserInformationRepository.GetOne(currentUser.Id));
 
             var managers = _userService.GetAllByRole("Manager");
             managers = managers.Concat(_userService.GetAllByRole("Administrator"));
 
             // managers.Contains(userDto) don't work
-            if (managers.Where(u => u.Id == userDto.Id).Any())
+            if (managers.Where(u => u.Id == currentUser.Id).Any())
             {
-                managers = managers.Where(m => m.Id != userDto.Id);
+                managers = managers.Where(m => m.Id != currentUser.Id);
             }
-            managers.OrderBy(n => n.UserInformation.FullName);
+            managers.OrderBy(n => n.FullName);
 
             return new SelectList(managers, "Id", "UserInformation.FullName");
         }
@@ -64,7 +66,7 @@ namespace TOT.Business.Services
                 _uow.ManagerResponseRepository.Create(managerResponse);
             }
             _uow.VacationRequestRepository.Create(vacation);
-
+            _uow.Save();
             var user = _userService.GetCurrentUser().Result;
             var userInfo = _uow.UserInformationRepository
                 .GetAll()
@@ -129,6 +131,7 @@ namespace TOT.Business.Services
             {
                 vacation.Notes = notes;
                 _uow.VacationRequestRepository.Update(vacation);
+                _uow.Save();
             }
         }
 
@@ -137,12 +140,36 @@ namespace TOT.Business.Services
             if(_uow.VacationRequestRepository.GetOne(id) is VacationRequest vacationRequest && vacationRequest.Approval == null)
             {
                 _uow.VacationRequestRepository.TransferToHistory(id);
+                _uow.Save();
                 return true;
             }
             else
             {
                 return false;
             }
+        }
+
+        private void CleanUp(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing) { }
+                _userService.Dispose();
+                _uow.Dispose();
+
+                disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            CleanUp(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~VacationService()
+        {
+            CleanUp(false);
         }
     }
 }

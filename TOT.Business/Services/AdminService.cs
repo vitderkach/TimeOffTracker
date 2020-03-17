@@ -13,16 +13,18 @@ namespace TOT.Business.Services
 {
     public class AdminService : IAdminService
     {
-        private UserManager<ApplicationUser> _userManager;
-        private RoleManager<IdentityRole<int>> _roleManager;
-        private IMapper _mapper;
-
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole<int>> _roleManager;
+        private readonly IMapper _mapper;
         private readonly IUserService _userService;
         private readonly IUserInfoService _userInfoService;
         private readonly IVacationService _vacationService;
         private readonly IManagerService _managerService;
+        private readonly IUnitOfWork _unitOfWork;
 
         private readonly string defaultPassword = "user123";
+
+        private bool disposed = false;
 
         public AdminService(RoleManager<IdentityRole<int>> roleManager,
             IMapper mapper, IUserService userService,
@@ -41,13 +43,11 @@ namespace TOT.Business.Services
 
         // Список всех пользователей, кроме самого админа
         // Чтобы он сам себя не мог удалить. 
-        public IEnumerable<ApplicationUserListDto> GetApplicationUserList()
+        public IEnumerable<UserInformationListDto> GetApplicationUserList()
         {
             var currentUserId = _userService.GetCurrentUser().Result.Id;
-            IList<ApplicationUser> userList = new List<ApplicationUser>();
-
-            foreach (ApplicationUser user in _userManager.Users.Include(
-                userInfo => userInfo.UserInformation))
+            var userList = new List<UserInformationDto>();
+            foreach (UserInformationDto user in _userInfoService.GetUsersInfo())
             {
                 if (user.Id == currentUserId)
                     continue;
@@ -55,17 +55,16 @@ namespace TOT.Business.Services
                 userList.Add(user);
             }
 
-            var applicationUserListDto = _mapper.Map<IEnumerable<ApplicationUser>,
-                IEnumerable<ApplicationUserListDto>>(userList);
 
-            ApplicationUser applicationUser;
-            foreach (ApplicationUserListDto user in applicationUserListDto)
+            List<UserInformationListDto> userListDto = new List<UserInformationListDto>();
+            foreach (var user in userList)
             {
-                applicationUser = _mapper.Map<ApplicationUserListDto, ApplicationUser>(user);
-                user.RoleName = _userManager.GetRolesAsync(applicationUser).Result.FirstOrDefault();
+                var userDto = _mapper.Map<UserInformationDto, UserInformationListDto>(user);
+                var appUser = _userManager.FindByIdAsync(user.Id.ToString()).Result;
+                userDto.RoleNames = _userManager.GetRolesAsync(appUser).Result;
             }
 
-            return applicationUserListDto;
+            return userListDto;
         }
 
         // список ролей для DropDownList
@@ -211,7 +210,7 @@ namespace TOT.Business.Services
         {
             if (_userInfoService.GetUserInfo(userId) is UserInformationDto userInformation)
             {
-                _userInfoService.FireUserInfo(userInformation.UserInformationId);
+                _userInfoService.FireUserInfo(userInformation.Id);
 
                 var vacantionIds = _vacationService.GetAllVacationIdsByUser(userId);
 
@@ -224,6 +223,35 @@ namespace TOT.Business.Services
             }
 
             return false;
+        }
+
+        private void CleanUp(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing) { }
+
+                _userManager.Dispose();
+                _userService.Dispose();
+                _vacationService.Dispose();
+                _userInfoService.Dispose();
+                _unitOfWork.Dispose();
+                _roleManager.Dispose();
+                _managerService.Dispose();
+
+                disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            CleanUp(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~AdminService()
+        {
+            CleanUp(false);
         }
     }
 }

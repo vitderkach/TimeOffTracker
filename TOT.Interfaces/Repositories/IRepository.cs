@@ -81,7 +81,7 @@ namespace TOT.Interfaces.Repositories
         bool СhargeVacationDays(int userId, int count, TimeOffType vacationType, bool isAlreadyCharged);
         void ChangeCountOfGiftdays(int userId, int count);
 
-        void UseVacationDays(int userId, int count, TimeOffType vacationType);
+        bool UseVacationDays(int userId, int count, TimeOffType vacationType, bool overflowIsAllowed);
 
         ICollection<TEntity> GetAllWithUserInformationTeamAndLocation();
 

@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace TOT.Data.Repositories
 {
-    public class TeamRepository : ITeamRepository<Team>
+    internal class TeamRepository : ITeamRepository<Team>
     {
 
         private readonly ApplicationDbContext _context;
