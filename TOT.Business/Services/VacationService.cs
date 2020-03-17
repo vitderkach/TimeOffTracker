@@ -33,22 +33,19 @@ namespace TOT.Business.Services
         public SelectList GetManagersForVacationApply()
         {
             var currentUser = _userService.GetCurrentUser().Result;
-            //var userDto = _mapper.MergeInto<UserInformationDto>(currentUser, _uow.UserInformationRepository.GetOne(currentUser.Id));
 
             var managers = _userService.GetAllByRole("Manager");
             managers = managers.Concat(_userService.GetAllByRole("Administrator"));
 
-            // managers.Contains(userDto) don't work
             if (managers.Where(u => u.Id == currentUser.Id).Any())
             {
                 managers = managers.Where(m => m.Id != currentUser.Id);
             }
+
             managers.OrderBy(n => n.FullName);
 
             return new SelectList(managers, "Id", "UserInformation.FullName");
         }
-
-        //TODO: Fix the method
 
         public void ApplyForVacation(VacationRequestDto vacationRequestDto)
         {

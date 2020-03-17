@@ -163,7 +163,7 @@ namespace TOT.Business.Services
 
             return approval;
         }
-        //TODO: Fix the method
+
         public void ApproveUserRequest(int managerResponseId,
             string managerNotes, bool? approval, bool overflowIsAllowed = false)
         {

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using TOT.Dto;
+using TOT.Entities;
 
 namespace TOT.Interfaces.Services
 {
