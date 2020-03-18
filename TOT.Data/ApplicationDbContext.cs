@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TOT.Data.Configuration;
@@ -19,6 +20,8 @@ namespace TOT.Data
         public DbSet<VacationRequest> VacationRequests { get; set; }
         public DbSet<ManagerResponse> ManagerResponses { get; set; }
         public DbSet<VacationType> VacationTypes { get; set; }
+        public DbSet<Location> Locations { get; set; }
+        public DbSet<Team> Teams { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -32,6 +35,5 @@ namespace TOT.Data
             builder.ApplyConfiguration(new VacationTypeConfiguration());
             base.OnModelCreating(builder);
         }
-
     }
 }

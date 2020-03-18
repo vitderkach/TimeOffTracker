@@ -13,8 +13,6 @@ namespace TOT.Data
 
         public static Dictionary<string, int> SeedUsersInfo(IServiceProvider serviceProvider)
         {
-            /* TODO: Because new tables have been added to the database and some types among tables have been changed, test data should be rewritten.
-            AS a base use commented below code for previous version of the database */
             using (var context = new ApplicationDbContext(
                 serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
             {
@@ -27,40 +25,37 @@ namespace TOT.Data
                 var userInfo = new List<UserInformation>()
                 {
                     new UserInformation(){ FirstName = "Matthew", LastName = "Brown",
-                        //VacationPolicy = new VacationPolicy()
-                        //{
-                        //    VacationTypes = new List<VacationType>()
-                        //    {
-                        //        new VacationType() { TimeOffType = TimeOffType.ConfirmedSickLeave, UsedDays = 0 },
-                        //        new VacationType() { TimeOffType = TimeOffType.StudyLeave, UsedDays = 0 },
-                        //        new VacationType() { TimeOffType = TimeOffType.PaidLeave, UsedDays = 0 },
-                        //        new VacationType() { TimeOffType = TimeOffType.UnofficialSickLeave, UsedDays = 0 }
-                        //    }
-                        //}
+                    VacationTypes = new List<VacationType>()
+                    {
+                        new VacationType() {TimeOffType = TimeOffType.AdministrativeLeave, StatutoryDays = 20, UsedDays = 1, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.StudyLeave, StatutoryDays = 10, UsedDays = 2, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.ConfirmedSickLeave, StatutoryDays = 30, UsedDays = 3, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.UnofficialSickLeave, StatutoryDays = 3, UsedDays = 4, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.GiftLeave, StatutoryDays = 5, UsedDays = 5, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.PaidLeave, StatutoryDays = 5, UsedDays = 0, Year = DateTime.Now.Year }
+                    }
                     },
                     new UserInformation(){ FirstName = "Joseph", LastName = "White",
-                        //VacationPolicy = new VacationPolicy()
-                        //{
-                        //    VacationTypes = new List<VacationType>()
-                        //    {
-                        //        new VacationType() { TimeOffType = TimeOffType.ConfirmedSickLeave, UsedDays = 0 },
-                        //        new VacationType() { TimeOffType = TimeOffType.StudyLeave, UsedDays = 0 },
-                        //        new VacationType() { TimeOffType = TimeOffType.PaidLeave, UsedDays = 0 },
-                        //        new VacationType() { TimeOffType = TimeOffType.UnofficialSickLeave, UsedDays = 0 }
-                        //    }
-                        //}
+                    VacationTypes = new List<VacationType>()
+                    {
+                        new VacationType() {TimeOffType = TimeOffType.AdministrativeLeave, StatutoryDays = 20, UsedDays = 1, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.StudyLeave, StatutoryDays = 10, UsedDays = 2, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.ConfirmedSickLeave, StatutoryDays = 30, UsedDays = 3, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.UnofficialSickLeave, StatutoryDays = 3, UsedDays = 4, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.GiftLeave, StatutoryDays = 5, UsedDays = 5, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.PaidLeave, StatutoryDays = 5, UsedDays = 0, Year = DateTime.Now.Year }
+                    }
                     },
                     new UserInformation(){ FirstName = "Nadia", LastName = "Campbell",
-                        //VacationPolicy = new VacationPolicy()
-                        //{
-                        //    VacationTypes = new List<VacationType>()
-                        //    {
-                        //        new VacationType() { TimeOffType = TimeOffType.ConfirmedSickLeave, UsedDays = 0 },
-                        //        new VacationType() { TimeOffType = TimeOffType.StudyLeave, UsedDays = 0 },
-                        //        new VacationType() { TimeOffType = TimeOffType.PaidLeave, UsedDays = 0 },
-                        //        new VacationType() { TimeOffType = TimeOffType.UnofficialSickLeave, UsedDays = 0 }
-                        //    }
-                        //}
+                    VacationTypes = new List<VacationType>()
+                    {
+                        new VacationType() {TimeOffType = TimeOffType.AdministrativeLeave, StatutoryDays = 20, UsedDays = 1, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.StudyLeave, StatutoryDays = 10, UsedDays = 2, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.ConfirmedSickLeave, StatutoryDays = 30, UsedDays = 3, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.UnofficialSickLeave, StatutoryDays = 3, UsedDays = 4, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.GiftLeave, StatutoryDays = 5, UsedDays = 5, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.PaidLeave, StatutoryDays = 5, UsedDays = 0, Year = DateTime.Now.Year }
+                    }
                     }
                 };
 

@@ -6,6 +6,8 @@ namespace TOT.Entities
 {
     public class VacationType
     {
+        public int Id { get; set; }
+
         public int UserInformationId { get; set; }
         public UserInformation UserInformation { get; set; }
 

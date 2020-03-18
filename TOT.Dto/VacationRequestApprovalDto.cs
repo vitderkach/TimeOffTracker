@@ -24,6 +24,9 @@ namespace TOT.Dto
         [DataType(DataType.Date)]
         public DateTime EndDate { get; set; }
 
+        [Display(Name = "To use more days than it has been charged is allowed")]
+        public bool OverflowIsAllowed { get; set; }
+
         [Display(Name = "Request notes")]
         public string EmployeeNotes { get; set; }
 

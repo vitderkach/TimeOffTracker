@@ -17,14 +17,14 @@ namespace TOT.Web.Controllers
     {
         private IAdminService _adminService;
 
-        public AdminController( IAdminService adminService)
+        public AdminController(IAdminService adminService)
         {
             _adminService = adminService;
         }
 
         private void AddErrorsFromResult(IdentityResult result)
         {
-            foreach(IdentityError error in result.Errors)
+            foreach (IdentityError error in result.Errors)
             {
                 ModelState.AddModelError("", error.Description);
             }
@@ -43,7 +43,7 @@ namespace TOT.Web.Controllers
                 userList = userList.Where(m => m.FullName.IndexOf(searchString, StringComparison.OrdinalIgnoreCase) >= 0);
 
             int pageSize = 3;
-            return View(await PaginatedList<ApplicationUserListDto>.CreateAsync(userList, pageNumber ?? 1, pageSize));
+            return View(await PaginatedList<UserInformationListDto>.CreateAsync(userList, pageNumber ?? 1, pageSize));
         }
 
         [ImportModelState]
@@ -77,13 +77,13 @@ namespace TOT.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Fire(int id)
         {
-            var result = await _adminService.DeleteUser(id);
+            bool isSuccessful = _adminService.FireEmployee(id);
 
-            if (!result.Succeeded)
+            if (!isSuccessful)
             {
-                AddErrorsFromResult(result);
+                ModelState.AddModelError("", "Oops, the user hasn't been found.");
             }
 
             return RedirectToAction("List");

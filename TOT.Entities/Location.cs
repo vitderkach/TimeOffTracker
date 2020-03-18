@@ -10,6 +10,6 @@ namespace TOT.Entities
 
         public string Name { get; set; }
 
-        public ICollection<UserInformation> UserInformations { get; set; }
+        public IEnumerable<UserInformation> UserInformations { get; set; }
     }
 }

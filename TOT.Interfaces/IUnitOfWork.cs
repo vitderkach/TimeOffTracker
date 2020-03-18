@@ -8,10 +8,20 @@ namespace TOT.Interfaces
 {
     public interface IUnitOfWork
     {
-        IRepository<VacationRequest> VacationRequestRepository { get; }
-        IRepository<UserInformation> UserInformationRepository { get; }
-        IRepository<ManagerResponse> ManagerResponseRepository { get; }
-        IRepository<VacationType> VacationTypeRepository { get; }
+        IVacationRequestRepository<VacationRequest> VacationRequestRepository { get; }
+
+        IUserInformationRepository<UserInformation> UserInformationRepository { get; }
+
+        IManagerResponseRepository<ManagerResponse> ManagerResponseRepository { get; }
+
+        IVacationTypeRepository<VacationType> VacationTypeRepository { get; }
+
+        ILocationRepository<Location> LocationRepository { get; }
+
+        ITeamRepository<Team> TeamRepository { get; }
+
+        void Dispose();
+
         void Save();
     }
 }

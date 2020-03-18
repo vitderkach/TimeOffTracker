@@ -2,79 +2,116 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using TOT.Entities;
 using TOT.Interfaces.Repositories;
 
 namespace TOT.Data.Repositories
 {
-    public class UserInformationRepository : IRepository<UserInformation>
+    internal class UserInformationRepository : IUserInformationRepository<UserInformation>
     {
-        private ApplicationDbContext context;
-        private bool disposed = false;
-
-        public UserInformationRepository(ApplicationDbContext appcontext)
+        private readonly ApplicationDbContext _context;
+        public UserInformationRepository(ApplicationDbContext context)
         {
-            this.context = appcontext;
+            _context = context;
         }
 
-        public void Create(UserInformation item)
-        {
-            context.UserInformations.Add(item);
-        }
+        public void Create(UserInformation item) => _context.UserInformations.Add(item);
 
-        public void Delete(int id)
-        {
-            UserInformation info = context.UserInformations.Find(id);
-            if (info != null)
-                context.UserInformations.Remove(info);
-        }
+        public UserInformation GetOne(int id)
+            => _context.UserInformations
+            .Where(ui => ui.IsFired == false && ui.ApplicationUserId == id)
+            .FirstOrDefault();
 
-        public virtual void Dispose(bool disposing)
+        public ICollection<UserInformation> GetAll()
+            => _context.UserInformations
+            .Where(ui => ui.IsFired == false)
+            .ToList();
+
+        public void Update(UserInformation item, params Expression<Func<UserInformation, object>>[] updatedProperties)
         {
-            if (!this.disposed)
+            var entry = _context.Entry<UserInformation>(item);
+            if (updatedProperties.Any())
             {
-                if (disposing)
+                foreach (var property in updatedProperties)
                 {
-                    context.Dispose();
+                    entry.Property(property).IsModified = true;
                 }
-                this.disposed = true;
+            }
+            else
+            {
+                foreach (var property in entry.OriginalValues.Properties)
+                {
+                    var original = entry.OriginalValues.GetValue<object>(property);
+                    var current = entry.CurrentValues.GetValue<object>(property);
+                    if (original != null && !original.Equals(current))
+                        entry.Property(property.Name).IsModified = true;
+                }
             }
         }
 
-        public void Dispose()
+        public UserInformation GetOneWithVacationRequests(int id)
+            => _context.UserInformations
+            .Where(ui => ui.ApplicationUserId == id && ui.IsFired == false)
+            .Include(ui => ui.VacationTypes)
+            .FirstOrDefault();
+
+        public ICollection<UserInformation> GetAllWithVacationsRequests()
+            => _context.UserInformations
+            .Where(ui => ui.IsFired == false)
+            .Include(ui => ui.VacationTypes)
+            .ToList();
+
+        public UserInformation GetOneWithTeamAndLocation(int id)
+            => _context.UserInformations
+            .Where(ui => ui.ApplicationUserId == id && ui.IsFired == false)
+            .Include(ui => ui.Team)
+            .Include(ui => ui.Location)
+            .FirstOrDefault();
+
+        public ICollection<UserInformation> GetAllWithTeamAndLocation()
+            => _context.UserInformations
+            .Where(ui => ui.IsFired == false)
+            .Include(ui => ui.Team)
+            .Include(ui => ui.Location)
+            .ToList();
+
+        public UserInformation GetOneWithAllProperties(int id)
+            => _context.UserInformations
+            .Where(ui => ui.ApplicationUserId == id && ui.IsFired == false)
+            .Include(ui => ui.VacationTypes)
+            .Include(ui => ui.Team)
+            .Include(ui => ui.Location)
+            .FirstOrDefault();
+
+        public ICollection<UserInformation> GetAllWithAllProperties()
+            => _context.UserInformations
+            .Where(ui => ui.IsFired == false)
+            .Include(ui => ui.VacationTypes)
+            .Include(ui => ui.Team)
+            .Include(ui => ui.Location)
+            .ToList();
+
+        public UserInformation GetOne(Expression<Func<UserInformation, bool>> filterExpression)
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            IQueryable<UserInformation> query = _context.UserInformations;
+            if (filterExpression != null)
+            {
+                query = query.Where(filterExpression);
+            }
+
+            return query.FirstOrDefault();
         }
 
-        public UserInformation Get(int id)
+        public ICollection<UserInformation> GetAll(Expression<Func<UserInformation, bool>> filterExpression)
         {
-            return context.UserInformations.Find(id);
-        }
+            IQueryable<UserInformation> query = _context.UserInformations;
+            if (filterExpression != null)
+            {
+                query = query.Where(filterExpression);
+            }
 
-        // TODO: Rewrite the method because the database logic has been changed. As an example the commented code below
-
-        public IEnumerable<UserInformation> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        //    public IEnumerable<UserInformation> GetAll()
-        //{
-        //    return context.UserInformations
-        //        .Include(u => u.VacationPolicies)
-        //            .ThenInclude(u => u.VacationTypes)
-
-        //        .Include(u => u.ApplicationUser)
-        //            .ThenInclude(u => u.UserInformation)
-        //                .ThenInclude(u => u.VacationPolicies)
-        //        .ToList();
-        //}
-
-        public void Update(UserInformation item)
-        {
-            context.Entry(item).State = Microsoft.
-                EntityFrameworkCore.EntityState.Modified;
+            return query.ToList();
         }
     }
 }
