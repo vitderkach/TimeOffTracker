@@ -2,84 +2,88 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using TOT.Entities;
 using TOT.Interfaces.Repositories;
 
 namespace TOT.Data.Repositories
 {
-    public class ManagerResponseRepository : IRepository<ManagerResponse>
+
+    internal class ManagerResponseRepository : IManagerResponseRepository<ManagerResponse>
     {
-        private ApplicationDbContext context;
-        private bool disposed = false;
-
-        public ManagerResponseRepository(ApplicationDbContext appcontext)
+        private readonly ApplicationDbContext _context;
+        public ManagerResponseRepository (ApplicationDbContext context)
         {
-            this.context = appcontext;
+            _context = context;
         }
 
-        public void Create(ManagerResponse item)
-        {
-            context.ManagerResponses.Add(item);
-            context.SaveChanges();
-        }
+        public void Create(ManagerResponse item) => _context.ManagerResponses.Add(item);
 
-        public void Delete(int id)
+        public ManagerResponse GetOne(int id) => _context.ManagerResponses.Find(id);
+
+        public ICollection<ManagerResponse> GetAll() => _context.ManagerResponses.ToList();
+
+        public void Update(ManagerResponse item, params Expression<Func<ManagerResponse, object>>[] updatedProperties)
         {
-            var response = context.ManagerResponses
-                   .Find(id);
-            if (response != null)
+            var entry = _context.Entry<ManagerResponse>(item);
+            if (updatedProperties.Any())
             {
-                context.ManagerResponses.Remove(response);
-                context.SaveChanges();
-            }
-        }
-
-        public virtual void Dispose(bool disposing)
-        {
-            if (!this.disposed)
-            {
-                if (disposing)
+                foreach (var property in updatedProperties)
                 {
-                    context.Dispose();
+                    entry.Property(property).IsModified = true;
                 }
-                this.disposed = true;
+            }
+            else
+            {
+                foreach (var property in entry.OriginalValues.Properties)
+                {
+                    var original = entry.OriginalValues.GetValue<object>(property);
+                    var current = entry.CurrentValues.GetValue<object>(property);
+                    if (original != null && !original.Equals(current))
+                        entry.Property(property.Name).IsModified = true;
+                }
             }
         }
 
-        public void Dispose()
+        public void TransferToHistory(int id)
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            if (_context.ManagerResponses.Find(id) is ManagerResponse managerResponse)
+            {
+                _context.Remove(managerResponse);
+            }
         }
 
-        public ManagerResponse GetOne(int id)
-        {
-            var response = context.ManagerResponses
-                .Include(manager => manager.Manager)
-                    .ThenInclude(info => info.UserInformation)
-                .Include(vr => vr.VacationRequest)
-                .ThenInclude(user => user.ApplicationUser)
-                    .ThenInclude(info => info.UserInformation)
-                .Where(mr => mr.Id == id)
-                .FirstOrDefault();
+        public ManagerResponse GetOneWithUserInfoAndVacationRequest(int id)
+            => _context.ManagerResponses
+            .Where(mr => mr.Id == id)
+            .Include(mr => mr.VacationRequest)
+            .Include(mr => mr.Manager).FirstOrDefault();
 
-            return response;
+        public ICollection<ManagerResponse> GetAllWithUserInfoAndVacationRequest()
+            => _context.ManagerResponses
+            .Include(mr => mr.VacationRequest)
+            .Include(mr => mr.Manager).ToList();
+
+        public ManagerResponse GetOne(Expression<Func<ManagerResponse, bool>> filterExpression)
+        {
+            IQueryable<ManagerResponse> query = _context.ManagerResponses;
+            if (filterExpression != null)
+            {
+                query = query.Where(filterExpression);
+            }
+
+            return query.FirstOrDefault();
         }
 
-        public IEnumerable<ManagerResponse> GetAll()
+        public ICollection<ManagerResponse> GetAll(Expression<Func<ManagerResponse, bool>> filterExpression)
         {
-            return context.ManagerResponses
-                .Include(manager => manager.Manager)
-                .Include(vr => vr.VacationRequest)
-                    .ThenInclude(user => user.ApplicationUser)
-                        .ThenInclude(info => info.UserInformation)
-                .ToList();
-        }
+            IQueryable<ManagerResponse> query = _context.ManagerResponses;
+            if (filterExpression != null)
+            {
+                query = query.Where(filterExpression);
+            }
 
-        public void Update(ManagerResponse item)
-        {
-            context.Entry(item).State = EntityState.Modified;
-            context.SaveChanges();
+            return query.ToList();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using TOT.Dto;
+using TOT.Entities;
 
 namespace TOT.Interfaces.Services
 {
@@ -7,7 +8,7 @@ namespace TOT.Interfaces.Services
     {
         IEnumerable<ManagerResponseDto> GetProcessedRequestsByCurrentManager();
         ManagerResponseDto GetResponseByVacationId(int vacationRequestId);
-        void ApproveUserRequest(int managerResponseId, string managerNotes, bool? approval);
+        void ApproveUserRequest(int managerResponseId, string managerNotes, bool? approval, bool overflowIsAllowed);
         IEnumerable<ManagerResponseDto> GetAllCurrentManagerResponses();
         ManagerResponseDto GetResponseActiveByVacationId(int vacationRequestId);
         IEnumerable<ManagerResponseListDto> GetAllMyManagerResponses();
@@ -15,5 +16,6 @@ namespace TOT.Interfaces.Services
             IEnumerable<ManagerResponseDto> managerResponsesDto);
         VacationRequestApprovalDto VacationApproval(ManagerResponseDto managerResponse);
         bool CheckManagerResponsesByUserId(int userId);
+        void Dispose();
     }
 }

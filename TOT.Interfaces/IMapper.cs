@@ -8,5 +8,6 @@ namespace TOT.Interfaces
     {
         TDestination Map<TSource, TDestination>(TSource source);
         TDestination Map<TSource, TDestination>(TSource source, TDestination destination);
+        TResult MergeInto<TResult>(object item1, object item2);
     }
 }

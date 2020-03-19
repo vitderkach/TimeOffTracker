@@ -13,22 +13,24 @@ namespace TOT.Business.Services
 {
     public class AdminService : IAdminService
     {
-        private UserManager<ApplicationUser> _userManager;
-        private RoleManager<IdentityRole<int>> _roleManager;
-        private IMapper _mapper;
-
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole<int>> _roleManager;
+        private readonly IMapper _mapper;
         private readonly IUserService _userService;
         private readonly IUserInfoService _userInfoService;
         private readonly IVacationService _vacationService;
         private readonly IManagerService _managerService;
+        private readonly IUnitOfWork _unitOfWork;
 
         private readonly string defaultPassword = "user123";
+
+        private bool disposed = false;
 
         public AdminService(RoleManager<IdentityRole<int>> roleManager,
             IMapper mapper, IUserService userService,
             UserManager<ApplicationUser> userManager,
             IManagerService managerService,
-            IUserInfoService userInfoService, IVacationService vacationService)
+            IUserInfoService userInfoService, IVacationService vacationService, IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -37,17 +39,16 @@ namespace TOT.Business.Services
             _vacationService = vacationService;
             _managerService = managerService;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
         // Список всех пользователей, кроме самого админа
         // Чтобы он сам себя не мог удалить. 
-        public IEnumerable<ApplicationUserListDto> GetApplicationUserList()
+        public IEnumerable<UserInformationListDto> GetApplicationUserList()
         {
             var currentUserId = _userService.GetCurrentUser().Result.Id;
-            IList<ApplicationUser> userList = new List<ApplicationUser>();
-
-            foreach (ApplicationUser user in _userManager.Users.Include(
-                userInfo => userInfo.UserInformation))
+            var userList = new List<UserInformationDto>();
+            foreach (UserInformationDto user in _userInfoService.GetUsersInfo())
             {
                 if (user.Id == currentUserId)
                     continue;
@@ -55,21 +56,20 @@ namespace TOT.Business.Services
                 userList.Add(user);
             }
 
-            var applicationUserListDto = _mapper.Map<IEnumerable<ApplicationUser>,
-                IEnumerable<ApplicationUserListDto>>(userList);
 
-            ApplicationUser applicationUser;
-            foreach (ApplicationUserListDto user in applicationUserListDto)
+            List<UserInformationListDto> userListDto = new List<UserInformationListDto>();
+            foreach (var user in userList)
             {
-                applicationUser = _mapper.Map<ApplicationUserListDto, ApplicationUser>(user);
-                user.RoleName = _userManager.GetRolesAsync(applicationUser).Result.FirstOrDefault();
+                var userDto = _mapper.Map<UserInformationDto, UserInformationListDto>(user);
+                var appUser = _userManager.FindByIdAsync(user.Id.ToString()).Result;
+                userDto.RoleNames = _userManager.GetRolesAsync(appUser).Result;
             }
 
-            return applicationUserListDto;
+            return userListDto;
         }
 
         // список ролей для DropDownList
-        public List<IdentityRole<int>> GetApplicationRoles()    
+        public List<IdentityRole<int>> GetApplicationRoles()
         {
             return _roleManager.Roles.ToList();
         }
@@ -93,6 +93,19 @@ namespace TOT.Business.Services
             var userRole = _roleManager.FindByIdAsync(
                 registrationForm.RoleId.ToString()).Result;
 
+            List<VacationType> vacationTypes = new List<VacationType>();
+
+            foreach (TimeOffType type in Enum.GetValues(typeof(TimeOffType)))
+            {
+                vacationTypes.Add(new VacationType
+                {
+                    StatutoryDays = 0,
+                    TimeOffType = type,
+                    UsedDays = 0,
+                    Year = DateTime.Now.Year
+                });
+            }
+
             ApplicationUser user = new ApplicationUser()
             {
                 UserName = registrationForm.UserName,
@@ -101,21 +114,7 @@ namespace TOT.Business.Services
                 {
                     FirstName = registrationForm.Name,
                     LastName = registrationForm.Surname,
-
-                    /* TODO: Because new tables have been added to the database, some types among tables have been changed, new types  of VacationTypes have been added,    
-                    test data should be rewritten. AS a base use commented below code for previous version of the database */
-
-                    //VacationPolicies = new List<VacationPolicy> {                     
-                    //new VacationPolicy()
-                    //{
-                    //    VacationTypes = new List<VacationType>()
-                    //    {
-                    //        new VacationType() { TimeOffType = TimeOffType.ConfirmedSickLeave, UsedDays = 0 },
-                    //        new VacationType() { TimeOffType = TimeOffType.StudyLeave, UsedDays = 0 },
-                    //        new VacationType() { TimeOffType = TimeOffType.PaidLeave, UsedDays = 0 },
-                    //        new VacationType() { TimeOffType = TimeOffType.AdministrativeLeave, UsedDays = 0 }
-                    //    }
-                    //}
+                    VacationTypes = vacationTypes
                 }
             };
 
@@ -193,7 +192,7 @@ namespace TOT.Business.Services
                     return result;
                 }
 
-                var removeResult =  await _userManager.RemoveFromRoleAsync(user, currentRoleName);
+                var removeResult = await _userManager.RemoveFromRoleAsync(user, currentRoleName);
 
                 if (removeResult.Succeeded)
                 {
@@ -207,39 +206,81 @@ namespace TOT.Business.Services
             return result;
         }
 
-        /*В общем, чтобы удалить пользователя без конфликта в БД нужно поставить NULL
-          в поле UserId таблицы VacationRequest. Из-за этого использовать метод
-          DeleteVacationByUserId(userId) не получается. Можно было, конечно, удалить 
-          сначала заявки, а потом пользователя. Но, если что-то пойдет не так и 
-          result будет не Succeeded, то все заявки пользователя пропадут.       
-          Поэтому сделал вот так */
-        public async Task<IdentityResult> DeleteUser(int userId)
+        public bool СhargeVacationDays(int userId, int count, TimeOffType vacationType, bool isAlreadyCharged)
         {
-            IdentityResult result = null;
-            ApplicationUser user = _userManager.FindByIdAsync(userId.ToString()).Result;
-            var userRequests = _vacationService.GetAllVacationIdsByUser(user.Id);
-
-            if (user != null)
+            if (count < 0)
             {
-                result = await _userManager.DeleteAsync(user);
-                if (result.Succeeded)
-                {
-                    _userInfoService.DeleteUserInfo(user.UserInformationId);
-                    if (userRequests.Any())
-                    {
-                        foreach (int vacationId in userRequests)
-                        {
-                            _vacationService.DeleteVacationById(vacationId);
-                        }
-                    }
-                    //_vacationService.DeleteVacationByUserId(userId);
-                }
+                throw new ArgumentException("The count of vacation days cannot be less than 0!");
+            }
+            var vacation = _unitOfWork.VacationTypeRepository.GetOne(vt => vt.UserInformationId == userId && vt.TimeOffType == vacationType);
+            if (isAlreadyCharged)
+            {
+                vacation.StatutoryDays = count;
+                _unitOfWork.VacationTypeRepository.Update(vacation, v => v.StatutoryDays);
+                return true;
             }
             else
             {
-                result = IdentityResult.Failed(result.Errors.ToArray());
+                if (vacation.StatutoryDays != 0)
+                {
+                    return false;
+                }
+                else
+                {
+                    vacation.StatutoryDays = count;
+                    _unitOfWork.VacationTypeRepository.Update(vacation, v => v.StatutoryDays);
+                    return true;
+                }
             }
-            return result;
+        }
+
+        public void ChangeCountOfGiftdays(int userId, int count)
+        {
+            var giftVacation = _unitOfWork.VacationTypeRepository.GetOne(vt => vt.UserInformationId == userId && vt.TimeOffType == TimeOffType.GiftLeave);
+            giftVacation.StatutoryDays += count;
+            _unitOfWork.VacationTypeRepository.Update(giftVacation, gv => gv.StatutoryDays);
+        }
+
+        public bool FireEmployee(int id)
+        {
+            var user = _unitOfWork.UserInformationRepository.GetOne(id);
+            if (user is UserInformation)
+            {
+                user.IsFired = true;
+                _unitOfWork.UserInformationRepository.Update(user, u => u.IsFired);
+
+                return true;
+            }
+            return false;
+        }
+
+        private void CleanUp(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing) { }
+
+                _userManager.Dispose();
+                _userService.Dispose();
+                _vacationService.Dispose();
+                _userInfoService.Dispose();
+                _unitOfWork.Dispose();
+                _roleManager.Dispose();
+                _managerService.Dispose();
+
+                disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            CleanUp(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~AdminService()
+        {
+            CleanUp(false);
         }
     }
 }

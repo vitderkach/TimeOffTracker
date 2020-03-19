@@ -9,15 +9,17 @@ using TOT.Dto;
 using TOT.Entities;
 using TOT.Interfaces;
 using TOT.Interfaces.Services;
-
 namespace TOT.Business.Services
 {
     public class UserService: IUserService
     {
-        private IUnitOfWork _uow;
-        private IMapper _mapper;
-        private IHttpContextAccessor _httpContext;
-        private UserManager<ApplicationUser> _userManager;
+        private readonly IUnitOfWork _uow;
+        private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContext;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        private bool disposed = false;
+
         public UserService(IUnitOfWork uow, UserManager<ApplicationUser> userManager, IMapper mapper,
             IHttpContextAccessor httpContext)
         {
@@ -30,12 +32,9 @@ namespace TOT.Business.Services
         {
             var user = await _userManager.GetUserAsync(_httpContext.HttpContext.User);
             return user;
-            
-            /*var userWithInfo = _userManager.Users.Where(u => u.Id == user.Id)
-                .Include(userInfo => userInfo.UserInformation)
-                .FirstOrDefaultAsync().Result;*/
         }
-        public IEnumerable<ApplicationUserDto> GetAllByRole(string role)
+
+        public IEnumerable<UserInformationDto> GetAllByRole(string role)
         {
             var managers = _userManager.GetUsersInRoleAsync(role).Result;
             var userInformation = _uow.UserInformationRepository.GetAll();
@@ -50,9 +49,41 @@ namespace TOT.Business.Services
                         managers[i].UserInformation = userInfo;
                 }
             }
-            var managersDto = _mapper.Map<IEnumerable<ApplicationUser>,
-                                IEnumerable<ApplicationUserDto>>(managers);
+
+            List<UserInformation> managersInfo = new List<UserInformation>();
+            foreach (var manager in managers)
+            {
+                _uow.UserInformationRepository.GetOne(manager.Id);
+            }
+
+            IEnumerable<UserInformationDto> managersDto  = _mapper.MergeInto<IEnumerable<UserInformationDto>>(managers, managersInfo);
+
             return managersDto;
         }
+
+        private void CleanUp(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing) { }
+
+                _uow.Dispose();
+                _userManager.Dispose();
+
+                disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            CleanUp(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~UserService()
+        {
+            CleanUp(false);
+        }
+
     }
 }

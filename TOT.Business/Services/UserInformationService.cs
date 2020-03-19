@@ -4,41 +4,44 @@ using TOT.Dto;
 using TOT.Interfaces;
 using TOT.Interfaces.Services;
 using TOT.Entities;
+using Microsoft.AspNetCore.Identity;
+using System.Linq;
 
 namespace TOT.Business.Services
 {
     public class UserInformationService : IUserInfoService
     {
-        private IUnitOfWork Database;
-        private IMapper _mapper;
-        public UserInformationService(IUnitOfWork uow, IMapper mapper)
-        {
-            Database = uow;
-            _mapper = mapper;
-        }
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public void Dispose()
+        private bool disposed = false;
+
+        public UserInformationService(IUnitOfWork uow, IMapper mapper, UserManager<ApplicationUser> userManager)
         {
-            throw new NotImplementedException("Dispose() method not implemented");
+            _unitOfWork = uow;
+            _mapper = mapper;
+            _userManager = userManager;
         }
 
         public UserInformationDto GetUserInfo(int? id)
         {
             if (id == null)
                 throw new NullReferenceException("id = null");
-
-            var userInfo = Database.UserInformationRepository.GetOne(id.Value);
+            var user = _userManager.FindByIdAsync(id.ToString()).Result;
+            var userInfo = _unitOfWork.UserInformationRepository.GetOne(id.Value);
 
             if (userInfo == null)
                 throw new NullReferenceException("userInfo not found");
 
-            return _mapper.Map<UserInformation, UserInformationDto>(userInfo);
+            return _mapper.MergeInto<UserInformationDto>(user, userInfo);
         }
 
         public IEnumerable<UserInformationDto> GetUsersInfo()
         {
-            return _mapper.Map<IEnumerable<UserInformation>,
-                List<UserInformationDto>>(Database.UserInformationRepository.GetAll());
+            var users = _userManager.Users.ToList();
+            var usersInfo = _unitOfWork.UserInformationRepository.GetAll();
+            return _mapper.MergeInto<IEnumerable<UserInformationDto>>(users, usersInfo);
         }
 
         public void SaveUserInfo(UserInformationDto userInfoDTO)
@@ -46,22 +49,29 @@ namespace TOT.Business.Services
             var userInfo = _mapper.Map<UserInformationDto, UserInformation>(userInfoDTO);
             if(userInfo != null)
             {
-                Database.UserInformationRepository.Create(userInfo);
+                _unitOfWork.UserInformationRepository.Create(userInfo);
+                _unitOfWork.Save();
             }
         }
 
-        public void DeleteUserInfo(int? id)
+        private void CleanUp(bool disposing)
         {
-            if (id == null)
-                throw new NullReferenceException("id = null");
-
-            var userInfo = Database.UserInformationRepository.GetOne(id.Value);
-
-            if (userInfo != null)
+            if (!disposed)
             {
-                Database.UserInformationRepository.Delete(userInfo.ApplicationUserId);
-                Database.Save();
+                if (disposing) { }
+                _unitOfWork.Dispose();
+                disposed = true;
             }
+        }
+        public void Dispose()
+        {
+            CleanUp(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~UserInformationService()
+        {
+            CleanUp(false);
         }
     }
 }

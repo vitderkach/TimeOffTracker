@@ -19,20 +19,21 @@ namespace TOT.Data.Configuration
             entity.Property(n => n.Notes)
                 .HasColumnType("nvarchar(200)");
 
-            /*entity.HasOne(m => m.Manager)
-                .WithMany(mr => mr.ManagerResponses)
-                .HasForeignKey(fk => fk.ManagerId)
-                .HasConstraintName("FK_Manager_Responses")
-                .OnDelete(DeleteBehavior.Restrict); 
-            */
             entity.HasOne(r => r.VacationRequest)
                  .WithMany(mr => mr.ManagersResponses)
                  .HasForeignKey(fk => fk.VacationRequestId)
-                 .HasConstraintName("FK_Request_Responses")
+                 .HasConstraintName("FK_ManagerResponse_VacationRequest")
                  .OnDelete(DeleteBehavior.Cascade);
             /*Если удаляется заявка, удаляются и ответы к ней.
-              Заявка удаляется либо самим пользователем, либо
-              при удалении пользователя*/
+            Заявка удаляется либо самим пользователем, либо
+            при удалении пользователя*/
+
+            entity.HasOne(mr => mr.Manager)
+                .WithMany(ui => ui.ManagerResponses)
+                .HasForeignKey(mr => mr.ManagerId)
+                .HasConstraintName("FK_ManagerResponse_UserInformation")
+                .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

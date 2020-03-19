@@ -1,4 +1,4 @@
-﻿@model TOT.Web.Models.PaginatedList<TOT.Dto.ApplicationUserListDto>
+﻿@model TOT.Web.Models.PaginatedList<TOT.Dto.UserInformationListDto>
 @using PagedList.Mvc;
 @{
     var users = @Model.FirstOrDefault();
@@ -27,7 +27,7 @@
                 @Html.DisplayNameFor(model => users.FullName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => users.RoleName)
+                @Html.DisplayNameFor(model => users.RoleNames)
             </th>
             <th>
                 @Html.DisplayNameFor(model => users.RegistrationDate)
@@ -46,7 +46,7 @@
                     @Html.DisplayFor(modelItem => item.FullName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.RoleName)
+                    @Html.DisplayFor(modelItem => item.RoleNames)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.RegistrationDate)

@@ -12,10 +12,10 @@ namespace TOT.Interfaces.Services
         IEnumerable<VacationRequestListDto> GetAllByCurrentUser();
         VacationRequestDto GetVacationById(int id);
         void UpdateVacation(int id, string notes);
-        bool DeleteVacation(int id);
+        bool DeactivateVacation(int id);
         VacationDaysDto GetVacationDays(int userId);
         List<int> GetAllVacationIdsByUser(int userId);
-        void DeleteVacationById(int id);
         SelectList GetManagersForVacationApply();
+        void Dispose();
     }
 }

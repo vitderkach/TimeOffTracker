@@ -33,6 +33,6 @@ namespace TOT.Dto
         [Display(Name = "Status")]
         public bool? Approval { get; set; }
         public int UserId { get; set; }
-        public ApplicationUserDto User { get; set; }
+        public UserInformationDto User { get; set; }
     }
 }

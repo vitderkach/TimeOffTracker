@@ -2,65 +2,94 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using TOT.Entities;
 using TOT.Interfaces.Repositories;
 
 namespace TOT.Data.Repositories
 {
-    public class VacationTypeRepository : IRepository<VacationType>
+    internal class VacationTypeRepository : IVacationTypeRepository<VacationType>
     {
-        private ApplicationDbContext context;
-        private bool disposed = false;
-
-        public VacationTypeRepository(ApplicationDbContext appcontext)
+        private readonly ApplicationDbContext _context;
+        public VacationTypeRepository(ApplicationDbContext context)
         {
-            this.context = appcontext;
-        }
-
-        public void Create(VacationType item)
-        {
-            context.VacationTypes.Add(item);
-            context.SaveChanges();
+            _context = context;
         }
 
         public void Delete(int id)
         {
-            var response = context.VacationTypes
-                   .Find(id);
-            if (response != null)
+            if (_context.VacationTypes.Find(id) is VacationType vacationType)
             {
-                context.VacationTypes.Remove(response);
-                context.SaveChanges();
+                _context.VacationTypes.Remove(vacationType);
             }
         }
 
-        public virtual void Dispose(bool disposing)
+        public VacationType GetOne(int id) => _context.VacationTypes.Find(id);
+
+        public ICollection<VacationType> GetAll() => _context.VacationTypes.ToList();
+
+        public void Update(VacationType item, params Expression<Func<VacationType, object>>[] updatedProperties)
         {
-            if (!this.disposed)
+            var entry = _context.Entry<VacationType>(item);
+            if (updatedProperties.Any())
             {
-                if (disposing)
+                foreach (var property in updatedProperties)
                 {
-                    context.Dispose();
+                    entry.Property(property).IsModified = true;
                 }
-                this.disposed = true;
+            }
+            else
+            {
+                foreach (var property in entry.OriginalValues.Properties)
+                {
+                    var original = entry.OriginalValues.GetValue<object>(property);
+                    var current = entry.CurrentValues.GetValue<object>(property);
+                    if (original != null && !original.Equals(current))
+                        entry.Property(property.Name).IsModified = true;
+                }
             }
         }
 
-        public void Dispose()
+        public void Create(VacationType item) => _context.VacationTypes.Add(item);
+
+        public ICollection<VacationType> GetAllWithUserInformationTeamAndLocation()
+            => _context.VacationTypes
+            .Include(vt => vt.UserInformation)
+            .ThenInclude(ui => ui.Team)
+            .Include(vt => vt.UserInformation)
+            .ThenInclude(vt => vt.Location)
+            .ToList();
+
+        public VacationType GetOneWithUserInformationTeamAndLocation(int id)
+            => _context.VacationTypes
+            .Where(vt => vt.Id == id)
+            .Include(vt => vt.UserInformation)
+            .ThenInclude(ui => ui.Team)
+            .Include(vt => vt.UserInformation)
+            .ThenInclude(vt => vt.Location)
+            .FirstOrDefault();
+
+        public VacationType GetOne(Expression<Func<VacationType, bool>> filterExpression)
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            IQueryable<VacationType> query = _context.VacationTypes;
+            if (filterExpression != null)
+            {
+                query = query.Where(filterExpression);
+            }
+
+            return query.FirstOrDefault();
         }
 
-        public VacationType GetOne(int id) => context.VacationTypes.Where(vt => vt.UserInformationId == id).Include(vt => vt.UserInformation).FirstOrDefault();
-
-        public IEnumerable<VacationType> GetAll() => context.VacationTypes.ToList();
-
-        public void Update(VacationType item)
+        public ICollection<VacationType> GetAll(Expression<Func<VacationType, bool>> filterExpression)
         {
-            context.Entry(item).State = EntityState.Modified;
-            context.SaveChanges();
+            IQueryable<VacationType> query = _context.VacationTypes;
+            if (filterExpression != null)
+            {
+                query = query.Where(filterExpression);
+            }
+
+            return query.ToList();
         }
     }
 }

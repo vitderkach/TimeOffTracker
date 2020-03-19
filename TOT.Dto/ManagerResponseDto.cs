@@ -20,6 +20,6 @@ namespace TOT.Dto
         public VacationRequestDto VacationRequest { get; set; }
 
         public int ManagerId { get; set; }
-        public ApplicationUserDto Manager { get; set; }
+        public UserInformationDto Manager { get; set; }
     }
 }

@@ -13,10 +13,12 @@ namespace TOT.Business.Services
 {
     public class VacationService: IVacationService
     {
-        private IMapper _mapper;
-        private IUnitOfWork _uow; 
+        private readonly IMapper _mapper;
+        private readonly IUnitOfWork _uow; 
         private readonly IVacationEmailSender _vacationEmailSender;
         private readonly IUserService _userService;
+
+        private bool disposed = false;
 
         public VacationService(IMapper mapper, IUnitOfWork uow,
             IVacationEmailSender vacationEmailSender,
@@ -30,18 +32,17 @@ namespace TOT.Business.Services
 
         public SelectList GetManagersForVacationApply()
         {
-            var userDto = _mapper.Map<ApplicationUser, 
-                ApplicationUserDto>(_userService.GetCurrentUser().Result);
+            var currentUser = _userService.GetCurrentUser().Result;
 
             var managers = _userService.GetAllByRole("Manager");
             managers = managers.Concat(_userService.GetAllByRole("Administrator"));
 
-            // managers.Contains(userDto) don't work
-            if (managers.Where(u => u.Id == userDto.Id).Any())
+            if (managers.Where(u => u.Id == currentUser.Id).Any())
             {
-                managers = managers.Where(m => m.Id != userDto.Id);
+                managers = managers.Where(m => m.Id != currentUser.Id);
             }
-            managers.OrderBy(n => n.UserInformation.FullName);
+
+            managers.OrderBy(n => n.FullName);
 
             return new SelectList(managers, "Id", "UserInformation.FullName");
         }
@@ -51,15 +52,18 @@ namespace TOT.Business.Services
             var vacation = _mapper.Map<VacationRequestDto, VacationRequest>(vacationRequestDto);
             for (int i=0; i < vacationRequestDto.SelectedManager.Count; i++)
             {
+                ManagerResponse managerResponse =
+                    new ManagerResponse()
+                    {
+                        ManagerId = vacationRequestDto.SelectedManager[i],
+                        isRequested = i == 0 ? true : false,
+                        VacationRequestId = vacation.VacationRequestId
 
-                vacation.ManagersResponses.Add(new ManagerResponse()
-                {
-                    ManagerId = vacationRequestDto.SelectedManager[i],
-                    isRequested = i == 0 ? true : false,
-                });
+                    };
+                _uow.ManagerResponseRepository.Create(managerResponse);
             }
             _uow.VacationRequestRepository.Create(vacation);
-
+            _uow.Save();
             var user = _userService.GetCurrentUser().Result;
             var userInfo = _uow.UserInformationRepository
                 .GetAll()
@@ -68,7 +72,7 @@ namespace TOT.Business.Services
 
             EmailModel emailModel = new EmailModel()
             {
-                To = vacation.ManagersResponses.ElementAt(0).Manager.Email,
+                To = vacation.ManagersResponses.ElementAt(0).Manager.ApplicationUser.Email,
                 FullName = $"{userInfo.LastName} {userInfo.FirstName}",
                 Body = vacation.Notes
             };
@@ -77,8 +81,10 @@ namespace TOT.Business.Services
 
         public VacationDaysDto GetVacationDays(int userId)
         {
-            var vacationDays = _uow.UserInformationRepository.GetOne(userId).VacationTypes.Where(vt => vt.Year == DateTime.Now.Year).ToList();
-            var vacationDaysDto = _mapper.Map<ICollection<VacationType>, VacationDaysDto>(vacationDays);
+            var vacationDays = _uow.UserInformationRepository.GetOneWithVacationRequests(userId).VacationTypes.Where(vt => vt.Year == DateTime.Now.Year).ToList();
+
+            VacationDaysDto vacationDaysDto = new VacationDaysDto(); 
+            _mapper.Map<IEnumerable<VacationType>, VacationDaysDto>(vacationDays, vacationDaysDto);
             return vacationDaysDto;
         }
 
@@ -87,7 +93,7 @@ namespace TOT.Business.Services
             List<int> vacationIds = new List<int>();
             var vacations = _uow.VacationRequestRepository
                 .GetAll()
-                .Where(v => v.ApplicationUserId == userId);
+                .Where(v => v.UserInformationId== userId);
 
             foreach (VacationRequest request in vacations)
             {
@@ -97,17 +103,12 @@ namespace TOT.Business.Services
             return vacationIds;
         }
 
-        public void DeleteVacationById(int id)
-        {
-            _uow.VacationRequestRepository.Delete(id);
-        }
-
         public IEnumerable<VacationRequestListDto> GetAllByCurrentUser()
         {
             var currentUserId = _userService.GetCurrentUser().Result.Id;
             var vacations = _uow.VacationRequestRepository
                 .GetAll()
-                .Where(v => v.ApplicationUserId == currentUserId);
+                .Where(v => v.UserInformationId == currentUserId);
 
             var vacationsDto = _mapper.Map<IEnumerable<VacationRequest>, IEnumerable<VacationRequestListDto>>(vacations);
             return vacationsDto;
@@ -127,21 +128,45 @@ namespace TOT.Business.Services
             {
                 vacation.Notes = notes;
                 _uow.VacationRequestRepository.Update(vacation);
+                _uow.Save();
             }
         }
 
-        public bool DeleteVacation(int id)
+        public bool DeactivateVacation(int id)
         {
-            var vacation = _uow.VacationRequestRepository.GetOne(id);
-            if(vacation.Approval == null)
+            if(_uow.VacationRequestRepository.GetOne(id) is VacationRequest vacationRequest && vacationRequest.Approval == null)
             {
-                _uow.VacationRequestRepository.Delete(id);
+                _uow.VacationRequestRepository.TransferToHistory(id);
+                _uow.Save();
                 return true;
             }
             else
             {
                 return false;
             }
+        }
+
+        private void CleanUp(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing) { }
+                _userService.Dispose();
+                _uow.Dispose();
+
+                disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            CleanUp(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~VacationService()
+        {
+            CleanUp(false);
         }
     }
 }

@@ -20,10 +20,10 @@ namespace TOT.Entities
         public string Notes { get; set; }
         public bool? Approval { get; set; }
 
-        public ICollection<ManagerResponse> ManagersResponses { get; set; }
+        public IEnumerable<ManagerResponse> ManagersResponses { get; set; }
 
-        public int? ApplicationUserId { get; set; }
-        public ApplicationUser ApplicationUser { get; set; }
+        public int UserInformationId { get; set; }
+        public UserInformation UserInformation { get; set; }
     }
 
     public enum TimeOffType

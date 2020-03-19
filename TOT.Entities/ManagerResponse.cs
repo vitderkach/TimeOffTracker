@@ -18,6 +18,6 @@ namespace TOT.Entities
         public VacationRequest VacationRequest { get; set; }
 
         public int ManagerId { get; set; }
-        public ApplicationUser Manager { get; set; }
+        public UserInformation Manager { get; set; }
     }
 }

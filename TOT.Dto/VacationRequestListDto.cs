@@ -19,7 +19,7 @@ namespace TOT.Dto {
         [Display(Name = "Approval")]
         public bool? Approval { get; set; }
 
-        public ApplicationUserDto User { get; set; }
+        public UserInformationDto User { get; set; }
         
         public ICollection<ManagerResponseDto> ManagersResponses { get; set; }
         [Display(Name = "Request notes")]
