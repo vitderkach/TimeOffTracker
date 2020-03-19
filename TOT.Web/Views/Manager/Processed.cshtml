@@ -1,5 +1,7 @@
 ﻿@model IEnumerable<TOT.Dto.ManagerResponseListDto>
 
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
 @{
     ViewData["Title"] = "Processed";
 }
@@ -11,19 +13,19 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Employee)
+                @Localizer[Html.DisplayNameFor(model => model.Employee)]
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.VacationType)
+                @Localizer[Html.DisplayNameFor(model => model.VacationType)]
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StartDate)
+                @Localizer[Html.DisplayNameFor(model => model.StartDate)]
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EndDate)
+                @Localizer[Html.DisplayNameFor(model => model.EndDate)]
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Approval)
+                @Localizer[Html.DisplayNameFor(model => model.Approval)]
             </th>
         </tr>
     </thead>
@@ -45,11 +47,13 @@
                 </td>
                 <td>
                     @{
-                        if (item.Approval == false){
-                            <div> Declined </div> 
+                        if (item.Approval == false)
+                        {
+                            <div> @Localizer["Declined"] </div>
                         }
-                        if (item.Approval == true){
-                            <div> Approved </div> 
+                        if (item.Approval == true)
+                        {
+                            <div> @Localizer["Approved"] </div>
                         }
                     }
                 </td>

@@ -2,6 +2,8 @@
 
 @using Microsoft.AspNetCore.Identity
 @using TOT.Entities
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
 
 @{
     var userId = @Model.EmployeeId;
@@ -9,111 +11,111 @@
 @inject UserManager<ApplicationUser> UserManager
 
 <div class="container col-md-9">
-    <h4>Request from @Model.Employee</h4>
+    <h4>@Localizer["Request from"] @Model.Employee</h4>
     <hr />
 </div>
 
 <form asp-controller="Manager" asp-action="Approval" method="post" class="">
-<div class="container justify-content-between">
-    <div class="row justify-content-between">
-        <div class="container col-md-6">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div>
-            <div class="form-row">
-                <input type="text" asp-for="VacationRequestId" hidden />
-                <input type="text" asp-for="Employee" hidden />
-                <input type="text" asp-for="ManagerResponseId" hidden />
-                <div class="form-group col-md-6">
-                    <label asp-for="StartDate" class="control-label"></label>
-                    <input asp-for="StartDate" class="form-control" readonly />
+    <div class="container justify-content-between">
+        <div class="row justify-content-between">
+            <div class="container col-md-6">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div>
+                    <div class="form-row">
+                        <input type="text" asp-for="VacationRequestId" hidden />
+                        <input type="text" asp-for="Employee" hidden />
+                        <input type="text" asp-for="ManagerResponseId" hidden />
+                        <div class="form-group col-md-6">
+                            <label asp-for="StartDate" class="control-label"></label>
+                            <input asp-for="StartDate" class="form-control" readonly />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label asp-for="EndDate" class="control-label"></label>
+                            <input asp-for="EndDate" class="form-control" readonly />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="VacationType" class="control-label"></label>
+                        <input asp-for="VacationType" class="form-control" readonly />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="EmployeeNotes" class="control-label"></label>
+                        <textarea style="resize:none" asp-for="EmployeeNotes" class="form-control" rows="3" cols="1" readonly></textarea>
+                    </div>
                 </div>
-                <div class="form-group col-md-6">
-                    <label asp-for="EndDate" class="control-label"></label>
-                    <input asp-for="EndDate" class="form-control" readonly />
-                </div>
-            </div>
-            <div class="form-group">
-                <label asp-for="VacationType" class="control-label"></label>
-                <input asp-for="VacationType" class="form-control" readonly />
-            </div>
-            <div class="form-group">
-                <label asp-for="EmployeeNotes" class="control-label"></label>
-                <textarea style="resize:none" asp-for="EmployeeNotes" class="form-control" rows="3" cols="1" readonly></textarea>
-            </div>
-        </div>
-        <hr />
-        <div class="form-group">
-            <label asp-for="ManagerNotes" class="control-label"></label>
-            <textarea style="resize:none" asp-for="ManagerNotes" class="form-control" rows="3" cols="1"></textarea>
-            <span asp-validation-for="ManagerNotes" class="text-danger"></span>
-        </div>
-            @if (Model.isApproval == null)
-            {
+                <hr />
                 <div class="form-group">
-            <button type="button" data-target="#positive" data-toggle="modal" class="btn btn-outline-success">Approve</button>
-            <button type="button" data-target="#negative" data-toggle="modal" class="btn btn-outline-danger">Decline</button>
-            <!-- Approve window -->
-            <div class="modal fade" id="positive" tabindex="-1" role="dialog" aria-labelledby="approveLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="approveLabel"><span><b>Are you sure?</b></span></h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Candel">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                    <label asp-for="ManagerNotes" class="control-label"></label>
+                    <textarea style="resize:none" asp-for="ManagerNotes" class="form-control" rows="3" cols="1"></textarea>
+                    <span asp-validation-for="ManagerNotes" class="text-danger"></span>
+                </div>
+                @if (Model.isApproval == null)
+                {
+                    <div class="form-group">
+                        <button type="button" data-target="#positive" data-toggle="modal" class="btn btn-outline-success">@Localizer["Approve"]</button>
+                        <button type="button" data-target="#negative" data-toggle="modal" class="btn btn-outline-danger">@Localizer["Decline"]</button>
+                        <!-- Approve window -->
+                        <div class="modal fade" id="positive" tabindex="-1" role="dialog" aria-labelledby="approveLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="approveLabel"><span><b>@Localizer["Are you sure?"]</b></span></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Candel">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>
+                                            @Localizer["Do you really want to approve the request from"] <br /> <span><b>@Model.Employee</b></span>?<br />
+                                            <span><b>@Localizer["From"]:</b></span> @Model.StartDate.ToShortDateString() &nbsp; <span><b>@Localizer["To"]:</b></span> @Model.EndDate.ToShortDateString() <br />
+                                            <span><b>@Localizer["Vacation type"]:</b></span> @Model.VacationType <br /><br />
+                                            @Localizer["This process cannot be undone"].
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">@Localizer["Cancel"]</button>
+                                        <input name="submit" type="submit" value=@Localizer["Approve"] class="btn btn-success" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="modal-body">
-                            <p>
-                                Do you really want to approve the request from <br /> <span><b>@Model.Employee</b></span>?<br />
-                                <span><b>From:</b></span> @Model.StartDate.ToShortDateString() &nbsp; <span><b>To:</b></span> @Model.EndDate.ToShortDateString() <br />
-                                <span><b>Vacation type:</b></span> @Model.VacationType <br /><br />
-                                This process cannot be undone.
-                            </p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                            <input name="submit" type="submit" value="Approve" class="btn btn-success" />
+                        <!-- Decline window -->
+                        <div class="modal fade" id="negative" tabindex="-1" role="dialog" aria-labelledby="declineLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="declineLabel"><span><b>@Localizer["Are you sure?"]</b></span></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Candel">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>
+                                            @Localizer["Do you really want to decline the request from"] <br /> <span><b>@Model.Employee</b></span>?<br />
+                                            <span><b>@Localizer["From"]:</b></span> @Model.StartDate.ToShortDateString() &nbsp; <span><b>@Localizer["To"]:</b></span> @Model.EndDate.ToShortDateString() <br />
+                                            <span><b>@Localizer["Vacation type"]:</b></span> @Model.VacationType <br /><br />
+                                            @Localizer["This process cannot be undone"].
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">@Localizer["Cancel"]</button>
+                                        <input name="submit" type="submit" value=@Localizer["Decline"] class="btn btn-danger" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                }
+                <div class="form-group mt-2">
+                    <hr />
+                    <button class="btn btn-outline-dark" asp-action="Index">Back to List</button>
                 </div>
             </div>
-            <!-- Decline window -->
-            <div class="modal fade" id="negative" tabindex="-1" role="dialog" aria-labelledby="declineLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="declineLabel"><span><b>Are you sure?</b></span></h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Candel">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <p>
-                                Do you really want to decline the request from <br /> <span><b>@Model.Employee</b></span>?<br />
-                                <span><b>From:</b></span> @Model.StartDate.ToShortDateString() &nbsp; <span><b>To:</b></span> @Model.EndDate.ToShortDateString() <br />
-                                <span><b>Vacation type:</b></span> @Model.VacationType <br /><br />
-                                This process cannot be undone.
-                            </p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                            <input name="submit" type="submit" value="Decline" class="btn btn-danger" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-            }
-        <div class="form-group mt-2">
-            <hr />
-            <button class="btn btn-outline-dark" asp-action="Index">Back to List</button>
-        </div>
-        </div>
-        <div class="col-3" id="partialVacationDays">
+            <div class="col-3" id="partialVacationDays">
 
+            </div>
         </div>
     </div>
-</div>
 </form>
 
 @section Scripts {

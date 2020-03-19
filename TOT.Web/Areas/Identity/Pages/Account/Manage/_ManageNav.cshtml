@@ -1,4 +1,6 @@
 ﻿@inject SignInManager<ApplicationUser> SignInManager
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
@@ -15,9 +17,9 @@
 
 <ul class="nav flex-column">
     <li class="nav-item">
-        <a class="btn btn-link" asp-page="./Index">Profile</a>
+        <a class="btn btn-link" asp-page="./Index">@Localizer["Profile"]</a>
     </li>
     <li class="nav-item">
-        <a class="btn btn-link" id="change-password" asp-page="./ChangePassword">Change password</a>
+        <a class="btn btn-link" id="change-password" asp-page="./ChangePassword">@Localizer["Change password"]</a>
     </li>
 </ul>

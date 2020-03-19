@@ -1,79 +1,82 @@
 ﻿@model TOT.Dto.VacationRequestDto
 @using TOT.Dto;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
+
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = @Localizer["Edit"];
 }
-    <form asp-controller="Vacation" asp-action="Edit" method="post">
-        <div class="container col-6">
-            <div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="inputEmail4">
-                            @Html.DisplayNameFor(model => model.StartDate)
-                        </label>
-                        @Html.EditorFor(model => model.StartDate, null, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="inputPassword4">
-                            @Html.DisplayNameFor(model => model.EndDate)
-                        </label>
-                        @Html.EditorFor(model => model.EndDate, null, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+<form asp-controller="Vacation" asp-action="Edit" method="post">
+    <div class="container col-6">
+        <div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputEmail4">
+                        @Html.DisplayNameFor(model => model.StartDate)
+                    </label>
+                    @Html.EditorFor(model => model.StartDate, null, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputPassword4">
+                        @Html.DisplayNameFor(model => model.EndDate)
+                    </label>
+                    @Html.EditorFor(model => model.EndDate, null, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
 
-                    </div>
-                </div>
-                <div class="form-row">
-                    @Html.DisplayNameFor(model => model.VacationType)
-                    @Html.EditorFor(model => model.VacationTypeString, null, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                </div>
-                <div class="form-row mt-3">
-                    @Html.DisplayNameFor(model => model.Notes)
-                    @Html.TextAreaFor(model => model.Notes, 3, 1, new { @class = "form-control", @style = "resize:none;" })
                 </div>
             </div>
-            <div>
-                @foreach (ManagerResponseDto response in Model.ManagersResponses)
-                {
-                    <div class="card mt-3">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                @Html.DisplayFor(model => response.Manager.FullName)
-                                @if (response.Approval == false)
-                                {
-                                    <p>Declined</p>
-                                }
-                                @if (response.Approval == true)
-                                {
-                                    <p>Approved</p>
-                                }
-                                @if (response.Approval == null)
-                                {
-                                    <p>In Proccess</p>
-                                }
-
-                                <hr />
-                            </h5>
-                            <p class="card-text">
-                                @{
-                                    if (response.Notes == null)
-                                    {
-                                        <div style="opacity:50%;">Empty</div>
-                                    }
-                                    else
-                                    {
-                                        @Html.DisplayFor(model => response.Notes)
-                                    }
-                                }
-                            </p>
-                        </div>
-                    </div>
-                }
+            <div class="form-row">
+                @Html.DisplayNameFor(model => model.VacationType)
+                @Html.EditorFor(model => model.VacationTypeString, null, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
             </div>
-            <div class="mt-3">
-                <input type="submit" value="Save" class="btn btn-outline-dark" />
-                <button class="btn btn-outline-dark" asp-route="/Vacation/List">Cancel</button>
+            <div class="form-row mt-3">
+                @Html.DisplayNameFor(model => model.Notes)
+                @Html.TextAreaFor(model => model.Notes, 3, 1, new { @class = "form-control", @style = "resize:none;" })
             </div>
         </div>
+        <div>
+            @foreach (ManagerResponseDto response in Model.ManagersResponses)
+            {
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                                @Html.DisplayFor(model => response.Manager.FullName)
+                            @if (response.Approval == false)
+                            {
+                                <p>@Localizer["Declined"]</p>
+                            }
+                            @if (response.Approval == true)
+                            {
+                                <p>@Localizer["Approved"]</p>
+                            }
+                            @if (response.Approval == null)
+                            {
+                                <p>@Localizer["In Proccess"]</p>
+                            }
 
-       
+                            <hr />
+                        </h5>
+                        <p class="card-text">
+                            @{
+                                if (response.Notes == null)
+                                {
+                                    <div style="opacity:50%;">Empty</div>
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(model => response.Notes)
+                                }
+                            }
+                        </p>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="mt-3">
+            <input type="submit" value=@Localizer["Save"] class="btn btn-outline-dark" />
+            <button class="btn btn-outline-dark" asp-route="/Vacation/List">@Localizer["Cancel"]</button>
+        </div>
+    </div>
 
-    </form>
+
+
+</form>

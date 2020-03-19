@@ -1,26 +1,28 @@
 ﻿@model PaginatedList<TOT.Dto.ManagerResponseListDto>
 @using PagedList.Mvc;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
 @{
     var response = @Model.FirstOrDefault();
 }
 <hr />
 <div class="form-group row">
     <div class="col-6">
-        <a asp-action="Index" class="btn btn-outline-dark" asp-route-currentFilter="Approved">Approved</a>
-        <a asp-action="Index" class="btn btn-outline-dark" asp-route-currentFilter="In Proccess">Need to review</a>
-        <a asp-action="Index" class="btn btn-outline-dark" asp-route-currentFilter="Declined">Declined</a>
+        <a asp-action="Index" class="btn btn-outline-dark" asp-route-currentFilter="Approved">@Localizer["Approved"]</a>
+        <a asp-action="Index" class="btn btn-outline-dark" asp-route-currentFilter="In Proccess">@Localizer["Need to review"]</a>
+        <a asp-action="Index" class="btn btn-outline-dark" asp-route-currentFilter="Declined">@Localizer["Declined"]</a>
     </div>
     <div class="col-6">
         <div class="row">
-            <form asp-action="Index" method="get" >
+            <form asp-action="Index" method="get">
                 <div class="form-row">
                     <div class="row col-12">
-                        <label for="searchName" class="col-4">Find by name:</label>
+                        <label for="searchName" class="col-4">@Localizer["Find by name"]:</label>
                         <input type="text" id="searchName" name="SearchString" value="@ViewData["NameSortParm"]" class="form-control col" />
                     </div>
                     <div class="row col-12 justify-content-end p-2">
-                        <input type="submit" value="Search" class="col-3 btn btn-outline-dark" />
-                        <a class="col-4 btn btn-outline-dark ml-1" asp-action="Index">Back to Full List</a>
+                        <input type="submit" value=@Localizer["Search"] class="col-3 btn btn-outline-dark" />
+                        <a class="col-4 btn btn-outline-dark ml-1" asp-action="Index">@Localizer["Back to Full List"]</a>
                     </div>
                 </div>
             </form>
@@ -32,19 +34,19 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => response.Employee)
+                @Localizer[Html.DisplayNameFor(model => response.Employee)]
             </th>
             <th>
-                @Html.DisplayNameFor(model => response.VacationType)
+                @Localizer[Html.DisplayNameFor(model => response.VacationType)]
             </th>
             <th>
-                @Html.DisplayNameFor(model => response.StartDate)
+                @Localizer[Html.DisplayNameFor(model => response.StartDate)]
             </th>
             <th>
-                @Html.DisplayNameFor(model => response.EndDate)
+                @Localizer[Html.DisplayNameFor(model => response.EndDate)]
             </th>
             <th>
-                Details
+                @Localizer["Details"]
             </th>
         </tr>
     </thead>
@@ -85,7 +87,7 @@
    asp-route-currentFilter="@ViewData["CurrentFilter"]"
    asp-route-searchString="@ViewData["NameSortParm"]"
    class="btn btn-outline-dark @prevDisabled">
-    Previous
+    @Localizer["Previous"]
 </a>
 <a asp-action="Index"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
@@ -93,5 +95,5 @@
    asp-route-currentFilter="@ViewData["CurrentFilter"]"
    asp-route-searchString="@ViewData["NameSortParm"]"
    class="btn btn-outline-dark @nextDisabled">
-    Next
+    @Localizer["Next"]
 </a>

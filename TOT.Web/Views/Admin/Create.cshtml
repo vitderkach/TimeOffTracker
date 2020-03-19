@@ -1,5 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity;
 @model TOT.Dto.RegistrationUserDto
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
 
 @{
     ViewData["Title"] = "Create";
@@ -9,7 +11,7 @@
 }
 
 <div class="container col-6">
-    <h4>Registration</h4>
+    <h4>@Localizer["Registration"]</h4>
     <hr />
 </div>
 
@@ -38,14 +40,14 @@
                 <div class="form-group col-md-6">
                     <label asp-for="RoleId" class="control-label"></label>
                     <select asp-for="RoleId" class="form-control"
-                            asp-items=@roleList>
+                            asp-items=roleList>
                     </select>
                     <span asp-validation-for="RoleId" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group mt-3">
-                <input name="submit" type="submit" value="Add user" class="btn btn-outline-dark" />
-                <a class="btn btn-outline-dark text-dark" asp-controller="Home" asp-action="Index">Cancel</a>
+                <input name="submit" type="submit" value=@Localizer["Add"] class="btn btn-outline-dark" />
+                <a class="btn btn-outline-dark text-dark" asp-controller="Home" asp-action="Index">@Localizer["Cancel"]</a>
             </div>
         </div>
     </div>

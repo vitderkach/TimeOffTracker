@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Localization;
 using TOT.Entities;
 
 namespace TOT.Web.Areas.Identity.Pages.Account.Manage
@@ -17,17 +18,21 @@ namespace TOT.Web.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
+        private readonly IStringLocalizer<Resources.Resources> _localizer;
 
         public IndexModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IStringLocalizer<Resources.Resources> localizer)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _localizer = localizer;
         }
 
+        [Display(Name = "Role")]
         public string Role { get; set; }
 
         public bool IsEmailConfirmed { get; set; }
@@ -104,7 +109,7 @@ namespace TOT.Web.Areas.Identity.Pages.Account.Manage
                 }
                 catch
                 {
-                    StatusMessage = "A user with this e-mail already exists.";
+                    StatusMessage = _localizer["A user with this e-mail already exists."];
                     return RedirectToPage();
                 }
                 /*if (!setEmailResult.Succeeded)
@@ -133,13 +138,13 @@ namespace TOT.Web.Areas.Identity.Pages.Account.Manage
                 {
                     // var userId = await _userManager.GetUserIdAsync(user);
                     // throw new InvalidOperationException($"Unexpected error occurred setting login for user with ID '{user.UserName}'.");
-                    StatusMessage = "A user with this login already exists.";
+                    StatusMessage = _localizer["A user with this login already exists."];
                     return RedirectToPage();
                 }
             }
 
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
+            StatusMessage = _localizer["Your profile has been updated"];
             return RedirectToPage();
         }
 
@@ -170,7 +175,7 @@ namespace TOT.Web.Areas.Identity.Pages.Account.Manage
                 "Confirm your email",
                 $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-            StatusMessage = "Verification email sent. Please check your email.";
+            StatusMessage = _localizer["Verification email sent. Please check your email."];
             return RedirectToPage();
         }
     }

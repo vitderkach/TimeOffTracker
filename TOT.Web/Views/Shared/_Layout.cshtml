@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using System.Globalization
+@using Microsoft.AspNetCore.Http.Features
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
+
+<!DOCTYPE html>
 <html>
 <head>
     <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
@@ -30,9 +37,9 @@
             color: white;
         }
 
-        body a:hover {
-            color: lightsteelblue;
-        }
+            body a:hover {
+                color: lightsteelblue;
+            }
 
         .main {
             padding-top: 5em;
@@ -81,15 +88,17 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link">Home</a>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link">@Localizer["Home"]</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Vacation
+                        @Localizer["Vacation"]
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" asp-area="" asp-controller="Vacation" asp-action="Apply">Apply</a>
-                        <a class="dropdown-item" asp-area="" asp-controller="Vacation" asp-action="List">My Requests</a>
+                        <a class="dropdown-item" asp-area="" asp-controller="Vacation" asp-action="Apply">
+                            @Localizer["Apply"]
+                        </a>
+                        <a class="dropdown-item" asp-area="" asp-controller="Vacation" asp-action="List">@Localizer["My Requests"]</a>
                     </div>
                 </li>
                 <partial name="_MenuManager" />
@@ -102,7 +111,10 @@
     <div class="main container body-content my-5">
         @RenderBody()
     </div>
-
+    <div class="col-md-6 text-right">
+        @await Html.PartialAsync("_SelectLanguagePartial")
+    </div>
+    @RenderBody()
     <environment include="Development">
 
         <script src="~/lib/jquery/dist/jquery.js"></script>

@@ -31,6 +31,7 @@
     <ProjectReference Include="..\TOT.Dto\TOT.Dto.csproj" />
     <ProjectReference Include="..\TOT.Entities\TOT.Entities.csproj" />
     <ProjectReference Include="..\TOT.Interfaces\TOT.Interfaces.csproj" />
+    <ProjectReference Include="..\TOT.Resources\TOT.Resources.csproj" />
     <ProjectReference Include="..\TOT.Utility\TOT.Utility.csproj" />
   </ItemGroup>
 
