@@ -1,5 +1,6 @@
 ﻿@model TOT.Dto.EditApplicationUserDto
-
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
 @{
     ViewData["Title"] = "Edit";
 
@@ -8,7 +9,7 @@
 }
 
 <div class="container col-md-9">
-    <h4>User Profile</h4>
+    <h4>@Localizer["User Profile"]</h4>
     <hr />
 </div>
 
@@ -35,14 +36,13 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="RoleId" class="control-label"></label>
-                    <select asp-for="RoleId" class="form-control" name="currentRoleId"
-                            asp-items=@roleList>
+                    <select asp-for="RoleId" class="form-control" name="currentRoleId" asp-items=@roleList>
                     </select>
                     <span asp-validation-for="RoleId" class="text-danger"></span>
                 </div>
                 <div class="form-group mt-3">
-                    <input type="submit" value="Save changes" class="btn btn-outline-dark" />
-                    <a class="btn btn-outline-light text-dark" asp-controller="Admin" asp-action="List">Back to List</a>
+                    <input type="submit" value=@Localizer["Save changes"] class="btn btn-outline-dark" />
+                    <a class="btn btn-outline-light text-dark" asp-controller="Admin" asp-action="List">@Localizer["Back to List"]</a>
                 </div>
             </div>
         </div>
@@ -53,7 +53,7 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-<script>
+    <script>
     $(document).ready(function () {
         var userId = @userId;
             $.ajax({
@@ -66,6 +66,6 @@
                 },
             });
         });
-</script>
+    </script>
 }
 

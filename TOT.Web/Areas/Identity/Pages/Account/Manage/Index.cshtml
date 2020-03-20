@@ -1,4 +1,6 @@
 ﻿@page
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
 @model IndexModel
 @{
     var userId = UserManager.GetUserId(User);
@@ -32,12 +34,12 @@
                 else
                 {
                     <input asp-for="Input.Email" class="form-control" />
-                    <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="btn btn-link">Send verification email</button>
+                    <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="btn btn-link">@Localizer["Send verification email"]</button>
                 }
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
-               <!-- <partial name="_ManageNav" />-->
+                <!-- <partial name="_ManageNav" />-->
             </div>
-            <button type="submit" class="btn btn-outline-dark mt-3">Save</button>
+            <button type="submit" class="btn btn-outline-dark mt-3">@Localizer["Save"]</button>
         </form>
     </div>
     <div class="col-md-3" id="partialVacationDays"></div>

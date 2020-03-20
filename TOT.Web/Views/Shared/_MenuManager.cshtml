@@ -1,5 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using TOT.Entities
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
 
 @{
     var permission = User.IsInRole("Manager") || User.IsInRole("Administrator");
@@ -11,7 +14,7 @@
 @if (SignInManager.IsSignedIn(User) && permission)
 {
     <li class="nav-item dropdown">
-        <a class="nav-link" asp-controller="Manager" asp-action="Index">Manager</a>
+        <a class="nav-link" asp-controller="Manager" asp-action="Index">@Localizer["Manager"]</a>
 
     </li>
 }

@@ -8,7 +8,7 @@ namespace TOT.Dto
         public int VacationRequestId { get; set; }
         public string Employee { get; set; }
 
-        [Display(Name = "Vacation Type")]
+        [Display(Name = "Vacation type")]
         public string VacationType { get; set; }
 
         [Display(Name = "From")]

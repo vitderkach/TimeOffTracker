@@ -1,10 +1,12 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
+@{
     ViewData["Title"] = "Time Off Tracker";
 }
-    <div class="jumbotron">
-        <h1 class="display-4">Time OFF Tracker</h1>
-        <p class="lead">Vacation tracking level up.</p>
-        <hr class="my-4">
-        <p>The application is meant to ease the process of employees' vacations tracking.</p>
-        <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
-    </div>
+<div class="jumbotron">
+    <h1 class="display-4">Time OFF Tracker</h1>
+    <p class="lead">Vacation tracking level up.</p>
+    <hr class="my-4">
+    <p>@Localizer["The application is meant to ease the process of employees' vacations tracking"].</p>
+    <a class="btn btn-primary btn-lg" href="#" role="button">@Localizer["Learn more"]</a>
+</div>

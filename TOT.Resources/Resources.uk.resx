@@ -1,0 +1,483 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="A user with this e-mail already exists." xml:space="preserve">
+    <value>Корисувач з таким e-mail вже існує.</value>
+  </data>
+  <data name="A user with this login already exists." xml:space="preserve">
+    <value>Користувач з таким логіном вже існує.</value>
+  </data>
+  <data name="Access denied" xml:space="preserve">
+    <value>Доступ заборонений</value>
+  </data>
+  <data name="Action" xml:space="preserve">
+    <value>Дія</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Додати</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>Адміністратор</value>
+  </data>
+  <data name="Administrative Leave" xml:space="preserve">
+    <value>Адміністративна</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>Всі</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>Подати заявку</value>
+  </data>
+  <data name="Apply for vacation" xml:space="preserve">
+    <value>Заявка на відпустку</value>
+  </data>
+  <data name="Approval" xml:space="preserve">
+    <value>Підтверджений</value>
+  </data>
+  <data name="Approve" xml:space="preserve">
+    <value>Підтвердити</value>
+  </data>
+  <data name="Approved" xml:space="preserve">
+    <value>Підтверджено</value>
+  </data>
+  <data name="Are you sure?" xml:space="preserve">
+    <value>Ви впевнені?</value>
+  </data>
+  <data name="Back to Full List" xml:space="preserve">
+    <value>Назад до повного списку</value>
+  </data>
+  <data name="Back to List" xml:space="preserve">
+    <value>Назад до списку</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Відмінити</value>
+  </data>
+  <data name="Change password" xml:space="preserve">
+    <value>Змінити пароль</value>
+  </data>
+  <data name="click here to log in" xml:space="preserve">
+    <value>натиснітю сюди, щоб зайти</value>
+  </data>
+  <data name="Confirm email" xml:space="preserve">
+    <value>Підтвердження E-mail</value>
+  </data>
+  <data name="Confirm new password" xml:space="preserve">
+    <value>Підтвердіть новий пароль</value>
+  </data>
+  <data name="Confirmed Sick Leave" xml:space="preserve">
+    <value>Лікарняна</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Створити</value>
+  </data>
+  <data name="Create user" xml:space="preserve">
+    <value>Створити користувача</value>
+  </data>
+  <data name="Current password" xml:space="preserve">
+    <value>Поточний пароль</value>
+  </data>
+  <data name="Date response" xml:space="preserve">
+    <value>Дата відповіді</value>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Відхилити</value>
+  </data>
+  <data name="Declined" xml:space="preserve">
+    <value>Відхилено</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Видалити</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Подробиці</value>
+  </data>
+  <data name="Do you really want to approve the request from" xml:space="preserve">
+    <value>Ви дійсно хочете підтвердити запит від</value>
+  </data>
+  <data name="Do you really want to decline the request from" xml:space="preserve">
+    <value>Ви дійсно хочете відхилити запит від</value>
+  </data>
+  <data name="Do you really want to delete user" xml:space="preserve">
+    <value>Ви точно хочете видалити користувача</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Редагувати</value>
+  </data>
+  <data name="Employee" xml:space="preserve">
+    <value>Робітник</value>
+  </data>
+  <data name="End date must be later than start date" xml:space="preserve">
+    <value>Кінцева дата має бути пізніше початкової дати</value>
+  </data>
+  <data name="Find by name" xml:space="preserve">
+    <value>Зайти за ім'ям</value>
+  </data>
+  <data name="Forgot your password?" xml:space="preserve">
+    <value>Забули пароль?</value>
+  </data>
+  <data name="From" xml:space="preserve">
+    <value>Від</value>
+  </data>
+  <data name="Full Name" xml:space="preserve">
+    <value>Повне ім'я</value>
+  </data>
+  <data name="Gift Leave" xml:space="preserve">
+    <value>Бонусна</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Головна</value>
+  </data>
+  <data name="If you didn't find the message, try checking &quot;Spam&quot; or contact administrator for help." xml:space="preserve">
+    <value>Якщо Ви не знайшли лист, перевірте папку "Спам" або зверніться до адміністратора за допомогою.</value>
+  </data>
+  <data name="In Proccess" xml:space="preserve">
+    <value>В процесі</value>
+  </data>
+  <data name="Language:" xml:space="preserve">
+    <value>Мова:</value>
+  </data>
+  <data name="Learn more" xml:space="preserve">
+    <value>Детальніше</value>
+  </data>
+  <data name="List of users" xml:space="preserve">
+    <value>Список користувачі</value>
+  </data>
+  <data name="Log in" xml:space="preserve">
+    <value>Вхід</value>
+  </data>
+  <data name="Log out" xml:space="preserve">
+    <value>Вихід</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Логін</value>
+  </data>
+  <data name="Manage your account" xml:space="preserve">
+    <value>Керуйте своїм обліковим записом</value>
+  </data>
+  <data name="Manager" xml:space="preserve">
+    <value>Менеджер</value>
+  </data>
+  <data name="Manager notes" xml:space="preserve">
+    <value>Примітки менеджера</value>
+  </data>
+  <data name="Managers" xml:space="preserve">
+    <value>Менеджери</value>
+  </data>
+  <data name="Maximum interval between dates is 30 day" xml:space="preserve">
+    <value>Максимальний інтервал між датами 30 днів</value>
+  </data>
+  <data name="My Requests" xml:space="preserve">
+    <value>Мої заявки</value>
+  </data>
+  <data name="Name*" xml:space="preserve">
+    <value>Ім'я*</value>
+  </data>
+  <data name="Need to review" xml:space="preserve">
+    <value>Потребує розгляду</value>
+  </data>
+  <data name="New password" xml:space="preserve">
+    <value>Новий пароль</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Наступна</value>
+  </data>
+  <data name="Notes" xml:space="preserve">
+    <value>Примітки</value>
+  </data>
+  <data name="Notes to current request" xml:space="preserve">
+    <value>Примітки до поточного запиту</value>
+  </data>
+  <data name="Paid Leave" xml:space="preserve">
+    <value>Оплачувана</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="Password confirmation" xml:space="preserve">
+    <value>Подтверждение пароля</value>
+  </data>
+  <data name="Please check your email to reset your password." xml:space="preserve">
+    <value>Будь ласка, перевірте свій E-mail, щоб зкинути свій пароль.</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Попередня</value>
+  </data>
+  <data name="Processed" xml:space="preserve">
+    <value>Оброблений</value>
+  </data>
+  <data name="Processed requests" xml:space="preserve">
+    <value>Оброблений запит</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Профіль</value>
+  </data>
+  <data name="Registered" xml:space="preserve">
+    <value>Зареєстрований</value>
+  </data>
+  <data name="Registration" xml:space="preserve">
+    <value>Реєстрація</value>
+  </data>
+  <data name="Remember me?" xml:space="preserve">
+    <value>Запам'ятати?</value>
+  </data>
+  <data name="Request from" xml:space="preserve">
+    <value>Запит від</value>
+  </data>
+  <data name="Request notes" xml:space="preserve">
+    <value>Примітки до запиту</value>
+  </data>
+  <data name="Required" xml:space="preserve">
+    <value>Обов'язково</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Зкинути</value>
+  </data>
+  <data name="Reset password" xml:space="preserve">
+    <value>Зкинути пароль</value>
+  </data>
+  <data name="Reset password confirmation" xml:space="preserve">
+    <value>Підтвердження скидання паролю</value>
+  </data>
+  <data name="Role" xml:space="preserve">
+    <value>Роль</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>Ролі</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Зберігти</value>
+  </data>
+  <data name="Save changes" xml:space="preserve">
+    <value>Зберігти зміни</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Пошук</value>
+  </data>
+  <data name="Send verification email" xml:space="preserve">
+    <value>Надіслати електронний лист для підтвердження</value>
+  </data>
+  <data name="Sick Leave" xml:space="preserve">
+    <value>Лікарняна</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="Study Leave" xml:space="preserve">
+    <value>Навчальна</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>Відправити</value>
+  </data>
+  <data name="Surname*" xml:space="preserve">
+    <value>Прізвище*</value>
+  </data>
+  <data name="Thank you for confirming your email." xml:space="preserve">
+    <value>Дякуюємо, що підтвердили свій E-mail.</value>
+  </data>
+  <data name="The application is meant to ease the process of employees' vacations tracking" xml:space="preserve">
+    <value>Програма призначена для полегшення процесу відстеження відпусток працівників</value>
+  </data>
+  <data name="The E-mail field can not exceed 70 characters." xml:space="preserve">
+    <value>Поле E-mail не може містити більше 70 знаків</value>
+  </data>
+  <data name="The E-mail field is not a valid e-mail address." xml:space="preserve">
+    <value>В поле E-mail не дійсна E-mail адреса.</value>
+  </data>
+  <data name="The E-mail field is required." xml:space="preserve">
+    <value>Поле E-mail має бути заповнено.</value>
+  </data>
+  <data name="The Login field can not exceed 40 characters." xml:space="preserve">
+    <value>Поле Логин не може містити більше 40 знаків.</value>
+  </data>
+  <data name="The Name field can contain only letters." xml:space="preserve">
+    <value>Поле Имя може містити тільки букви.</value>
+  </data>
+  <data name="The Name field can not exceed 50 characters." xml:space="preserve">
+    <value>Поле Имя не може містити більше 50 знаків.</value>
+  </data>
+  <data name="The Name field is required." xml:space="preserve">
+    <value>Поле Имя має бути заповнено.</value>
+  </data>
+  <data name="The new password and confirmation password do not match." xml:space="preserve">
+    <value>Новий пароль та пароль підтвердження не співпадають.</value>
+  </data>
+  <data name="The Surname field can contain only letters." xml:space="preserve">
+    <value>Поле Фамилия може містити тільки букви.</value>
+  </data>
+  <data name="The Surname field can not exceed 50 characters." xml:space="preserve">
+    <value>Поле Фамилия не може містити більше 50 знаків.</value>
+  </data>
+  <data name="The Surname field is required." xml:space="preserve">
+    <value>Поле Фамилия має бути заповнено.</value>
+  </data>
+  <data name="This manager already exists" xml:space="preserve">
+    <value>Цей менеджер вже обраний</value>
+  </data>
+  <data name="This process cannot be undone" xml:space="preserve">
+    <value>Цей процес не можна буде відмінити</value>
+  </data>
+  <data name="To" xml:space="preserve">
+    <value>По</value>
+  </data>
+  <data name="Unofficial Sick Leave" xml:space="preserve">
+    <value>Лікарняна без причини</value>
+  </data>
+  <data name="Update password" xml:space="preserve">
+    <value>Оновити пароль</value>
+  </data>
+  <data name="User Name" xml:space="preserve">
+    <value>Ім'я користувача</value>
+  </data>
+  <data name="User Profile" xml:space="preserve">
+    <value>Профіль користувача</value>
+  </data>
+  <data name="Users List" xml:space="preserve">
+    <value>Список користувачів</value>
+  </data>
+  <data name="Vacation" xml:space="preserve">
+    <value>Відпустка</value>
+  </data>
+  <data name="Vacation type" xml:space="preserve">
+    <value>Тип відпустки</value>
+  </data>
+  <data name="Vacation types" xml:space="preserve">
+    <value>Типи відпусток</value>
+  </data>
+  <data name="Verification email sent. Please check your email." xml:space="preserve">
+    <value>Електронний лист для підтвердження надіслано. Будь ласка, перевірте свою електронну пошту.</value>
+  </data>
+  <data name="You do not have access to this resource." xml:space="preserve">
+    <value>У Вас нема доступу до цього ресурсу.</value>
+  </data>
+  <data name="You have successfully logged out of the application." xml:space="preserve">
+    <value>Ви успішно вийшли з додатку.</value>
+  </data>
+  <data name="You Reached the limits" xml:space="preserve">
+    <value>Ви досягли ліміту</value>
+  </data>
+  <data name="Your password has been changed." xml:space="preserve">
+    <value>Ваш пароль змінено.</value>
+  </data>
+  <data name="Your password has been reset. Please" xml:space="preserve">
+    <value>Ваш пароль зкинуто. Будь ласка</value>
+  </data>
+  <data name="Your profile has been updated" xml:space="preserve">
+    <value>Ваш профіль змінено</value>
+  </data>
+</root>

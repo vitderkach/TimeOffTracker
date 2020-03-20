@@ -1,6 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using TOT.Entities
+@using Microsoft.AspNetCore.Mvc.Localization
 
+@inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
 @{
     var permission = User.IsInRole("Administrator");
 }
@@ -12,11 +14,11 @@
 {
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Admin
+            @Localizer["Admin"]
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" asp-controller="Admin" asp-action="List">List of users</a>
-            <a class="dropdown-item" asp-controller="Admin" asp-action="Create">Create user</a>
+            <a class="dropdown-item" asp-controller="Admin" asp-action="List">@Localizer["List of users"]</a>
+            <a class="dropdown-item" asp-controller="Admin" asp-action="Create">@Localizer["Create user"]</a>
         </div>
     </li>
 }
