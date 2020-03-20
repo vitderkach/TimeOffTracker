@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using TOT.Dto;
 using TOT.Entities;
-
+using AutoMapper.EquivalencyExpression;
 namespace TOT.Utility.AutoMapper
 {
     public class DomainTo : Profile
@@ -15,8 +15,8 @@ namespace TOT.Utility.AutoMapper
         {
             CreateMap<VacationRequest, VacationRequestDto>()
                 .ForMember(dest => dest.VacationTypeString, opt => opt.MapFrom(src => src.VacationType.GetDescription()));
-            CreateMap<VacationRequest, ApplyForRequestGetDto>()
-                .ForMember(dest => dest.VacationTypes, opt => opt.MapFrom(src => src.VacationType.GetDescription()));
+            CreateMap<VacationRequest, ApplicationDto>()
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserInformationId));
 
             CreateMap<ManagerResponse, ManagerResponseDto>();
             CreateMap<VacationRequestListDto, VacationRequest>();
@@ -46,13 +46,19 @@ namespace TOT.Utility.AutoMapper
                 .ForMember(dest => dest.isApproval, opt => opt.MapFrom(src => src.Approval));
 
             CreateMap<ApplicationUser, UserInformationDto>().
-                ForSourceMember(src => src.Id, opt => opt.DoNotValidate());
+                ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.FirstName, opt => opt.Ignore())
+                .ForMember(dest => dest.LastName, opt => opt.Ignore())
+                .ForMember(dest => dest.ManagerResponses, opt => opt.Ignore())
+                .ForMember(dest => dest.VacationRequests, opt => opt.Ignore())
+                .ForMember(dest => dest.RecruitmentDate, opt => opt.Ignore())
+                .EqualityComparison((odto, o) => odto.Id == o.Id);
 
             CreateMap<UserInformation, UserInformationDto>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ApplicationUserId));
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ApplicationUserId))
+                .ForMember(dest => dest.Email, opt => opt.Ignore())
+                .EqualityComparison((odto, o) => odto.ApplicationUserId == o.Id);
 
-            CreateMap<ApplicationUser, UserInformationListDto>().
-    ForSourceMember(src => src.Id, opt => opt.DoNotValidate());
 
             CreateMap<UserInformation, UserInformationListDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ApplicationUserId));

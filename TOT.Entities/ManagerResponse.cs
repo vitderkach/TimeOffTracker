@@ -6,7 +6,7 @@ namespace TOT.Entities
     {
         public ManagerResponse()
         {
-            isRequested = false;
+            isRequested = true;
         }
         public int Id { get; set; }
         public string Notes { get; set; }

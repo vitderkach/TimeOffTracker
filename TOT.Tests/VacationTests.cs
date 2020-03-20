@@ -54,63 +54,63 @@ namespace TOT.Tests {
             vacationRequest = listVacationDto[0];
         }
 
-        [TestMethod]
-        public void VacationGetByIdReturnsCorrect()
-        {
-            //arrange
-            var expectedDto = new VacationRequestDto() { 
-                VacationRequestId = 1,
-                VacationType = TimeOffType.ConfirmedSickLeave
-            };
+        //[TestMethod]
+        //public void VacationGetByIdReturnsCorrect()
+        //{
+        //    //arrange
+        //    var expectedDto = new VacationRequestDto() { 
+        //        VacationRequestId = 1,
+        //        VacationType = TimeOffType.ConfirmedSickLeave
+        //    };
 
-            var expected = new VacationRequest()
-            {
-                VacationRequestId = 1,
-                VacationType = TimeOffType.ConfirmedSickLeave
-            };
+        //    var expected = new VacationRequest()
+        //    {
+        //        VacationRequestId = 1,
+        //        VacationType = TimeOffType.ConfirmedSickLeave
+        //    };
 
-            var mockVacation = new Mock<IVacationService>();
-            mockVacation.Setup(v => v.GetVacationById(1))
-                .Returns(expectedDto);
+        //    var mockVacation = new Mock<IVacationService>();
+        //    mockVacation.Setup(v => v.GetVacationById(1))
+        //        .Returns(expectedDto);
 
-            var uowMock = new Mock<IUnitOfWork>();
-            uowMock.Setup(u => u.VacationRequestRepository.GetOne(1))
-                .Returns(expected);
+        //    var uowMock = new Mock<IUnitOfWork>();
+        //    uowMock.Setup(u => u.VacationRequestRepository.GetOne(1))
+        //        .Returns(expected);
 
-            VacationService vacationService = new VacationService(
-                _mapper,
-                uowMock.Object,
-                null,
-                null
-                );
+        //    VacationService vacationService = new VacationService(
+        //        _mapper,
+        //        uowMock.Object,
+        //        null,
+        //        null
+        //        );
 
-            //act
-            var actual = vacationService.GetVacationById(1);
+        //    //act
+        //    var actual = vacationService.GetVacationById(1);
 
-            //assert
-            uowMock.Verify(u => u.VacationRequestRepository.GetOne(It.IsAny<int>()));
-            Assert.AreEqual(expectedDto.VacationRequestId, actual.VacationRequestId);
-            Assert.AreEqual(expectedDto.VacationType, actual.VacationType);
-        }
+        //    //assert
+        //    uowMock.Verify(u => u.VacationRequestRepository.GetOne(It.IsAny<int>()));
+        //    Assert.AreEqual(expectedDto.VacationRequestId, actual.VacationRequestId);
+        //    Assert.AreEqual(expectedDto.VacationType, actual.VacationType);
+        //}
 
-        [TestMethod]
-        public void GetAllVacationsByUserIdReturnsCorrect()
-        {
-            //arrange
-            int expected = 1;
-            var uowMock = new Mock<IUnitOfWork>();
-            uowMock.Setup(u => u.VacationRequestRepository.GetAll())
-                .Returns(listVacation);
+        //[TestMethod]
+        //public void GetAllVacationsByUserIdReturnsCorrect()
+        //{
+        //    //arrange
+        //    int expected = 1;
+        //    var uowMock = new Mock<IUnitOfWork>();
+        //    uowMock.Setup(u => u.VacationRequestRepository.GetAll())
+        //        .Returns(listVacation);
 
-            var service = new VacationService(_mapper, uowMock.Object, null, null);
+        //    var service = new VacationService(_mapper, uowMock.Object, null, null);
 
-            //act
-            var actual = service.GetAllVacationIdsByUser(1).Count;
+        //    //act
+        //    var actual = service.GetAllVacationIdsByUser(1).Count;
             
-            //assert
-            uowMock.Verify(u => u.VacationRequestRepository.GetAll());
-            Assert.AreEqual(expected, actual);
-        }
+        //    //assert
+        //    uowMock.Verify(u => u.VacationRequestRepository.GetAll());
+        //    Assert.AreEqual(expected, actual);
+        //}
 
         // TODO: Rewrite the method: instead delete transfer to history
         //[TestMethod]

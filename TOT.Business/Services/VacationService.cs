@@ -11,79 +11,57 @@ using TOT.Interfaces.Services;
 
 namespace TOT.Business.Services
 {
-    public class VacationService: IVacationService
+    public class VacationService : IVacationService
     {
         private readonly IMapper _mapper;
-        private readonly IUnitOfWork _uow; 
+        private readonly IUnitOfWork _uow;
         private readonly IVacationEmailSender _vacationEmailSender;
         private readonly IUserService _userService;
-
+        private readonly UserManager<ApplicationUser> _userManager;
         private bool disposed = false;
 
         public VacationService(IMapper mapper, IUnitOfWork uow,
             IVacationEmailSender vacationEmailSender,
-            IUserService userService)
+            IUserService userService, UserManager<ApplicationUser> userManager)
         {
             _mapper = mapper;
             _uow = uow;
             _userService = userService;
             _vacationEmailSender = vacationEmailSender;
+            _userManager = userManager;
         }
 
-        public SelectList GetManagersForVacationApply()
+        public void ApplyForVacation(ApplicationDto applicationDto)
         {
-            var currentUser = _userService.GetCurrentUser().Result;
-
-            var managers = _userService.GetAllByRole("Manager");
-            managers = managers.Concat(_userService.GetAllByRole("Administrator"));
-
-            if (managers.Where(u => u.Id == currentUser.Id).Any())
-            {
-                managers = managers.Where(m => m.Id != currentUser.Id);
-            }
-
-            managers.OrderBy(n => n.FullName);
-
-            return new SelectList(managers, "Id", "UserInformation.FullName");
-        }
-
-        public void ApplyForVacation(VacationRequestDto vacationRequestDto)
-        {
-            var vacation = _mapper.Map<VacationRequestDto, VacationRequest>(vacationRequestDto);
-            for (int i=0; i < vacationRequestDto.SelectedManager.Count; i++)
-            {
-                ManagerResponse managerResponse =
-                    new ManagerResponse()
-                    {
-                        ManagerId = vacationRequestDto.SelectedManager[i],
-                        isRequested = i == 0 ? true : false,
-                        VacationRequestId = vacation.VacationRequestId
-
-                    };
-                _uow.ManagerResponseRepository.Create(managerResponse);
-            }
+            var vacation = _mapper.Map<ApplicationDto, VacationRequest>(applicationDto);
             _uow.VacationRequestRepository.Create(vacation);
             _uow.Save();
-            var user = _userService.GetCurrentUser().Result;
-            var userInfo = _uow.UserInformationRepository
-                .GetAll()
-                .Where(u => u.ApplicationUser.Id == user.Id)
-                .FirstOrDefault();
-
-            EmailModel emailModel = new EmailModel()
+            foreach (var managerEmail in applicationDto.RequiredManagersEmails)
             {
-                To = vacation.ManagersResponses.ElementAt(0).Manager.ApplicationUser.Email,
-                FullName = $"{userInfo.LastName} {userInfo.FirstName}",
-                Body = vacation.Notes
-            };
-            _vacationEmailSender.ExecuteToManager(emailModel);
+                var manager = _userManager.FindByEmailAsync(managerEmail).Result;
+                ManagerResponse managerResponse = new ManagerResponse()
+                {
+                    ManagerId = manager.Id,
+                    VacationRequest = vacation
+                };
+                _uow.ManagerResponseRepository.Create(managerResponse);
+                _uow.Save();
+                var managerUserInfo = _uow.UserInformationRepository.GetOne(manager.Id);
+                EmailModel emailModel = new EmailModel()
+                {
+                    To = managerEmail,
+                    FullName = $"{managerUserInfo.FirstName}",
+                    Body = vacation.Notes
+                };
+                _vacationEmailSender.ExecuteToManager(emailModel);
+            }
         }
 
         public VacationDaysDto GetVacationDays(int userId)
         {
             var vacationDays = _uow.UserInformationRepository.GetOneWithVacationRequests(userId).VacationTypes.Where(vt => vt.Year == DateTime.Now.Year).ToList();
 
-            VacationDaysDto vacationDaysDto = new VacationDaysDto(); 
+            VacationDaysDto vacationDaysDto = new VacationDaysDto();
             _mapper.Map<IEnumerable<VacationType>, VacationDaysDto>(vacationDays, vacationDaysDto);
             return vacationDaysDto;
         }
@@ -93,7 +71,7 @@ namespace TOT.Business.Services
             List<int> vacationIds = new List<int>();
             var vacations = _uow.VacationRequestRepository
                 .GetAll()
-                .Where(v => v.UserInformationId== userId);
+                .Where(v => v.UserInformationId == userId);
 
             foreach (VacationRequest request in vacations)
             {
@@ -134,7 +112,7 @@ namespace TOT.Business.Services
 
         public bool DeactivateVacation(int id)
         {
-            if(_uow.VacationRequestRepository.GetOne(id) is VacationRequest vacationRequest && vacationRequest.Approval == null)
+            if (_uow.VacationRequestRepository.GetOne(id) is VacationRequest vacationRequest && vacationRequest.Approval == null)
             {
                 _uow.VacationRequestRepository.TransferToHistory(id);
                 _uow.Save();
@@ -153,9 +131,35 @@ namespace TOT.Business.Services
                 if (disposing) { }
                 _userService.Dispose();
                 _uow.Dispose();
-
+                _userManager.Dispose();
                 disposed = true;
             }
+        }
+
+        public SelectList GetTimeOffTypeList()
+        {
+            var list = new List<SelectListItem>();
+            foreach (TimeOffType item in Enum.GetValues(typeof(TimeOffType)))
+            {
+                list.Add(new SelectListItem
+                {
+                    Text = Enum.GetName(typeof(TimeOffType), item),
+                    Value = item.ToString()
+                });
+            }
+            list = list.OrderBy(x => x.Text).ToList();
+            return new SelectList(list, "Text", "Value");
+        }
+
+        public SelectList GetManagersForVacationApply(int userId)
+        {
+            List<UserInformationDto> excitingManagers =
+                _userService
+                .GetAllByRole("Manager")
+                .Where(uid => uid.Id != userId)
+                .OrderBy(uid => uid.FullName)
+                .ToList();
+            return new SelectList(excitingManagers, "Email", "FullName");
         }
 
         public void Dispose()

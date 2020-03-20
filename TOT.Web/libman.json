@@ -41,6 +41,16 @@
         "dist/tooltip.min.js",
         "dist/tooltip.js"
       ]
+    },
+    {
+      "provider": "cdnjs",
+      "library": "bootstrap-select@1.13.12",
+      "destination": "wwwroot/lib/bootstrap-select/"
     }
-  ]
+  ,
+{
+  "library": "bootstrap-datepicker@1.9.0",
+  "destination": "wwwroot/lib/bootstrap-datepicker/"
+}
+]
 }

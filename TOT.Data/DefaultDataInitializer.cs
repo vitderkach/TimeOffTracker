@@ -56,6 +56,42 @@ namespace TOT.Data
                         new VacationType() {TimeOffType = TimeOffType.GiftLeave, StatutoryDays = 5, UsedDays = 5, Year = DateTime.Now.Year },
                         new VacationType() {TimeOffType = TimeOffType.PaidLeave, StatutoryDays = 5, UsedDays = 0, Year = DateTime.Now.Year }
                     }
+                    },
+
+                                        new UserInformation(){ FirstName = "Alex", LastName = "Johnson",
+                    VacationTypes = new List<VacationType>()
+                    {
+                        new VacationType() {TimeOffType = TimeOffType.AdministrativeLeave, StatutoryDays = 20, UsedDays = 1, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.StudyLeave, StatutoryDays = 10, UsedDays = 2, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.ConfirmedSickLeave, StatutoryDays = 30, UsedDays = 3, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.UnofficialSickLeave, StatutoryDays = 3, UsedDays = 4, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.GiftLeave, StatutoryDays = 5, UsedDays = 5, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.PaidLeave, StatutoryDays = 5, UsedDays = 0, Year = DateTime.Now.Year }
+                    }
+                    },
+
+                                                            new UserInformation(){ FirstName = "Vitaliy", LastName = "Derkach",
+                    VacationTypes = new List<VacationType>()
+                    {
+                        new VacationType() {TimeOffType = TimeOffType.AdministrativeLeave, StatutoryDays = 20, UsedDays = 1, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.StudyLeave, StatutoryDays = 10, UsedDays = 2, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.ConfirmedSickLeave, StatutoryDays = 30, UsedDays = 3, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.UnofficialSickLeave, StatutoryDays = 3, UsedDays = 4, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.GiftLeave, StatutoryDays = 5, UsedDays = 5, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.PaidLeave, StatutoryDays = 5, UsedDays = 0, Year = DateTime.Now.Year }
+                    }
+                    },
+
+                                                                                new UserInformation(){ FirstName = "Valeriya", LastName = "Alekseienko",
+                    VacationTypes = new List<VacationType>()
+                    {
+                        new VacationType() {TimeOffType = TimeOffType.AdministrativeLeave, StatutoryDays = 20, UsedDays = 1, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.StudyLeave, StatutoryDays = 10, UsedDays = 2, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.ConfirmedSickLeave, StatutoryDays = 30, UsedDays = 3, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.UnofficialSickLeave, StatutoryDays = 3, UsedDays = 4, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.GiftLeave, StatutoryDays = 5, UsedDays = 5, Year = DateTime.Now.Year },
+                        new VacationType() {TimeOffType = TimeOffType.PaidLeave, StatutoryDays = 5, UsedDays = 0, Year = DateTime.Now.Year }
+                    }
                     }
                 };
 
@@ -129,6 +165,51 @@ namespace TOT.Data
                 if (result.Succeeded)
                 {
                     userManager.AddToRoleAsync(user, "Employee").Wait();
+                }
+            }
+            if (userManager.FindByEmailAsync("manager1@gmail.com").Result == null)
+            {
+                ApplicationUser user = new ApplicationUser();
+                user.Email = "manager1@gmail.com";
+                user.UserName = "Manager1";
+                user.RegistrationDate = new System.DateTime(2019, 10, 21, 09, 04, 17);
+                user.UserInformationId = userInfo["Johnson"];
+
+                IdentityResult result = userManager.CreateAsync(user, "Manager1TOT-159").Result;
+
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, "Manager").Wait();
+                }
+            }
+            if (userManager.FindByEmailAsync("manager2@gmail.com").Result == null)
+            {
+                ApplicationUser user = new ApplicationUser();
+                user.Email = "manager2@gmail.com";
+                user.UserName = "Manager2";
+                user.RegistrationDate = new System.DateTime(2019, 10, 21, 09, 04, 17);
+                user.UserInformationId = userInfo["Derkach"];
+
+                IdentityResult result = userManager.CreateAsync(user, "Manager2TOT-543").Result;
+
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, "Manager").Wait();
+                }
+            }
+            if (userManager.FindByEmailAsync("manager3@gmail.com").Result == null)
+            {
+                ApplicationUser user = new ApplicationUser();
+                user.Email = "manager3@gmail.com";
+                user.UserName = "Manager3";
+                user.RegistrationDate = new System.DateTime(2019, 10, 21, 09, 04, 17);
+                user.UserInformationId = userInfo["Alekseienko"];
+
+                IdentityResult result = userManager.CreateAsync(user, "Manager3TOT-836").Result;
+
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, "Manager").Wait();
                 }
             }
         }

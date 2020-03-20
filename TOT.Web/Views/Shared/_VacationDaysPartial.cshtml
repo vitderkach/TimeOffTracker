@@ -34,79 +34,81 @@
 
 
         <div>
-            <h5 class="card-title">
+            <div class="card-title font-weight-bold" style="font-size:110%">
                 Paid Leave:
-                <span class="text-danger">
-                    @usedPaidDays
-                </span>
+                <span>
+                    <span class="text-danger">
+                        @usedPaidDays
+                    </span>
                     <span>/</span>
                     <span class="text-success">@statutoryPaidDays</span>
-                <div class="progress">
-                    <div class="progress-bar progress-bar-striped bg-info"
-                         role="progressbar"
-                         style="width: @usedForPaidPercentage%"
-                         aria-valuenow=@usedForPaidPercentage.ToString() aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-            </h5>
+                </span>
+            </div>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped bg-info"
+                     role="progressbar"
+                     style="width: @usedForPaidPercentage%"
+                     aria-valuenow=@usedForPaidPercentage.ToString() aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+
         </div>
 
         <div>
-            <h5 class="card-title">
+            <div class="card-title font-weight-bold pt-2" style="font-size:110%">
                 Sick Leave:
-                <span class="text-danger">
-                    @usedSickDays
-                </span>
+                <span>
+                    <span class="text-danger">
+                        @usedSickDays
+                    </span>
                     <span>/</span>
                     <span class="text-success">@statutorySickDays</span>
-                <div class="progress">
-                    <div class="progress-bar progress-bar-striped bg-info"
-                         role="progressbar"
-                         style="width: @usedForSickPercentage%"
-                         aria-valuenow=@usedForSickPercentage.ToString() aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-            </h5>
+                </span>
+            </div>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped bg-info"
+                     role="progressbar"
+                     style="width: @usedForSickPercentage%"
+                     aria-valuenow=@usedForSickPercentage.ToString() aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+
         </div>
 
         <div>
-            <h5 class="card-title">
+            <div class="card-title font-weight-bold pt-2" style="font-size:110%">
                 Study Leave:
-                <span class="text-danger">
-                    @usedStudyDays
-                </span>
+                <span>
+                    <span class="text-danger">
+                        @usedStudyDays
+                    </span>
                     <span>/</span>
                     <span class="text-success">@statutoryStudyDays</span>
-                <div class="progress">
-                    <div class="progress-bar progress-bar-striped bg-info"
-                         role="progressbar"
-                         style="width: @usedForStudyPercentage%"
-                         aria-valuenow=@usedForStudyPercentage.ToString() aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-            </h5>
+                </span>
+            </div>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped bg-info"
+                     role="progressbar"
+                     style="width: @usedForStudyPercentage%"
+                     aria-valuenow=@usedForStudyPercentage.ToString() aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
         </div>
 
         <div>
-            <h5 class="card-title">
+            <div class="card-title font-weight-bold pt-2" style="font-size:110%">
                 Admin Leave:
-                <span class="text-danger">
-                    @usedAdminDays
-                </span>
+                <span>
+                    <span class="text-danger">
+                        @usedAdminDays
+                    </span>
                     <span>/</span>
                     <span class="text-success">@statutoryAdminDays</span>
-                <div class="progress">
-                    <div class="progress-bar progress-bar-striped bg-info"
-                         role="progressbar"
-                         style="width: @usedForAdminPercentage%"
-                         aria-valuenow=@usedForAdminPercentage.ToString() aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-            </h5>
+                </span>
+            </div>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped bg-info"
+                     role="progressbar"
+                     style="width: @usedForAdminPercentage%"
+                     aria-valuenow=@usedForAdminPercentage.ToString() aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
         </div>
     </div>
 </div>
-
-
-
-@*@if (!TimeOffTypes.ElementAt(i).TimeOffType.Equals("Unpaid vacation"))
-{
-    <span>/</span>
-    <span class="text-success">@Model.TimeOffTypes.ElementAt(i).StatutoryDays</span>
-}*@
