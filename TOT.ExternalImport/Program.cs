@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using TOT.DataImport.Excel;
 using TOT.DataImport.Interfaces;
@@ -17,7 +18,16 @@ namespace TOT.DataImport
             {
                 IExcelDataImporter dataImporter = new ExcelDataImporter();
                 dataImporter
-                    .SetConfiguration(new ExcelDataImporterConfiguration())
+                    .SetConfiguration(new ExcelDataImporterConfiguration
+                    {
+                        Year = 2020,
+                        Months = new List<int> { 1 },
+                        NameColumnStartCell = "G4",
+                        EmploymentDateColumnStartCell = "B4",
+                        GiftDaysColumnStartCell = "C4",
+                        VacationDaysColumnsStartCell = "H4",
+                        EntriesCount = 100
+                    })
                     .ImportFromStream(fileStream)
                     .SaveToStorage(new DbStorageProvider())
                     .Start();

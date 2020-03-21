@@ -8,13 +8,13 @@ namespace TOT.DataImport.Excel
 {
     class AttendanceTableConfiguration
     {
-        public Dictionary<string, TimeOffType> cellValueTimeOffTypePairs { get; protected set; } = new Dictionary<string, TimeOffType>
+        public Dictionary<string, TimeOffType> CellValueTimeOffTypePairs { get; protected set; } = new Dictionary<string, TimeOffType>
         {
-            { "о", TimeOffType.Vacation },
-            { "б", TimeOffType.SickLeave },
+            { "о", TimeOffType.PaidLeave },
+            { "б", TimeOffType.ConfirmedSickLeave },
             { "у", TimeOffType.StudyLeave },
-            { "н", TimeOffType.UnpaidVacation },
-            // TODO: { "а", TimeOffType.Administrative },
+            { "н", TimeOffType.UnofficialSickLeave },
+            { "а", TimeOffType.AdministrativeLeave },
         };
     }
 }

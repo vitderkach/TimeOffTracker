@@ -7,7 +7,7 @@ namespace TOT.DataImport.Excel
     class ExcelDataImporterConfiguration
     {
         public int Year { get; set; }
-        public List<int> Month { get; set; }
+        public List<int> Months { get; set; }
 
         public int EntriesCount { get; set; }
 
@@ -15,7 +15,7 @@ namespace TOT.DataImport.Excel
         public string EmploymentDateColumnStartCell { get; set; }
         public string GiftDaysColumnStartCell { get; set; }
 
-        public Dictionary<int, string> VacationDaysColumnsStartCells { get; set; }
+        public string VacationDaysColumnsStartCell { get; set; }
 
         public AttendanceTableConfiguration AttendanceTableConfiguration = new AttendanceTableConfiguration();
     }
