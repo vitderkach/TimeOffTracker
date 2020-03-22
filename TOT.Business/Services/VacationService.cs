@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,17 +18,19 @@ namespace TOT.Business.Services
         private readonly IVacationEmailSender _vacationEmailSender;
         private readonly IUserService _userService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IStringLocalizer<Resources.Resources> _localizer;
         private bool disposed = false;
 
         public VacationService(IMapper mapper, IUnitOfWork uow,
             IVacationEmailSender vacationEmailSender,
-            IUserService userService, UserManager<ApplicationUser> userManager)
+            IUserService userService, UserManager<ApplicationUser> userManager, IStringLocalizer<Resources.Resources> localizer)
         {
             _mapper = mapper;
             _uow = uow;
             _userService = userService;
             _vacationEmailSender = vacationEmailSender;
             _userManager = userManager;
+            _localizer = localizer;
         }
 
         public void ApplyForVacation(ApplicationDto applicationDto)
@@ -143,12 +145,12 @@ namespace TOT.Business.Services
             {
                 list.Add(new SelectListItem
                 {
-                    Text = Enum.GetName(typeof(TimeOffType), item),
+                    Text = _localizer[item.GetDescription()],
                     Value = item.ToString()
                 });
             }
             list = list.OrderBy(x => x.Text).ToList();
-            return new SelectList(list, "Text", "Value");
+            return new SelectList(list, "Value", "Text");
         }
 
         public SelectList GetManagersForVacationApply(int userId)

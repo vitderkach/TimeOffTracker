@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using TOT.Business.Services;
 using TOT.Dto;
-using TOT.Entities;
 using TOT.Interfaces;
 using TOT.Interfaces.Services;
 using TOT.Web.Models;
-using PagedList;
 using System.Security.Claims;
 using Microsoft.Extensions.Localization;
 
@@ -25,15 +18,12 @@ namespace TOT.Web.Controllers
         private readonly IMapper _mapper;
         private readonly IVacationService _vacationService;
         private readonly IUserService _userService;
-        private readonly IStringLocalizer<Resources.Resources> _localizer;
 
-        public VacationController(IVacationService vacationService, IMapper mapper,
-            IUserService userService, IStringLocalizer<Resources.Resources> localizer)
+        public VacationController(IVacationService vacationService, IMapper mapper, IUserService userService)
         {
             _vacationService = vacationService;
             _mapper = mapper;
             _userService = userService;
-            _localizer = localizer;
         }
         public ActionResult Index()
         {
