@@ -1,6 +1,7 @@
 ﻿@model PaginatedList<TOT.Dto.VacationRequestListDto>
 @using PagedList.Mvc;
 @using Microsoft.AspNetCore.Mvc.Localization
+@using TOT.Data.Extensions
 @inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
 @{
     var vacations = @Model.FirstOrDefault();
@@ -44,7 +45,7 @@
                     @Html.DisplayFor(modelItem => item.EndDate)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.VacationType)
+                    @Html.DisplayFor(modelItem => @Localizer[item.VacationType.GetDescription()].Value)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Notes)
@@ -52,11 +53,11 @@
                 <td>
                     @{
                         if (item.Approval == null)
-                        { <div> In Process </div> }
+                        { <div> @Localizer["In Proccess"] </div> }
                         if (item.Approval == false)
-                        { <div> Declined </div> }
+                        { <div> @Localizer["Declined"] </div> }
                         if (item.Approval == true)
-                        { <div> Approved </div> }
+                        { <div> @Localizer["Approved"] </div> }
                     }
                 </td>
                 <td>

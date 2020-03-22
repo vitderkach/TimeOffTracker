@@ -19,9 +19,7 @@ namespace TOT.Utility.AutoMapper
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserInformationId));
 
             CreateMap<ManagerResponse, ManagerResponseDto>();
-            CreateMap<VacationRequestListDto, VacationRequest>();
-            CreateMap<VacationRequest, VacationRequestListDto>()
-                .ForMember(dest => dest.VacationType, opt => opt.MapFrom(src => src.VacationType.GetDescription()));
+            CreateMap<VacationRequest, VacationRequestListDto>();
 
             CreateMap<VacationRequestApprovalDto, VacationRequestDto>()
                  .ForMember(dest => dest.VacationType, opt => opt.MapFrom(src => src.VacationType.Replace(" ", "")));
