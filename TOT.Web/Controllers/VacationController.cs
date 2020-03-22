@@ -15,6 +15,7 @@ using TOT.Interfaces.Services;
 using TOT.Web.Models;
 using PagedList;
 using System.Security.Claims;
+using Microsoft.Extensions.Localization;
 
 namespace TOT.Web.Controllers
 {
@@ -24,13 +25,15 @@ namespace TOT.Web.Controllers
         private readonly IMapper _mapper;
         private readonly IVacationService _vacationService;
         private readonly IUserService _userService;
+        private readonly IStringLocalizer<Resources.Resources> _localizer;
 
         public VacationController(IVacationService vacationService, IMapper mapper,
-            IUserService userService)
+            IUserService userService, IStringLocalizer<Resources.Resources> localizer)
         {
             _vacationService = vacationService;
             _mapper = mapper;
             _userService = userService;
+            _localizer = localizer;
         }
         public ActionResult Index()
         {

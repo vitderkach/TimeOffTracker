@@ -1,13 +1,15 @@
 @using Microsoft.AspNetCore.Identity
 @using TOT.Entities
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
 
 <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })"
-    method="post" id="logoutForm" class="navbar-right"
->
+      method="post" id="logoutForm" class="navbar-right">
     <ul class="navbar-nav">
         @if (SignInManager.IsSignedIn(User))
         {
@@ -17,15 +19,15 @@
                     @UserManager.GetUserName(User)
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Profile</a>
-                    <input type="submit" class="dropdown-item" value="Log out" />
+                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@Localizer["Profile"]</a>
+                    <input type="submit" class="dropdown-item" value=@Localizer["Log out"] />
                 </div>
             </li>
         }
         else
         {
             <li class="nav-item">
-                <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">@Localizer["Log in"]</a>
             </li>
         }
     </ul>

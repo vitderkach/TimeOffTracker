@@ -9,7 +9,7 @@ namespace TOT.Dto
     {
         public int Id { get; set; }
 
-        [Display(Name = "Roles")]
+        [Display(Name = "Role")]
         public IEnumerable<string> RoleNames { get; set; }
 
         [DataType(DataType.Date)]

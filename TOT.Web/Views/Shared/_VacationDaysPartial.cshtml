@@ -1,5 +1,7 @@
 ﻿@model TOT.Dto.VacationDaysDto
 @using TOT.Entities
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
 @{
     var TimeOffTypes = Model.TimeOffTypes;
 }
@@ -35,7 +37,7 @@
 
         <div>
             <div class="card-title font-weight-bold" style="font-size:110%">
-                Paid Leave:
+                @Localizer["Paid Leave"]:
                 <span>
                     <span class="text-danger">
                         @usedPaidDays
@@ -55,7 +57,7 @@
 
         <div>
             <div class="card-title font-weight-bold pt-2" style="font-size:110%">
-                Sick Leave:
+                @Localizer["Sick Leave"]:
                 <span>
                     <span class="text-danger">
                         @usedSickDays
@@ -75,7 +77,7 @@
 
         <div>
             <div class="card-title font-weight-bold pt-2" style="font-size:110%">
-                Study Leave:
+                @Localizer["Study Leave"]:
                 <span>
                     <span class="text-danger">
                         @usedStudyDays
@@ -94,7 +96,7 @@
 
         <div>
             <div class="card-title font-weight-bold pt-2" style="font-size:110%">
-                Admin Leave:
+                @Localizer["Administrative Leave"]:
                 <span>
                     <span class="text-danger">
                         @usedAdminDays

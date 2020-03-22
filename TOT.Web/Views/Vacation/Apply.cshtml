@@ -2,13 +2,15 @@
 @using Microsoft.AspNetCore.Identity
 @using TOT.Entities
 @using TOT.Interfaces.Services
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
 @inject IVacationService VacationService
 
 <link rel="stylesheet" href="~/lib/bootstrap-select/css/bootstrap-select.min.css" />
 <link rel="stylesheet" href="~/css/bootsrap-datepicker.css" />
 <div class="row justify-content-between">
     <div class="container col-5">
-        <h2 class="text-center">Apply for vacation</h2>
+        <h2 class="text-center">@Localizer["Apply for vacation"]</h2>
         <hr class="row  ml-0" />
         <form asp-action="Apply" name="form" id="form" method="post">
 
@@ -38,7 +40,7 @@
             </div>
 
             <div class="form-group row">
-                <label asp-for="RequiredManagersEmails" class="control-label col-4">Managers</label>
+                <label asp-for="RequiredManagersEmails" class="control-label col-4">@Localizer["Managers"]</label>
                 <select asp-for="RequiredManagersEmails" class="selectpicker col px-0" data-live-search="true" multiple>
                     @foreach (var item in ViewBag.AvailableManagers)
                     {
@@ -47,7 +49,6 @@
                 </select>
                 <span asp-validation-for="RequiredManagersEmails" class="text-danger"></span>
             </div>
-
             <div class="form-group row">
                 <input type="hidden" asp-for="UserId" />
             </div>

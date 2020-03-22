@@ -1,5 +1,7 @@
 ﻿@page
 @model LogoutModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
 @{
     ViewData["Title"] = "Log out";
 }
@@ -7,5 +9,5 @@
 <header>
     <h1>@ViewData["Title"]</h1>
     <br />
-    <p>You have successfully logged out of the application.</p>
+    <p>@Localizer["You have successfully logged out of the application."]</p>
 </header>
