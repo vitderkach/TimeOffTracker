@@ -33,22 +33,33 @@ namespace TOT.Business.Services
         public IEnumerable<VacationRequestListForManagersDTO> GetDefinedManagerVacationRequests(int userId, bool? approval)
         {
             IEnumerable<VacationRequestListForManagersDTO> vacationRequestsDTO = new List<VacationRequestListForManagersDTO>();
-            var vacationRequests =
+            var managerResponses =
                 _uow.ManagerResponseRepository
-                .GetAllWithVacationRequestsAndUserInfos(mr => mr.Approval == approval && mr.ManagerId == userId && mr.VacationRequest.StageOfApproving > 1)
-                .Select(mr => mr.VacationRequest);
+                .GetAllWithVacationRequestsAndUserInfos(mr => mr.Approval == approval && mr.ManagerId == userId && mr.VacationRequest.StageOfApproving > 1);
             var userInfos = _userInfoService.GetUsersInfo();
+            var vacationRequests = managerResponses.Select(mr => mr.VacationRequest);
             userInfos = userInfos.Where(ui => vacationRequests.Where(vr => vr.UserInformationId == ui.Id).Any()).ToList();
-            return _mapper.MergeInto<ICollection<VacationRequestListForManagersDTO>>(vacationRequests, userInfos);
+            var vacationRequestsDto = _mapper.MergeInto<ICollection<VacationRequestListForManagersDTO>>(vacationRequests, userInfos);
+            foreach (var item in vacationRequestsDto)
+            {
+                item.ManagerApproval = managerResponses.FirstOrDefault(mr => mr.VacationRequestId == item.VacationRequestId).Approval;
+            }
+            return vacationRequestsDto;
         }
 
         public IEnumerable<VacationRequestListForManagersDTO> GetAllManagerVacationRequests(int userId)
         {
             IEnumerable<VacationRequestListForManagersDTO> vacationRequestsDTO = new List<VacationRequestListForManagersDTO>();
-            var vacationRequests = _uow.ManagerResponseRepository.GetAllWithVacationRequestsAndUserInfos(mr => mr.ManagerId == userId && mr.VacationRequest.StageOfApproving > 1).Select(mr => mr.VacationRequest);
+            var managerResponses = _uow.ManagerResponseRepository.GetAllWithVacationRequestsAndUserInfos(mr => mr.ManagerId == userId && mr.VacationRequest.StageOfApproving > 1);
             var userInfos = _userInfoService.GetUsersInfo();
+            var vacationRequests = managerResponses.Select(mr => mr.VacationRequest);
             userInfos = userInfos.Where(ui => vacationRequests.Where(vr => vr.UserInformationId == ui.Id).Any()).ToList();
-            return _mapper.MergeInto<ICollection<VacationRequestListForManagersDTO>>(vacationRequests, userInfos);
+            var vacationRequestsDto = _mapper.MergeInto<ICollection<VacationRequestListForManagersDTO>>(vacationRequests, userInfos);
+            foreach (var item in vacationRequestsDto)
+            {
+                item.ManagerApproval = managerResponses.FirstOrDefault(mr => mr.VacationRequestId == item.VacationRequestId).Approval;
+            }
+            return vacationRequestsDto;
         }
 
         public bool CheckManagerResponsesByUserId(int userId)
@@ -67,6 +78,7 @@ namespace TOT.Business.Services
             managerResponse.Notes = managerNotes;
             managerResponse.Approval = approval;
             _uow.ManagerResponseRepository.Update(managerResponse, mr => mr.Approval, mr => mr.Notes);
+            _uow.Save();
             if (approval == true)
             {
 

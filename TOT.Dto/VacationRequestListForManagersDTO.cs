@@ -27,6 +27,8 @@ namespace TOT.Dto
         public DateTime EndDate { get; set; }
 
         [Display(Name = "Status")]
+        public bool? ManagerApproval { get; set; }
+
         public bool? Approval { get; set; }
     }
 }

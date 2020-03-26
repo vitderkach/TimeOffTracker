@@ -56,7 +56,7 @@ namespace TOT.Web.Controllers {
             {
                 case "Not handled yet":
                 {
-                    responses = _managerService.GetDefinedManagerVacationRequests(userId, null);
+                    responses = _managerService.GetDefinedManagerVacationRequests(userId, null).Where(vr => vr.Approval == null);
                     break;
                 }
                 case "Accepted":
@@ -69,6 +69,11 @@ namespace TOT.Web.Controllers {
                     responses = _managerService.GetDefinedManagerVacationRequests(userId, false);
                         break;
                 }
+                case "Declined by other manager":
+                    {
+                        responses = _managerService.GetDefinedManagerVacationRequests(userId, null).Where(vr => vr.Approval == false);
+                        break;
+                    }
                 default:
                 {
                         responses = _managerService.GetAllManagerVacationRequests(userId);
@@ -101,29 +106,27 @@ namespace TOT.Web.Controllers {
         }
 
         [HttpPost]
-        public IActionResult ApproveVacationRequest(VacationDetailsDTO vacationDetailsDTO)
+        public IActionResult ApproveVacationRequest(int responseId, int vacationRequestId, string notes)
         {
-            ManagerResponseDto managerResponseDto = vacationDetailsDTO.ManagerResponseDto;
-            var vacationRequest = _vacationService.GetVacationById(managerResponseDto.VacationRequestId);
+            var vacationRequest = _vacationService.GetVacationById(vacationRequestId);
             if (vacationRequest.Stage == 2)
             {
-                _managerService.GiveManagerResponse(managerResponseDto.Id, managerResponseDto.Notes, true);
+                _managerService.GiveManagerResponse(responseId, notes, true);
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("VacationList");
         }
 
         [HttpPost]
-        public IActionResult DeclineVacationRequest(VacationDetailsDTO vacationDetailsDTO)
+        public IActionResult DeclineVacationRequest(int responseId, int vacationRequestId, string notes)
         {
-            ManagerResponseDto managerResponseDto = vacationDetailsDTO.ManagerResponseDto;
-            var vacationRequest = _vacationService.GetVacationById(managerResponseDto.VacationRequestId);
+            var vacationRequest = _vacationService.GetVacationById(vacationRequestId);
             if (vacationRequest.Stage == 2)
             {
-                _managerService.GiveManagerResponse(managerResponseDto.Id, managerResponseDto.Notes, false);
+                _managerService.GiveManagerResponse(responseId, notes, false);
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("VacationList");
         }
     }
 }

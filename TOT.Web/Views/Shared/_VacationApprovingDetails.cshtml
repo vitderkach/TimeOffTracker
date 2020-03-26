@@ -110,40 +110,42 @@
                         <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => managerResponse.Email)]: </span>
                         <span class=" col-8">@managerResponse.Email</span>
                     </li>
-                    @if (Model.VacationRequestDto.Stage > 1 || ((managerResponse.ForStageOfApproving == 1 || managerResponse.ForStageOfApproving == 3) && managerResponse.Approval != null))
+                    if (!(Model.VacationRequestDto.Approval == false && managerResponse.Approval == null))
                     {
-                        @if (managerResponse.Approval != null)
+                        @if (Model.VacationRequestDto.Stage > 1 || ((managerResponse.ForStageOfApproving == 1 || managerResponse.ForStageOfApproving == 3) && managerResponse.Approval != null))
                         {
-                            <li class="row list-group-item list-group-item__vacdetails">
-                                <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => managerResponse.ResponseDate)]: </span>
-                                <span class=" col-8">@managerResponse.ResponseDate.Date</span>
-                            </li>
-                        }
-                        @if (managerResponse.Approval == null)
-                        {
-                            <li class="row list-group-item list-group-item-warning list-group-item__vacdetails">
-                                <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => managerResponse.Approval)]: </span>
+                            @if (managerResponse.Approval != null)
+                            {
+                                <li class="row list-group-item list-group-item__vacdetails">
+                                    <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => managerResponse.ResponseDate)]: </span>
+                                    <span class=" col-8">@managerResponse.ResponseDate.Date</span>
+                                </li>
+                            }
+                            @if (managerResponse.Approval == null)
+                            {
+                                <li class="row list-group-item list-group-item-warning list-group-item__vacdetails">
+                                    <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => managerResponse.Approval)]: </span>
 
-                                <span class=" col-8">@Localizer["not handled yet"]</span>
-                            </li>
-                        }
-                        else if (managerResponse.Approval == true)
-                        {
-                            <li class="row list-group-item list-group-item-success list-group-item__vacdetails">
-                                <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => managerResponse.Approval)]: </span>
+                                    <span class=" col-8">@Localizer["not handled yet"]</span>
+                                </li>
+                            }
+                            else if (managerResponse.Approval == true)
+                            {
+                                <li class="row list-group-item list-group-item-success list-group-item__vacdetails">
+                                    <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => managerResponse.Approval)]: </span>
 
-                                <span class=" col-8">@Localizer["accepted"]</span>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="row list-group-item list-group-item-danger list-group-item__vacdetails">
-                                <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => managerResponse.Approval)]: </span>
+                                    <span class=" col-8">@Localizer["accepted"]</span>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="row list-group-item list-group-item-danger list-group-item__vacdetails">
+                                    <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => managerResponse.Approval)]: </span>
 
-                                <span class=" col-8">@Localizer["declined"]</span>
-                            </li>
+                                    <span class=" col-8">@Localizer["declined"]</span>
+                                </li>
+                            }
                         }
-
                         if (managerResponse.Approval != null)
                         {
                             <li class="row list-group-item list-group-item__vacdetails">
@@ -153,13 +155,21 @@
                         }
 
                     }
+                    else
+                    {
+                        <li class="row list-group-item list-group-item-danger list-group-item__vacdetails">
+                            <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => managerResponse.Approval)]: </span>
+
+                            <span class=" col-8">@Localizer["declined by other manager"]</span>
+                        </li>
+                    }
                 }
             </ul>
         </div>
     </div>
     <div class="row w-100"></div>
-    @if ((User.Identity.IsAuthenticated && User.IsInRole("Manager") && Model.VacationRequestDto.Stage == 2 && Model.VacationRequestDto.AllManagerResponses.FirstOrDefault(mr => mr.ManagerId == userId).Approval == null)
-      || ((User.Identity.IsAuthenticated && User.IsInRole("Administrator") && ((Model.VacationRequestDto.Stage == 1 && Model.VacationRequestDto.Approval == null) || (Model.VacationRequestDto.Stage == 3 && Model.VacationRequestDto.AllManagerResponses.FirstOrDefault(mr => mr.ManagerId == userId).Approval == null)))))
+    @if ((User.Identity.IsAuthenticated && User.IsInRole("Manager") && Model.VacationRequestDto.Stage == 2 && Model.VacationRequestDto.AllManagerResponses.FirstOrDefault(mr => mr.ManagerId == userId).Approval == null && Model.VacationRequestDto.Approval == null)
+     || ((User.Identity.IsAuthenticated && User.IsInRole("Administrator") && ((Model.VacationRequestDto.Stage == 1 && Model.VacationRequestDto.Approval == null) || (Model.VacationRequestDto.Stage == 3 && Model.VacationRequestDto.AllManagerResponses.FirstOrDefault(mr => mr.ManagerId == userId).Approval == null)))))
     {
         <div class="col-8 container">
             <form class="col-12 row pr-0" action="" method="post">
@@ -169,6 +179,10 @@
                     <textarea name="notes" class="form-control col ml-3" rows="6"></textarea>
                 </div>
                 <input type="hidden" name="vacationRequestId" value="@Model.VacationRequestDto.ApplicationDto.Id" />
+                @if (Model.VacationRequestDto.Stage > 1 && Model.VacationRequestDto.Stage < 4)
+                {
+                    <input type="hidden" name="responseId" value="@Model.ManagerResponseDto.Id" />
+                }
                 <div class="row col-12 justify-content-around form-group">
                     <input class="btn btn-success" type="submit" value="Confirm" formaction="ApproveVacationRequest" />
                     <input class="btn btn-danger" type="submit" value="Decline" formaction="DeclineVacationRequest" />

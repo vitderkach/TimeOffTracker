@@ -8,9 +8,10 @@
 }
     <div class="form-group">
         <a asp-action="VacationList" class="btn btn-dark" asp-route-currentFilter="">@Localizer["All"]</a>
-        <a asp-action="VacationList" class="btn btn-dark" asp-route-currentFilter="Just registered">@Localizer["Not handled yet"]</a>
+        <a asp-action="VacationList" class="btn btn-dark" asp-route-currentFilter="Not handled yet">@Localizer["Not handled yet"]</a>
         <a asp-action="VacationList" class="btn btn-success" asp-route-currentFilter="Accepted">@Localizer["Accepted"]</a>
         <a asp-action="VacationList" class="btn btn-success" asp-route-currentFilter="Declined">@Localizer["Declined"]</a>
+        <a asp-action="VacationList" class="btn btn-success" asp-route-currentFilter="Declined by other manager">@Localizer["Declined by other manager"]</a>
     </div>
 <table class="table">
     <thead>
@@ -48,17 +49,17 @@
                 @Html.DisplayFor(modelItem => @Localizer[item.VacationType.GetDescription()].Value)
             </td>
             <td>
-                @if (item.Approval == true)
+                @if (item.ManagerApproval == true)
                 {
                     <text>@Localizer["Accepted"].Value</text>
                 }
-                else if (item.Approval == false)
+                else if (item.ManagerApproval == false)
                 {
                     <text>@Localizer["Declined"].Value</text>
                 }
-                else
+                else if(item.ManagerApproval == null && item.Approval == false)
                 {
-                    <text>@Localizer["Not handled yet"].Value</text>
+                    <text>@Localizer["Declined by other manager"].Value</text>
                 }
             </td>
             <td>
