@@ -25,15 +25,14 @@ namespace TOT.Dto
         [Display(Name = "From")]
         [DataType(DataType.Date)]
         [Required(ErrorMessage = "Required")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd-MM-yyyy}")]
         public DateTime StartDate { get; set; }
 
         [Display(Name = "To")]
         [DataType(DataType.Date)]
         [Required(ErrorMessage = "Required")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd-MM-yyyy}")]
         public DateTime EndDate { get; set; }
-
-        [Display(Name = "Vacation types")]
-        public string SelectedTimeOffType { get; set; }
 
         [Display(Name = "Notes")]
         public string Notes { get; set; }

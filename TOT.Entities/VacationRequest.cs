@@ -19,6 +19,8 @@ namespace TOT.Entities
         public TimeOffType VacationType { get; set; }
         public string Notes { get; set; }
         public bool? Approval { get; set; }
+        [Range(1, 4)]
+        public int StageOfApproving { get; set; }
 
         public IEnumerable<ManagerResponse> ManagersResponses { get; set; }
 

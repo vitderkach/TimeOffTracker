@@ -18,13 +18,15 @@ namespace TOT.Business.Services
         private readonly IUnitOfWork _uow;
         private readonly IVacationEmailSender _vacationEmailSender;
         private readonly IUserService _userService;
+        private readonly IUserInfoService _userInfoService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IStringLocalizer<Resources.Resources> _localizer;
         private bool disposed = false;
 
         public VacationService(IMapper mapper, IUnitOfWork uow,
             IVacationEmailSender vacationEmailSender,
-            IUserService userService, UserManager<ApplicationUser> userManager, IStringLocalizer<Resources.Resources> localizer)
+            IUserService userService, UserManager<ApplicationUser> userManager, IStringLocalizer<Resources.Resources> localizer,
+            IUserInfoService userInfoService)
         {
             _mapper = mapper;
             _uow = uow;
@@ -32,37 +34,31 @@ namespace TOT.Business.Services
             _vacationEmailSender = vacationEmailSender;
             _userManager = userManager;
             _localizer = localizer;
+            _userInfoService = userInfoService;
         }
 
         public void ApplyForVacation(ApplicationDto applicationDto)
         {
             var vacation = _mapper.Map<ApplicationDto, VacationRequest>(applicationDto);
+            vacation.StageOfApproving = 1;
             _uow.VacationRequestRepository.Create(vacation);
-            _uow.Save();
             foreach (var managerEmail in applicationDto.RequiredManagersEmails)
             {
                 var manager = _userManager.FindByEmailAsync(managerEmail).Result;
                 ManagerResponse managerResponse = new ManagerResponse()
                 {
                     ManagerId = manager.Id,
-                    VacationRequest = vacation
+                    VacationRequest = vacation,
+                    ForStageOfApproving = 2
                 };
                 _uow.ManagerResponseRepository.Create(managerResponse);
-                _uow.Save();
-                var managerUserInfo = _uow.UserInformationRepository.GetOne(manager.Id);
-                EmailModel emailModel = new EmailModel()
-                {
-                    To = managerEmail,
-                    FullName = $"{managerUserInfo.FirstName}",
-                    Body = vacation.Notes
-                };
-                _vacationEmailSender.ExecuteToManager(emailModel);
             }
+            _uow.Save();
         }
 
         public VacationDaysDto GetVacationDays(int userId)
         {
-            var vacationDays = _uow.UserInformationRepository.GetOneWithVacationRequests(userId).VacationTypes.Where(vt => vt.Year == DateTime.Now.Year).ToList();
+            var vacationDays = _uow.UserInformationRepository.GetOne(ui => ui.ApplicationUserId == userId, ui => ui.VacationTypes).VacationTypes.Where(vt => vt.Year == DateTime.Now.Year).ToList();
 
             VacationDaysDto vacationDaysDto = new VacationDaysDto();
             _mapper.Map<IEnumerable<VacationType>, VacationDaysDto>(vacationDays, vacationDaysDto);
@@ -97,9 +93,12 @@ namespace TOT.Business.Services
 
         public VacationRequestDto GetVacationById(int id)
         {
-            var vacation = _uow.VacationRequestRepository.GetOne(id);
+            var vacation = _uow.VacationRequestRepository.GetOne(vr => vr.VacationRequestId == id, vr=> vr.ManagersResponses);
+            var usersListDto = _userInfoService.GetUsersInfo();
+            usersListDto = usersListDto.Where(uid => vacation.ManagersResponses.Where(mr => mr.ManagerId == uid.Id).Any());
             var vacationDto = _mapper.Map<VacationRequest, VacationRequestDto>(vacation);
-
+            vacationDto.User.Email = vacation.UserInformation.ApplicationUser.Email;
+            vacationDto.AllManagerResponses = _mapper.Map<IEnumerable<UserInformationDto>, ICollection<ManagerResponseListDto>>(usersListDto, vacationDto.AllManagerResponses);
             return vacationDto;
         }
         public void UpdateVacation(int id, string notes)
@@ -126,6 +125,44 @@ namespace TOT.Business.Services
                 return false;
             }
         }
+        private bool CalculateVacationDays(VacationRequest vacationRequest, bool overflowIsAllowed)
+        {
+            int requestedUsedDays = (vacationRequest.EndDate - vacationRequest.StartDate).Days;
+
+            if (requestedUsedDays < 0)
+            {
+                throw new ArgumentException("The count of used days cannot be less than 0!");
+            }
+
+            int userId = vacationRequest.UserInformationId;
+            TimeOffType vacationType = vacationRequest.VacationType;
+            var vacation = _uow.VacationTypeRepository.GetOne(vt => vt.Id == userId && vt.TimeOffType == vacationType);
+
+            if (overflowIsAllowed)
+            {
+                vacation.UsedDays += requestedUsedDays;
+                _uow.VacationTypeRepository.Update(vacation, v => v.UsedDays);
+                _uow.Save();
+
+                return true;
+            }
+            else
+            {
+                int allowedToUseDays = vacation.StatutoryDays - vacation.UsedDays;
+                if (allowedToUseDays < requestedUsedDays)
+                {
+                    return false;
+                }
+                else
+                {
+                    vacation.UsedDays += requestedUsedDays;
+                    _uow.VacationTypeRepository.Update(vacation, v => v.UsedDays);
+                    _uow.Save();
+
+                    return true;
+                }
+            }
+        }
 
         private void CleanUp(bool disposing)
         {
@@ -135,6 +172,7 @@ namespace TOT.Business.Services
                 _userService.Dispose();
                 _uow.Dispose();
                 _userManager.Dispose();
+                _userInfoService.Dispose();
                 disposed = true;
             }
         }

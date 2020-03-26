@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace TOT.Entities
 {
@@ -13,7 +14,8 @@ namespace TOT.Entities
         public DateTime DateResponse { get; set; }
         public bool? Approval { get; set; }
         public bool isRequested { get; set; }
-
+        [Range(1, 4)]
+        public int ForStageOfApproving { get; set; }
         public int VacationRequestId { get; set; }
         public VacationRequest VacationRequest { get; set; }
 

@@ -21,8 +21,8 @@ namespace TOT.Dto
         [Display(Name = "Full Name")]
         public string FullName => FirstName + " " + LastName;
 
-        public ICollection<VacationRequestDto> VacationRequests { get; set; }
-        public ICollection<ManagerResponseDto> ManagerResponses { get; set; }
+        //public ICollection<VacationRequestDto> VacationRequests { get; set; }
+        //public ICollection<ManagerResponseDto> ManagerResponses { get; set; }
 
     }
 }

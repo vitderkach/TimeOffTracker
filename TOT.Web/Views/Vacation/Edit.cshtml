@@ -1,5 +1,6 @@
 ﻿@model TOT.Dto.VacationRequestDto
 @using TOT.Dto;
+@using TOT.Data.Extensions
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
 
@@ -12,34 +13,34 @@
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="inputEmail4">
-                        @Html.DisplayNameFor(model => model.StartDate)
+                        @Html.DisplayNameFor(model => model.ApplicationDto.StartDate)
                     </label>
-                    @Html.EditorFor(model => model.StartDate, null, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    @Html.EditorFor(model => model.ApplicationDto.StartDate, null, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                 </div>
                 <div class="form-group col-md-6">
                     <label for="inputPassword4">
-                        @Html.DisplayNameFor(model => model.EndDate)
+                        @Html.DisplayNameFor(model => model.ApplicationDto.EndDate)
                     </label>
-                    @Html.EditorFor(model => model.EndDate, null, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    @Html.EditorFor(model => model.ApplicationDto.EndDate, null, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
 
                 </div>
             </div>
             <div class="form-row">
-                @Html.DisplayNameFor(model => model.VacationType)
-                @Html.EditorFor(model => model.VacationTypeString, null, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.DisplayNameFor(model => model.ApplicationDto.VacationType)
+                @Html.EditorFor(model => model.ApplicationDto.VacationType.GetDescription(), null, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
             </div>
             <div class="form-row mt-3">
-                @Html.DisplayNameFor(model => model.Notes)
-                @Html.TextAreaFor(model => model.Notes, 3, 1, new { @class = "form-control", @style = "resize:none;" })
+                @Html.DisplayNameFor(model => model.ApplicationDto.Notes)
+                @Html.TextAreaFor(model => model.ApplicationDto.Notes, 3, 1, new { @class = "form-control", @style = "resize:none;" })
             </div>
         </div>
         <div>
-            @foreach (ManagerResponseDto response in Model.ManagersResponses)
+            @foreach (ManagerResponseListDto response in Model.AllManagerResponses)
             {
                 <div class="card mt-3">
                     <div class="card-body">
-                        <h5 class="card-title">
-                                @Html.DisplayFor(model => response.Manager.FullName)
+                        <div class="card-title">
+                                @Html.DisplayFor(model => response.FullName)
                             @if (response.Approval == false)
                             {
                                 <p>@Localizer["Declined"]</p>
@@ -54,12 +55,12 @@
                             }
 
                             <hr />
-                        </h5>
+                        </div>
                         <p class="card-text">
                             @{
                                 if (response.Notes == null)
                                 {
-                                    <div style="opacity:50%;">Empty</div>
+                                    <div style="opacity:0.5;">Empty</div>
                                 }
                                 else
                                 {

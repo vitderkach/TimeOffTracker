@@ -32,7 +32,7 @@
                 @Html.DisplayNameFor(model => users.RoleNames)
             </th>
             <th>
-                @Html.DisplayNameFor(model => users.RegistrationDate)
+                @Html.DisplayNameFor(model => users.RecruitmentDate)
             </th>
             <th>
                 @Localizer["Action"]
@@ -51,7 +51,7 @@
                     @Html.DisplayFor(modelItem => item.RoleNames)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.RegistrationDate)
+                    @Html.DisplayFor(modelItem => item.RecruitmentDate)
                 </td>
                 <td>
                     <form asp-action="Delete" asp-route-id="@item.Id" method="post">
@@ -93,13 +93,13 @@
     var nextDisabled = !Model.HasNextPage ? "disabled" : "";
 }
 
-<a asp-action="List"
+<a asp-action="UserList"
    asp-route-pageNumber="@(Model.PageIndex - 1)"
    asp-route-searchString="@ViewData["NameSortParm"]"
    class="btn btn-outline-dark @prevDisabled">
     @Localizer["Previous"]
 </a>
-<a asp-action="List"
+<a asp-action="UserList"
    asp-route-pageNumber="@(Model.PageIndex + 1)"
    asp-route-searchString="@ViewData["NameSortParm"]"
    class="btn btn-outline-dark @nextDisabled">

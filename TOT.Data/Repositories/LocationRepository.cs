@@ -53,9 +53,13 @@ namespace TOT.Data.Repositories
             }
         }
 
-        public Location GetOne(Expression<Func<Location, bool>> filterExpression)
+        public Location GetOne(Expression<Func<Location, bool>> filterExpression, params Expression<Func<Location, object>>[] includes)
         {
             IQueryable<Location> query = _context.Locations;
+            if (includes != null)
+            {
+                query = includes.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+            }
             if (filterExpression != null)
             {
                 query = query.Where(filterExpression);
@@ -64,9 +68,13 @@ namespace TOT.Data.Repositories
             return query.FirstOrDefault();
         }
 
-        public ICollection<Location> GetAll(Expression<Func<Location, bool>> filterExpression)
+        public ICollection<Location> GetAll(Expression<Func<Location, bool>> filterExpression, params Expression<Func<Location, object>>[] includes)
         {
             IQueryable<Location> query = _context.Locations;
+            if (includes != null)
+            {
+                query = includes.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+            }
             if (filterExpression != null)
             {
                 query = query.Where(filterExpression);

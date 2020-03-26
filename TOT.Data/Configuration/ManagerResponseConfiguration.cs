@@ -19,6 +19,9 @@ namespace TOT.Data.Configuration
             entity.Property(n => n.Notes)
                 .HasColumnType("nvarchar(200)");
 
+            entity.Property(mr => mr.ForStageOfApproving)
+                .HasDefaultValue(1);
+
             entity.HasOne(r => r.VacationRequest)
                  .WithMany(mr => mr.ManagersResponses)
                  .HasForeignKey(fk => fk.VacationRequestId)

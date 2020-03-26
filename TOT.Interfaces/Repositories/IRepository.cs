@@ -26,17 +26,18 @@ namespace TOT.Interfaces.Repositories
     {
         ICollection<TEntity> GetAll();
         TEntity GetOne(int id);
-        TEntity GetOne(Expression<Func<TEntity, bool>> filterExpression);
-        ICollection<TEntity> GetAll(Expression<Func<TEntity, bool>> filterExpression);
+        TEntity GetOne(Expression<Func<TEntity, bool>> filterExpression, params Expression<Func<TEntity, object>>[] includesl);
+        ICollection<TEntity> GetAll(Expression<Func<TEntity, bool>> filterExpression, params Expression<Func<TEntity, object>>[] includes);
     }
 
     public interface IManagerResponseRepository<TEntity> : ICanUpdateEntity<TEntity>, ICanCreateEntity<TEntity>, ICanGetEntity<TEntity>
         where TEntity : class
     {
         void TransferToHistory(int id);
-
-        TEntity GetOneWithUserInfoAndVacationRequest(int id);
-        ICollection<TEntity> GetAllWithUserInfoAndVacationRequest();
+        ICollection<TEntity> GetAllWithVacationRequestsAndUserInfos();
+        TEntity GetOneWithVacationRequestAndUserInfo(int id);
+        ICollection<TEntity> GetAllWithVacationRequestsAndUserInfos(Expression<Func<ManagerResponse, bool>> filterExpression);
+        TEntity GetOneWithVacationRequestAndUserInfo(Expression<Func<ManagerResponse, bool>> filterExpression);
     }
 
     public interface ITeamRepository<TEntity> : ICanDeleteEntity<TEntity>, ICanUpdateEntity<TEntity>, ICanCreateEntity<TEntity>, ICanGetEntity<TEntity>
@@ -48,12 +49,6 @@ namespace TOT.Interfaces.Repositories
     public interface IUserInformationRepository<TEntity> : ICanUpdateEntity<TEntity>, ICanCreateEntity<TEntity>, ICanGetEntity<TEntity>
         where TEntity : class
     {
-        TEntity GetOneWithVacationRequests(int id);
-        ICollection<TEntity> GetAllWithVacationsRequests();
-
-        TEntity GetOneWithTeamAndLocation(int id);
-        ICollection<TEntity> GetAllWithTeamAndLocation();
-
         TEntity GetOneWithAllProperties(int id);
         ICollection<TEntity> GetAllWithAllProperties();
     }

@@ -57,9 +57,13 @@ namespace TOT.Data.Repositories
             }
         }
 
-        public Team GetOne(Expression<Func<Team, bool>> filterExpression)
+        public Team GetOne(Expression<Func<Team, bool>> filterExpression, params Expression<Func<Team, object>>[] includes)
         {
             IQueryable<Team> query = _context.Teams;
+            if (includes != null)
+            {
+                query = includes.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+            }
             if (filterExpression != null)
             {
                 query = query.Where(filterExpression);
@@ -68,9 +72,13 @@ namespace TOT.Data.Repositories
             return query.FirstOrDefault();
         }
 
-        public ICollection<Team> GetAll(Expression<Func<Team, bool>> filterExpression)
+        public ICollection<Team> GetAll(Expression<Func<Team, bool>> filterExpression, params Expression<Func<Team, object>>[] includes)
         {
             IQueryable<Team> query = _context.Teams;
+            if (includes != null)
+            {
+                query = includes.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+            }
             if (filterExpression != null)
             {
                 query = query.Where(filterExpression);

@@ -50,32 +50,6 @@ namespace TOT.Data.Repositories
             }
         }
 
-        public UserInformation GetOneWithVacationRequests(int id)
-            => _context.UserInformations
-            .Where(ui => ui.ApplicationUserId == id && ui.IsFired == false)
-            .Include(ui => ui.VacationTypes)
-            .FirstOrDefault();
-
-        public ICollection<UserInformation> GetAllWithVacationsRequests()
-            => _context.UserInformations
-            .Where(ui => ui.IsFired == false)
-            .Include(ui => ui.VacationTypes)
-            .ToList();
-
-        public UserInformation GetOneWithTeamAndLocation(int id)
-            => _context.UserInformations
-            .Where(ui => ui.ApplicationUserId == id && ui.IsFired == false)
-            .Include(ui => ui.Team)
-            .Include(ui => ui.Location)
-            .FirstOrDefault();
-
-        public ICollection<UserInformation> GetAllWithTeamAndLocation()
-            => _context.UserInformations
-            .Where(ui => ui.IsFired == false)
-            .Include(ui => ui.Team)
-            .Include(ui => ui.Location)
-            .ToList();
-
         public UserInformation GetOneWithAllProperties(int id)
             => _context.UserInformations
             .Where(ui => ui.ApplicationUserId == id && ui.IsFired == false)
@@ -92,9 +66,13 @@ namespace TOT.Data.Repositories
             .Include(ui => ui.Location)
             .ToList();
 
-        public UserInformation GetOne(Expression<Func<UserInformation, bool>> filterExpression)
+        public UserInformation GetOne(Expression<Func<UserInformation, bool>> filterExpression, params Expression<Func<UserInformation, object>>[] includes)
         {
             IQueryable<UserInformation> query = _context.UserInformations;
+            if (includes != null)
+            {
+                query = includes.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+            }
             if (filterExpression != null)
             {
                 query = query.Where(filterExpression);
@@ -103,9 +81,13 @@ namespace TOT.Data.Repositories
             return query.FirstOrDefault();
         }
 
-        public ICollection<UserInformation> GetAll(Expression<Func<UserInformation, bool>> filterExpression)
+        public ICollection<UserInformation> GetAll(Expression<Func<UserInformation, bool>> filterExpression, params Expression<Func<UserInformation, object>>[] includes)
         {
             IQueryable<UserInformation> query = _context.UserInformations;
+            if (includes != null)
+            {
+                query = includes.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+            }
             if (filterExpression != null)
             {
                 query = query.Where(filterExpression);

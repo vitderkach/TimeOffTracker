@@ -59,14 +59,13 @@ namespace TOT.Data.Repositories
             .Include(mr => mr.VacationRequest)
             .Include(mr => mr.Manager).FirstOrDefault();
 
-        public ICollection<ManagerResponse> GetAllWithUserInfoAndVacationRequest()
-            => _context.ManagerResponses
-            .Include(mr => mr.VacationRequest)
-            .Include(mr => mr.Manager).ToList();
-
-        public ManagerResponse GetOne(Expression<Func<ManagerResponse, bool>> filterExpression)
+        public ManagerResponse GetOne(Expression<Func<ManagerResponse, bool>> filterExpression, params Expression<Func<ManagerResponse, object>>[] includes)
         {
             IQueryable<ManagerResponse> query = _context.ManagerResponses;
+            if (includes != null)
+            {
+                query = includes.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+            }
             if (filterExpression != null)
             {
                 query = query.Where(filterExpression);
@@ -75,9 +74,13 @@ namespace TOT.Data.Repositories
             return query.FirstOrDefault();
         }
 
-        public ICollection<ManagerResponse> GetAll(Expression<Func<ManagerResponse, bool>> filterExpression)
+        public ICollection<ManagerResponse> GetAll(Expression<Func<ManagerResponse, bool>> filterExpression, params Expression<Func<ManagerResponse, object>>[] includes)
         {
             IQueryable<ManagerResponse> query = _context.ManagerResponses;
+            if (includes != null)
+            {
+                query = includes.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+            }
             if (filterExpression != null)
             {
                 query = query.Where(filterExpression);
@@ -85,5 +88,35 @@ namespace TOT.Data.Repositories
 
             return query.ToList();
         }
+
+        public ManagerResponse GetOneWithVacationRequestAndUserInfo(Expression<Func<ManagerResponse, bool>> filterExpression)
+        {
+            IQueryable<ManagerResponse> query = _context.ManagerResponses;
+            query = query.Include(mr => mr.VacationRequest).ThenInclude(vr => vr.UserInformation);
+            if (filterExpression != null)
+            {
+                query = query.Where(filterExpression);
+            }
+
+            return query.FirstOrDefault();
+        }
+
+        public ICollection<ManagerResponse> GetAllWithVacationRequestsAndUserInfos(Expression<Func<ManagerResponse, bool>> filterExpression)
+        {
+            IQueryable<ManagerResponse> query = _context.ManagerResponses;
+            query = query.Include(mr => mr.VacationRequest).ThenInclude(vr => vr.UserInformation);
+            if (filterExpression != null)
+            {
+                query = query.Where(filterExpression);
+            }
+
+            return query.ToList();
+        }
+
+        public ManagerResponse GetOneWithVacationRequestAndUserInfo(int id)
+=> _context.ManagerResponses.Where(mr => mr.Id == id).Include(mr => mr.VacationRequest).ThenInclude(vr => vr.UserInformation).FirstOrDefault();
+
+        public ICollection<ManagerResponse> GetAllWithVacationRequestsAndUserInfos()
+=> _context.ManagerResponses.Include(mr => mr.VacationRequest).ThenInclude(vr => vr.UserInformation).ToList();
     }
 }

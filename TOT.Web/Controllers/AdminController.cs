@@ -9,18 +9,89 @@ using System.Linq;
 using System;
 using TOT.Utility.Validation;
 using TOT.Utility.Validation.Alerts;
+using System.Security.Claims;
+using TOT.Interfaces;
+using System.Collections.Generic;
 
 namespace TOT.Web.Controllers
 {
     [Authorize(Roles = "Administrator")]
     public class AdminController : Controller
     {
-        private IAdminService _adminService;
-
-        public AdminController(IAdminService adminService)
+        private readonly IAdminService _adminService;
+        private readonly IVacationService _vacationService;
+        private readonly IMapper _mapper;
+        public AdminController(IAdminService adminService, IMapper mapper, IVacationService vacationService)
         {
             _adminService = adminService;
+            _mapper = mapper;
+            _vacationService = vacationService;
         }
+
+        public async Task<IActionResult> VacationList(
+    string sortOrder,
+    string currentFilter,
+    string searchString,
+    int? pageNumber)
+        {
+            if (searchString != null)
+            {
+                ViewData["NameSortParm"] = searchString;
+            }
+            else
+            {
+                if (currentFilter == null)
+                {
+                    pageNumber = 1;
+                }
+            }
+
+            if (currentFilter != null)
+                ViewData["CurrentFilter"] = currentFilter;
+
+            int userId = int.Parse((User.FindFirstValue(ClaimTypes.NameIdentifier)));
+
+            ICollection<VacationRequestsListForAdminsDTO> responses;
+            switch (currentFilter)
+            {
+                case "Just registered":
+                    {
+                        responses = _adminService.GetDefinedVacationRequestsForAcceptance(userId, null);
+                        break;
+                    }
+                case "Need a final approval":
+                    {
+                        responses = _adminService.GetDefinedVacationRequestsForApproving(userId, null);
+                        break;
+                    }
+                case "Accepted":
+                    {
+                        responses = _adminService.GetDefinedVacationRequestsForAcceptance(userId, true);
+                        var k = _adminService.GetDefinedVacationRequestsForAcceptance(userId, false);
+                        responses = responses.Concat(k).ToList();
+                        break;
+                    }
+                case "Approved":
+                    {
+                        responses = _adminService.GetDefinedVacationRequestsForApproving(userId, true);
+                        responses = responses.Concat(_adminService.GetDefinedVacationRequestsForApproving(userId, false)).ToList();
+                        
+                        break;
+                    }
+                default:
+                    {
+                        responses = _adminService.GetAllVacationRequests(userId);
+                        var name = ViewData["NameSortParm"] as string;
+                        if (name != null)
+                            responses = responses.Where(vrl => vrl.FullName.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+                        break;
+                    }
+            }
+            int pageSize = 3;
+            return View(await PaginatedList<VacationRequestsListForAdminsDTO>.CreateAsync(responses, pageNumber ?? 1, pageSize));
+        }
+
+
 
         private void AddErrorsFromResult(IdentityResult result)
         {
@@ -30,7 +101,7 @@ namespace TOT.Web.Controllers
             }
         }
 
-        public async Task<IActionResult> List(string searchString,
+        public async Task<IActionResult> UserList(string searchString,
             int? pageNumber)
         {
             if (searchString != null)
@@ -40,7 +111,7 @@ namespace TOT.Web.Controllers
 
             var userList = _adminService.GetApplicationUserList();
             if (searchString != null)
-                userList = userList.Where(m => m.FullName.IndexOf(searchString, StringComparison.OrdinalIgnoreCase) >= 0);
+                userList = userList.Where(m => m.FullName.IndexOf(searchString, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
 
             int pageSize = 3;
             return View(await PaginatedList<UserInformationListDto>.CreateAsync(userList, pageNumber ?? 1, pageSize));
@@ -77,7 +148,7 @@ namespace TOT.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Fire(int id)
+        public IActionResult Fire(int id)
         {
             bool isSuccessful = _adminService.FireEmployee(id);
 
@@ -118,6 +189,62 @@ namespace TOT.Web.Controllers
             }
 
             return RedirectToAction("List");
+        }
+
+        // вывод страницы для Approve/Reject выбранного запроса
+        public IActionResult Details(int vacationId)
+        {
+
+            var vacationRequestDTO = _vacationService.GetVacationById(vacationId);
+            VacationDetailsDTO vacationDetailsDTO = null;
+            if (vacationRequestDTO.Stage == 1)
+            {
+                var managerResponse = new ManagerResponseDto();
+                vacationDetailsDTO = _mapper.MergeInto<VacationDetailsDTO>(vacationRequestDTO, managerResponse);
+            }
+            if (vacationRequestDTO.Stage == 2 || vacationRequestDTO.Stage == 4)
+            {
+                vacationDetailsDTO = _mapper.Map<VacationRequestDto, VacationDetailsDTO>(vacationRequestDTO);
+            }
+            else if (vacationRequestDTO.Stage == 3)
+            {
+                int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                var managerResponse = _adminService.GetAdminResponse(vacationId, userId);
+                vacationDetailsDTO = _mapper.MergeInto<VacationDetailsDTO>(vacationRequestDTO, managerResponse);
+            }
+            return View("_VacationApprovingDetails", vacationDetailsDTO);
+        }
+
+        [HttpPost]
+        public IActionResult ApproveVacationRequest(int responseId, int vacationRequestId, string notes)
+        {
+            var vacationRequest = _vacationService.GetVacationById(vacationRequestId);
+            if (vacationRequest.Stage == 1)
+            {
+                _adminService.AcceptVacationRequest(vacationRequestId, notes, true);
+            }
+            if (vacationRequest.Stage == 3)
+            {
+                _adminService.ApproveVacationRequest(responseId, notes, true);
+            }
+
+            return RedirectToAction("VacationList");
+        }
+
+        [HttpPost]
+        public IActionResult DeclineVacationRequest(int responseId, int vacationRequestId, string notes)
+        {
+            var vacationRequest = _vacationService.GetVacationById(vacationRequestId);
+            if (vacationRequest.Stage == 1)
+            {
+                _adminService.AcceptVacationRequest(vacationRequestId, notes, false);
+            }
+            if (vacationRequest.Stage == 3)
+            {
+                _adminService.ApproveVacationRequest(responseId, notes, false);
+            }
+
+            return RedirectToAction("VacationList");
         }
     }
 }

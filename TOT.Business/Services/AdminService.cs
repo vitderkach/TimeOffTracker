@@ -21,6 +21,7 @@ namespace TOT.Business.Services
         private readonly IVacationService _vacationService;
         private readonly IManagerService _managerService;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IVacationEmailSender _vacationEmailSender;
 
         private readonly string defaultPassword = "user123";
 
@@ -30,7 +31,7 @@ namespace TOT.Business.Services
             IMapper mapper, IUserService userService,
             UserManager<ApplicationUser> userManager,
             IManagerService managerService,
-            IUserInfoService userInfoService, IVacationService vacationService, IUnitOfWork unitOfWork)
+            IUserInfoService userInfoService, IVacationService vacationService, IUnitOfWork unitOfWork, IVacationEmailSender vacationEmailSender)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -40,11 +41,14 @@ namespace TOT.Business.Services
             _managerService = managerService;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _vacationEmailSender = vacationEmailSender;
         }
+
+ 
 
         // Список всех пользователей, кроме самого админа
         // Чтобы он сам себя не мог удалить. 
-        public IEnumerable<UserInformationListDto> GetApplicationUserList()
+        public ICollection<UserInformationListDto> GetApplicationUserList()
         {
             var currentUserId = _userService.GetCurrentUser().Result.Id;
             var userList = new List<UserInformationDto>();
@@ -63,6 +67,7 @@ namespace TOT.Business.Services
                 var userDto = _mapper.Map<UserInformationDto, UserInformationListDto>(user);
                 var appUser = _userManager.FindByIdAsync(user.Id.ToString()).Result;
                 userDto.RoleNames = _userManager.GetRolesAsync(appUser).Result;
+                userListDto.Add(userDto);
             }
 
             return userListDto;
@@ -276,6 +281,125 @@ namespace TOT.Business.Services
         {
             CleanUp(true);
             GC.SuppressFinalize(this);
+        }
+
+        public ManagerResponseDto GetAdminResponse(int vacationId, int userId)
+        {
+            ManagerResponse managerResponse = _unitOfWork.ManagerResponseRepository.GetOne(
+                mr => mr.VacationRequestId == vacationId
+                && mr.ManagerId == userId
+                && (mr.ForStageOfApproving == 1 || mr.ForStageOfApproving == 3));
+            return _mapper.Map<ManagerResponse, ManagerResponseDto>(managerResponse);
+        }
+
+        public void AcceptVacationRequest(int vacationRequestId, string adminNotes, bool approve)
+        {
+            VacationRequest vacationRequest = _unitOfWork.VacationRequestRepository.GetOne(vacationRequestId);
+            if (vacationRequest.StageOfApproving == 1)
+            {
+                ManagerResponse managerResponse = new ManagerResponse();
+                managerResponse.Approval = approve;
+                managerResponse.Notes = adminNotes;
+                managerResponse.ForStageOfApproving = 1;
+                managerResponse.Manager = _unitOfWork.UserInformationRepository.GetOne(_userService.GetCurrentUser().Result.Id);
+                managerResponse.VacationRequest = vacationRequest;
+                _unitOfWork.ManagerResponseRepository.Create(managerResponse);
+                if (approve == true)
+                {
+                    vacationRequest.StageOfApproving = 2;
+                    _unitOfWork.VacationRequestRepository.Update(vacationRequest, vr => vr.StageOfApproving);
+                    _unitOfWork.Save();
+                    foreach (var result in _unitOfWork.ManagerResponseRepository.GetAllWithVacationRequestsAndUserInfos(mr => mr.VacationRequestId == vacationRequestId && mr.ForStageOfApproving == 2).Select(mr => new { mr.ManagerId, mr.VacationRequest.Notes, mr.VacationRequest.UserInformation }))
+                    {
+                        UserInformation managerInformation = _unitOfWork.UserInformationRepository.GetOne(ui => ui.ApplicationUserId == result.ManagerId, ui => ui.ApplicationUser);
+                        ApplicationUser manager = managerInformation.ApplicationUser;
+                        EmailModel emailModel = new EmailModel()
+                        {
+                            To = manager.Email,
+                            FullName = $"{managerInformation.FirstName}",
+                            Body = $"You have a new vacation request from {result.UserInformation.FirstName} by reason of: \"{result.Notes}\""
+                        };
+                        _vacationEmailSender.ExecuteToManager(emailModel);
+                    }
+                }
+                else
+                {
+                    vacationRequest.Approval = false;
+                    _unitOfWork.VacationRequestRepository.Update(vacationRequest, vr => vr.Approval);
+                    _unitOfWork.Save();
+                }
+            }
+        }
+
+        public void ApproveVacationRequest(int adminResponseId, string adminNotes, bool approve)
+        {
+            ManagerResponse managerResponse = _unitOfWork.ManagerResponseRepository.GetOne(mr => mr.Id == adminResponseId, mr => mr.VacationRequest);
+            if (managerResponse.ForStageOfApproving == 3)
+            {
+                VacationRequest vacationRequest = managerResponse.VacationRequest;
+                managerResponse.Approval = approve;
+                managerResponse.Notes = adminNotes;
+                _unitOfWork.ManagerResponseRepository.Update(managerResponse, mr => mr.Notes, mr => mr.Approval);
+                if (approve == true)
+                {
+                    vacationRequest.StageOfApproving = 4;
+                    vacationRequest.Approval = true;
+                    _unitOfWork.VacationRequestRepository.Update(vacationRequest, vr => vr.StageOfApproving, vr => vr.Approval);
+                }
+                else
+                {
+                    vacationRequest.Approval = false;
+                    _unitOfWork.VacationRequestRepository.Update(vacationRequest, vr => vr.Approval);
+                }
+                _unitOfWork.Save();
+            }
+        }
+
+        public ICollection<VacationRequestsListForAdminsDTO> GetDefinedVacationRequestsForApproving(int userId, bool? approve)
+        {
+            ICollection<VacationRequest> vacationRequests = _unitOfWork.VacationRequestRepository.GetAll(vr => vr.StageOfApproving == 3 && vr.Approval == approve, vr => vr.ManagersResponses);
+            vacationRequests = vacationRequests.Where(vr => vr.ManagersResponses.Where(mr => mr.Id == userId).Any()).ToList();
+            return ConcatVacationRequestsWithUserInfos(vacationRequests);
+        }
+
+        public ICollection<VacationRequestsListForAdminsDTO> GetDefinedVacationRequestsForAcceptance(int userId, bool? approve)
+        {
+            ICollection<VacationRequest> vacationRequests;
+            if (approve == null)
+            {
+                vacationRequests = _unitOfWork.VacationRequestRepository.GetAll(vr => vr.StageOfApproving == 1 && vr.Approval == approve);
+            }
+            else
+            {
+                vacationRequests = _unitOfWork.VacationRequestRepository.GetAll(vr => vr.ManagersResponses.Where(mr => mr.ManagerId == userId && mr.Approval == approve && mr.ForStageOfApproving == 1).Any(), vr => vr.ManagersResponses).ToList();
+            }
+            return ConcatVacationRequestsWithUserInfos(vacationRequests);
+        }
+
+        public ICollection<VacationRequestsListForAdminsDTO> GetAllVacationRequests(int userId)
+        {
+            ICollection<VacationRequest> vacationRequests;
+            vacationRequests = _unitOfWork.VacationRequestRepository.GetAll(vr => vr.StageOfApproving == 1 && vr.Approval == null);
+            vacationRequests =  vacationRequests
+                .Concat(_unitOfWork.VacationRequestRepository
+                .GetAll(vr => vr.ManagersResponses.Where(mr => mr.ManagerId == userId && mr.Approval != null && mr.ForStageOfApproving == 1).Any(), vr => vr.ManagersResponses).ToList())
+                .ToList();
+            return ConcatVacationRequestsWithUserInfos(vacationRequests);
+        }
+
+        private ICollection<VacationRequestsListForAdminsDTO> ConcatVacationRequestsWithUserInfos(ICollection<VacationRequest> vacationRequests)
+        {
+            var userInfos = _userInfoService.GetUsersInfo();
+            userInfos = userInfos.Where(ui => vacationRequests.Where(vr => vr.UserInformationId == ui.Id).Any()).ToList();
+            var vacationRequestsDtos = _mapper.Map<ICollection<VacationRequest>, ICollection<VacationRequestsListForAdminsDTO>>(vacationRequests);
+            for (int i = 0; i < vacationRequestsDtos.Count; i++)
+            {
+                var item = vacationRequestsDtos.ElementAt(i);
+                var userInfo = userInfos.Where(ui => ui.Id == item.UserInformationId).FirstOrDefault();
+                item.FullName = userInfo.FullName;
+                item.Email = userInfo.Email;
+            }
+            return vacationRequestsDtos;
         }
 
         ~AdminService()

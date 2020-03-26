@@ -65,9 +65,13 @@ namespace TOT.Data.Repositories
             .Include(vr => vr.ManagersResponses)
             .ThenInclude(mr => mr.Manager).ToList();
 
-        public VacationRequest GetOne(Expression<Func<VacationRequest, bool>> filterExpression)
+        public VacationRequest GetOne(Expression<Func<VacationRequest, bool>> filterExpression, params Expression<Func<VacationRequest, object>>[] includes)
         {
             IQueryable<VacationRequest> query = _context.VacationRequests;
+            if (includes != null)
+            {
+                query = includes.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+            }
             if (filterExpression != null)
             {
                 query = query.Where(filterExpression);
@@ -76,9 +80,13 @@ namespace TOT.Data.Repositories
             return query.FirstOrDefault();
         }
 
-        public ICollection<VacationRequest> GetAll(Expression<Func<VacationRequest, bool>> filterExpression)
+        public ICollection<VacationRequest> GetAll(Expression<Func<VacationRequest, bool>> filterExpression, params Expression<Func<VacationRequest, object>>[] includes)
         {
             IQueryable<VacationRequest> query = _context.VacationRequests;
+            if (includes != null)
+            {
+                query = includes.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+            }
             if (filterExpression != null)
             {
                 query = query.Where(filterExpression);

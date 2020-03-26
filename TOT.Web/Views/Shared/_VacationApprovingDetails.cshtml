@@ -1,0 +1,204 @@
+﻿@model TOT.Dto.VacationDetailsDTO
+@using Microsoft.AspNetCore.Identity
+@using TOT.Entities
+@using TOT.Interfaces.Services
+@using Microsoft.AspNetCore.Mvc.Localization
+@using TOT.Data.Extensions
+@using TOT.Dto
+@inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
+@inject IVacationService VacationService
+@using System.Security.Claims
+@{
+    var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+    var claim = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+    var userId = int.Parse(claim.Value);
+    int counter = 0;
+}
+
+<link rel="stylesheet" href="~/lib/bootstrap-select/css/bootstrap-select.min.css" />
+<link rel="stylesheet" href="~/css/bootsrap-datepicker.css" />
+<style>
+    .list-group-item__vacdetails {
+        display: flex;
+    }
+
+    #vacation-details {
+        max-height: calc(100% - 100px);
+        overflow-y: auto;
+    }
+
+    #vacation-container {
+        height: 550px;
+    }
+
+    .scrollbar::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        border-radius: 10px;
+        background-color: #F5F5F5;
+    }
+
+    .scrollbar::-webkit-scrollbar {
+        width: 12px;
+        background-color: #F5F5F5;
+    }
+
+    .scrollbar::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+        background-color: #555;
+    }
+</style>
+<div class="justify-content-center">
+    <div class="container col-8" id="vacation-container">
+        <h2 class="text-center">@Localizer["Vacation application"]</h2>
+        <hr class="row mx-0" />
+        <div class="row col-12 scrollbar mx-0" id="vacation-details">
+            <ul class="list-group  col-12 pr-1">
+                <li class="row list-group-item list-group-item__vacdetails list-group-item-info">
+                    <div class=" row col-12">
+                        <span class="font-weight-bold">@Localizer["Details"]</span>
+                    </div>
+                </li>
+                <li class="row list-group-item list-group-item__vacdetails">
+                    <div class="col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => model.VacationRequestDto.User.FullName)]: </div>
+                    <div class="col-8">@Model.VacationRequestDto.User.FullName</div>
+                </li>
+
+                <li class="row list-group-item list-group-item__vacdetails">
+                    <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => model.VacationRequestDto.User.Email)]: </span>
+                    <span class=" col-8">@Model.VacationRequestDto.User.Email</span>
+                </li>
+
+                <li class=" row list-group-item list-group-item__vacdetails">
+                    <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => model.VacationRequestDto.VacationType)]: </span>
+                    <span class=" col-8">@Localizer[Model.VacationRequestDto.VacationType.GetDescription()]</span>
+                </li>
+                <li class=" row list-group-item list-group-item__vacdetails">
+                    <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => model.VacationRequestDto.ApplicationDto.Notes)]: </span>
+                    <div class=" col-8">@Model.VacationRequestDto.ApplicationDto.Notes</div>
+                </li>
+                @for (int i = 0; i < Model.VacationRequestDto.AllManagerResponses.Count; i++)
+                {
+                    counter++;
+                    ManagerResponseListDto managerResponse = Model.VacationRequestDto.AllManagerResponses.ElementAt(i);
+                    if (managerResponse.ManagerId == userId && managerResponse.Approval == null)
+                    {
+                        counter--;
+                        continue;
+                    }
+                    <li class="row list-group-item list-group-item__vacdetails list-group-item-info">
+                        <div class=" row col-12">
+                            @if (managerResponse.ForStageOfApproving == 2)
+                            {
+                                <span class="font-weight-bold">@Localizer["Manager"] @(counter): </span>
+                            }
+                            @if (managerResponse.ForStageOfApproving == 1)
+                            {
+                                <span class="font-weight-bold">@Localizer["Administrator preliminary answer"]: </span>
+                            }
+                            @if (managerResponse.ForStageOfApproving == 3)
+                            {
+                                <span class="font-weight-bold">@Localizer["Administrator finally answer"]: </span>
+                            }
+                        </div>
+                    </li>
+                    <li class="row list-group-item list-group-item__vacdetails">
+                        <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => managerResponse.FullName)]: </span>
+                        <span class=" col-8">@managerResponse.FullName</span>
+                    </li>
+                    <li class=" row list-group-item list-group-item__vacdetails">
+                        <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => managerResponse.Email)]: </span>
+                        <span class=" col-8">@managerResponse.Email</span>
+                    </li>
+                    @if (Model.VacationRequestDto.Stage > 1 || ((managerResponse.ForStageOfApproving == 1 || managerResponse.ForStageOfApproving == 3) && managerResponse.Approval != null))
+                    {
+                        @if (managerResponse.Approval != null)
+                        {
+                            <li class="row list-group-item list-group-item__vacdetails">
+                                <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => managerResponse.ResponseDate)]: </span>
+                                <span class=" col-8">@managerResponse.ResponseDate.Date</span>
+                            </li>
+                        }
+                        @if (managerResponse.Approval == null)
+                        {
+                            <li class="row list-group-item list-group-item-warning list-group-item__vacdetails">
+                                <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => managerResponse.Approval)]: </span>
+
+                                <span class=" col-8">@Localizer["not handled yet"]</span>
+                            </li>
+                        }
+                        else if (managerResponse.Approval == true)
+                        {
+                            <li class="row list-group-item list-group-item-success list-group-item__vacdetails">
+                                <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => managerResponse.Approval)]: </span>
+
+                                <span class=" col-8">@Localizer["accepted"]</span>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="row list-group-item list-group-item-danger list-group-item__vacdetails">
+                                <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => managerResponse.Approval)]: </span>
+
+                                <span class=" col-8">@Localizer["declined"]</span>
+                            </li>
+                        }
+
+                        if (managerResponse.Approval != null)
+                        {
+                            <li class="row list-group-item list-group-item__vacdetails">
+                                <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => managerResponse.Notes)]: </span>
+                                <div class=" col-8">@managerResponse.Notes</div>
+                            </li>
+                        }
+
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="row w-100"></div>
+    @if ((User.Identity.IsAuthenticated && User.IsInRole("Manager") && Model.VacationRequestDto.Stage == 2 && Model.VacationRequestDto.AllManagerResponses.FirstOrDefault(mr => mr.ManagerId == userId).Approval == null)
+      || ((User.Identity.IsAuthenticated && User.IsInRole("Administrator") && ((Model.VacationRequestDto.Stage == 1 && Model.VacationRequestDto.Approval == null) || (Model.VacationRequestDto.Stage == 3 && Model.VacationRequestDto.AllManagerResponses.FirstOrDefault(mr => mr.ManagerId == userId).Approval == null)))))
+    {
+        <div class="col-8 container">
+            <form class="col-12 row pr-0" action="" method="post">
+                <div class="form-group col-12">
+                    <label class="control-label col-4 font-weight-bold" asp-for="ManagerResponseDto.Notes">@Localizer[Html.DisplayNameFor(model => model.ManagerResponseDto.Notes)]:</label>
+                    <div class="w-100"></div>
+                    <textarea name="notes" class="form-control col ml-3" rows="6"></textarea>
+                </div>
+                <input type="hidden" name="vacationRequestId" value="@Model.VacationRequestDto.ApplicationDto.Id" />
+                <div class="row col-12 justify-content-around form-group">
+                    <input class="btn btn-success" type="submit" value="Confirm" formaction="ApproveVacationRequest" />
+                    <input class="btn btn-danger" type="submit" value="Decline" formaction="DeclineVacationRequest" />
+                </div>
+            </form>
+        </div>
+        <div class="col-3 d-flex flex-column align-items-center justify-content-start">
+        </div>
+    }
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/lib/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="~/lib/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script>
+        window.onload = runDatePicker();
+
+        function goBack() {
+            window.history.back();
+        }
+
+        function runDatePicker() {
+            $('input-group, .input-daterange').datepicker({
+                weekStart: 1,
+                container: '#datepicker',
+                format: 'dd-mm-yyyy'
+            });
+            $('.input-group, .input-daterange').datepicker();
+        }
+    </script>
+}

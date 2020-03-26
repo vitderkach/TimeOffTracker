@@ -5,20 +5,17 @@ namespace TOT.Dto
 {
     public class ManagerResponseListDto
     {
-        public int VacationRequestId { get; set; }
-        public string Employee { get; set; }
+        public int ManagerId { get; set; }
 
-        [Display(Name = "Vacation type")]
-        public string VacationType { get; set; }
+        [Display(Name = "Full Name")]
+        public string FullName { get; set; }
+        public string Email { get; set; }
 
-        [Display(Name = "From")]
+        [Display(Name = "Response date")]
         [DataType(DataType.Date)]
-        public DateTime StartDate { get; set; }
-
-        [Display(Name = "To")]
-        [DataType(DataType.Date)]
-        public DateTime EndDate { get; set; }
-        public VacationRequestDto VacationRequest { get; set; }
+        public DateTime ResponseDate { get; set; }
+        public int ForStageOfApproving { get; set; }
+        public string Notes { get; set; }
 
         [Display(Name = "Status")]
         public bool? Approval { get; set; }

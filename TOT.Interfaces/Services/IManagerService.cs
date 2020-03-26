@@ -6,15 +6,11 @@ namespace TOT.Interfaces.Services
 {
     public interface IManagerService
     {
-        IEnumerable<ManagerResponseDto> GetProcessedRequestsByCurrentManager();
-        ManagerResponseDto GetResponseByVacationId(int vacationRequestId);
-        void ApproveUserRequest(int managerResponseId, string managerNotes, bool? approval, bool overflowIsAllowed);
-        IEnumerable<ManagerResponseDto> GetAllCurrentManagerResponses();
-        ManagerResponseDto GetResponseActiveByVacationId(int vacationRequestId);
-        IEnumerable<ManagerResponseListDto> GetAllMyManagerResponses();
-        IEnumerable<ManagerResponseListDto> GetCurrentManagerRequests(
-            IEnumerable<ManagerResponseDto> managerResponsesDto);
-        VacationRequestApprovalDto VacationApproval(ManagerResponseDto managerResponse);
+        IEnumerable<VacationRequestListForManagersDTO> GetAllManagerVacationRequests(int userId);
+        IEnumerable<VacationRequestListForManagersDTO> GetDefinedManagerVacationRequests(int userId, bool? approval);
+        ManagerResponseDto GetManagerResponse(int vacationRequestId, int userId);
+
+        void GiveManagerResponse(int managerResponseId, string managerNotes, bool approve);
         bool CheckManagerResponsesByUserId(int userId);
         void Dispose();
     }

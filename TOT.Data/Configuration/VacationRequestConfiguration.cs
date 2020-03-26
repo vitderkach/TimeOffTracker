@@ -25,6 +25,9 @@ namespace TOT.Data.Configuration
             entity.Property(n => n.Notes)
                 .HasColumnType("nvarchar(200)");
 
+            entity.Property(vr => vr.StageOfApproving)
+                .HasDefaultValue(1);
+
             entity.Property(c => c.CreationDate)
                .HasColumnType("datetime")
                .HasDefaultValueSql("GETUTCDATE()");
