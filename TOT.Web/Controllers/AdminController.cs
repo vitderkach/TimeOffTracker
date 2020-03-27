@@ -188,7 +188,7 @@ namespace TOT.Web.Controllers
                 }
             }
 
-            return RedirectToAction("List");
+            return RedirectToAction("UserList");
         }
 
         // вывод страницы для Approve/Reject выбранного запроса
