@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.EquivalencyExpression;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,7 +21,12 @@ namespace TOT.Utility.AutoMapper
 
             CreateMap<ManagerResponseDto, ManagerResponse>();
             CreateMap<ApplicationDto, VacationRequest>()
-    .ForMember(dest => dest.UserInformationId, opt => opt.MapFrom(src => src.UserId));
+            .ForMember(dest => dest.UserInformationId, opt => opt.MapFrom(src => src.UserId))
+            .ForMember(dest => dest.CreationDate, opt => opt.Ignore())
+            .ForMember(dest => dest.Approval, opt => opt.Ignore())
+            .ForMember(dest => dest.StageOfApproving, opt => opt.Ignore())
+            .ForMember(dest => dest.UserInformationId, opt => opt.MapFrom(src => src.UserId))
+            .EqualityComparison((odto, o) => odto.Id == o.VacationRequestId);
             CreateMap<VacationRequestListDto, VacationRequest>();
 
             CreateMap<UserInformationListDto, ApplicationUser>();

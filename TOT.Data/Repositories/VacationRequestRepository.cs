@@ -26,7 +26,8 @@ namespace TOT.Data.Repositories
 
         public void Update(VacationRequest item, params Expression<Func<VacationRequest, object>>[] updatedProperties)
         {
-            var entry = _context.Entry<VacationRequest>(item);
+            var entry = _context.Entry<VacationRequest>(_context.VacationRequests.Find(item.VacationRequestId));
+            entry.CurrentValues.SetValues(item);
             if (updatedProperties.Any())
             {
                 foreach (var property in updatedProperties)
@@ -38,8 +39,8 @@ namespace TOT.Data.Repositories
             {
                 foreach (var property in entry.OriginalValues.Properties)
                 {
-                    var original = entry.OriginalValues.GetValue<object>(property);
-                    var current = entry.CurrentValues.GetValue<object>(property);
+                    var original = entry.Property(property.Name).OriginalValue;
+                    var current = entry.Property(property.Name).CurrentValue;
                     if (original != null && !original.Equals(current))
                         entry.Property(property.Name).IsModified = true;
                 }

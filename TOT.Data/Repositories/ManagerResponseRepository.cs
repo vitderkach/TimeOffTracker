@@ -12,7 +12,7 @@ namespace TOT.Data.Repositories
     internal class ManagerResponseRepository : IManagerResponseRepository<ManagerResponse>
     {
         private readonly ApplicationDbContext _context;
-        public ManagerResponseRepository (ApplicationDbContext context)
+        public ManagerResponseRepository(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -114,9 +114,9 @@ namespace TOT.Data.Repositories
         }
 
         public ManagerResponse GetOneWithVacationRequestAndUserInfo(int id)
-=> _context.ManagerResponses.Where(mr => mr.Id == id).Include(mr => mr.VacationRequest).ThenInclude(vr => vr.UserInformation).FirstOrDefault();
+            => _context.ManagerResponses.Where(mr => mr.Id == id).Include(mr => mr.VacationRequest).ThenInclude(vr => vr.UserInformation).FirstOrDefault();
 
         public ICollection<ManagerResponse> GetAllWithVacationRequestsAndUserInfos()
-=> _context.ManagerResponses.Include(mr => mr.VacationRequest).ThenInclude(vr => vr.UserInformation).ToList();
+            => _context.ManagerResponses.Include(mr => mr.VacationRequest).ThenInclude(vr => vr.UserInformation).ToList();
     }
 }

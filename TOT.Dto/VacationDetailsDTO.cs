@@ -8,5 +8,8 @@ namespace TOT.Dto
     {
         public VacationRequestDto VacationRequestDto { get; set; }
         public ManagerResponseDto ManagerResponseDto { get; set; }
+
+        public bool? AccountWeekdays { get; set; }
+        public int? HighDays { get; set; }
     }
 }

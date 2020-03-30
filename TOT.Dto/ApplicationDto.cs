@@ -39,7 +39,7 @@ namespace TOT.Dto
 
         [Display(Name = "Managers")]
         [Required(ErrorMessage = "Required")]
-        public IEnumerable<string> RequiredManagersEmails { get; set; }
+        public ICollection<string> RequiredManagersEmails { get; set; }
         public int UserId { get; set; }
     }
 }

@@ -88,20 +88,21 @@ namespace TOT.Web.Controllers {
         }
 
         // вывод страницы для Approve/Reject выбранного запроса
-        public IActionResult Details(int vacationId)
+        public IActionResult Details(int id)
         {
             int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            var vacationRequestDTO = _vacationService.GetVacationById(vacationId);
+            var vacationRequestDTO = _vacationService.GetVacationById(id);
             VacationDetailsDTO vacationDetailsDTO = null;
             if (vacationRequestDTO.Stage == 2)
             {
-                var managerResponse = _managerService.GetManagerResponse(vacationId, userId);
+                var managerResponse = _managerService.GetManagerResponse(id, userId);
                 vacationDetailsDTO = _mapper.MergeInto<VacationDetailsDTO>(vacationRequestDTO, managerResponse);
             }
             else
             {
                 vacationDetailsDTO = _mapper.Map<VacationRequestDto, VacationDetailsDTO>(vacationRequestDTO);
             }
+            ViewBag.Controller = "Manager";
             return View("_VacationApprovingDetails", vacationDetailsDTO);
         }
 

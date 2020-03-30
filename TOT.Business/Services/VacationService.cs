@@ -95,12 +95,21 @@ namespace TOT.Business.Services
         {
             var vacation = _uow.VacationRequestRepository.GetOne(vr => vr.VacationRequestId == id, vr=> vr.ManagersResponses);
             var usersListDto = _userInfoService.GetUsersInfo();
-            usersListDto = usersListDto.Where(uid => vacation.ManagersResponses.Where(mr => mr.ManagerId == uid.Id).Any());
             var vacationDto = _mapper.Map<VacationRequest, VacationRequestDto>(vacation);
             vacationDto.User.Email = vacation.UserInformation.ApplicationUser.Email;
-            vacationDto.AllManagerResponses = _mapper.Map<IEnumerable<UserInformationDto>, ICollection<ManagerResponseListDto>>(usersListDto, vacationDto.AllManagerResponses);
+            foreach (var response in vacationDto.AllManagerResponses)
+            {
+                var userDto = usersListDto.First(ud => ud.Id == response.ManagerId);
+                response.FullName = userDto.FullName;
+                response.Email = userDto.Email;
+            }
+            foreach (var item in vacationDto.AllManagerResponses)
+            {
+                vacationDto.ApplicationDto.RequiredManagersEmails.Add(item.Email);
+            }
             return vacationDto;
         }
+
         public void UpdateVacation(int id, string notes)
         {
             var vacation = _uow.VacationRequestRepository.GetOne(id);

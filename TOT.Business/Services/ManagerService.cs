@@ -68,7 +68,7 @@ namespace TOT.Business.Services
             .Any();
         public ManagerResponseDto GetManagerResponse(int vacationRequestId, int managerId)
         {
-            var managerResponse = _uow.ManagerResponseRepository.GetOneWithVacationRequestAndUserInfo(mr => mr.VacationRequestId == vacationRequestId && mr.ManagerId == managerId && mr.VacationRequest.StageOfApproving > 1);
+            var managerResponse = _uow.ManagerResponseRepository.GetOneWithVacationRequestAndUserInfo(mr => mr.VacationRequestId == vacationRequestId && mr.ManagerId == managerId && mr.VacationRequest.StageOfApproving == 2);
             return _mapper.Map<ManagerResponse, ManagerResponseDto>(managerResponse);
         }
 
@@ -88,6 +88,11 @@ namespace TOT.Business.Services
                     VacationRequest vacationRequest = _uow.VacationRequestRepository.GetOne(managerResponse.VacationRequestId);
                     vacationRequest.StageOfApproving = 3;
                     _uow.VacationRequestRepository.Update(vacationRequest, vr => vr.StageOfApproving);
+                    ManagerResponse response = new ManagerResponse();
+                    response.ManagerId = _uow.ManagerResponseRepository.GetOne(mr => mr.VacationRequestId == vacationRequest.VacationRequestId && mr.ForStageOfApproving == 1).ManagerId;
+                    response.VacationRequestId = vacationRequest.VacationRequestId;
+                    response.ForStageOfApproving = 3;
+                    _uow.ManagerResponseRepository.Create(response);
                 }
             }
             else

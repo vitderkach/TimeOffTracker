@@ -1,0 +1,65 @@
+﻿@model TOT.Dto.ApplicationDto
+@using Microsoft.AspNetCore.Identity
+@using TOT.Entities
+@using TOT.Interfaces.Services
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
+@inject IVacationService VacationService
+@{
+    var startDate = Model.StartDate == default ? DateTime.Now.ToString() : Model.StartDate.ToString();
+    var endDate = Model.EndDate == default ? DateTime.Now.ToString() : Model.EndDate.ToString();
+    string selectedManagers = "";
+    for (int i = 0; i < Model.RequiredManagersEmails.Count(); i++)
+    {
+        selectedManagers.Concat(Model.RequiredManagersEmails.ElementAt(i));
+    }
+}
+<link rel="stylesheet" href="~/lib/bootstrap-select/css/bootstrap-select.min.css" />
+<link rel="stylesheet" href="~/css/bootsrap-datepicker.css" />
+
+<div class="form-group row">
+    <label asp-for="VacationType" class="control-label col-4"></label>
+    <select asp-for="VacationType" asp-items="@ViewBag.TimeOffTypeList" class="form-control col"></select>
+    <span asp-validation-for="VacationType" class="text-danger"></span>
+</div>
+
+<div class="form-group row">
+    <label class="control-label col-4">Date range</label>
+    <div class="input-group input-daterange col row align-items-center justify-content-between" id="datepicker">
+        <div class="input-group-addon col-auto">from</div>
+        <input asp-for="StartDate" type="text" class="form-control col-auto mx-1" value=@startDate>
+        <div class="input-group-addon col-auto">to</div>
+        <input asp-for="EndDate" type="text" class="form-control col-auto mx-1" value=@endDate>
+    </div>
+    <span id="StartDateVal" asp-validation-for="StartDate" class="text-danger"></span>
+    <span id="StartDateVal" asp-validation-for="EndDate" class="text-danger"></span>
+</div>
+
+<div class="form-group row">
+    <label asp-for="Notes" class="control-label col-4"></label>
+    <div class="w-100"></div>
+    <textarea asp-for="Notes" class="form-control col ml-3" rows="8"></textarea>
+    <span asp-validation-for="Notes" class="text-danger"></span>
+</div>
+
+<div class="form-group row">
+    <label asp-for="RequiredManagersEmails" class="control-label col-4">@Localizer["Managers"]</label>
+    <select asp-for="RequiredManagersEmails" class="selectpicker col px-0" data-live-search="true" multiple values=@selectedManagers id="requiredManagersEmails">
+        @foreach (var item in ViewBag.AvailableManagers)
+        {
+            <option value="@item.Value" data-subtext="@item.Value">@item.Text</option>
+        }
+    </select>
+    <span asp-validation-for="RequiredManagersEmails" class="text-danger"></span>
+</div>
+<div class="form-group row">
+    <input type="hidden" asp-for="UserId" />
+</div>
+<div class="form-group row">
+    <input type="hidden" asp-for="Id" />
+</div>
+<div asp-validation-summary="ModelOnly" class="text-danger row"></div>
+<div class="form-group row justify-content-center">
+    <input class="btn btn-success col-2 mr-3" type="button" value="Send" onclick="confirm()" />
+    <input class="btn btn-danger col-2 ml-3" type="button" value="Cancel" onclick="goBack()" />
+</div>
