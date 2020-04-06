@@ -11,16 +11,16 @@ namespace TOT.Data.Configuration
             entity.HasKey(r => r.Id)
                 .HasName("PK_ManagerResponse");
 
-            entity.Property(d => d.DateResponse)
-               .HasColumnType("datetime")
-               .HasDefaultValueSql("GETUTCDATE()");
-            entity.HasIndex(d => d.DateResponse);
+            entity.Property(d => d.DateResponse);
 
             entity.Property(n => n.Notes)
                 .HasColumnType("nvarchar(200)");
 
             entity.Property(mr => mr.ForStageOfApproving)
                 .HasDefaultValue(1);
+
+            entity.Property(vr => vr.DateResponse)
+                .HasColumnType("datetime2(0)");
 
             entity.HasOne(r => r.VacationRequest)
                  .WithMany(mr => mr.ManagersResponses)

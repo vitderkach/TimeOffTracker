@@ -20,7 +20,7 @@ namespace TOT.Dto
         [Display(Name = "Vacation type")]
         public TimeOffType VacationType { get; set; }
         public ICollection<ManagerResponseListDto> AllManagerResponses { get; set; }
-
+        public bool? SelfCancelled { get; set; }
         public UserInformationDto User { get; set; }
     }
 }

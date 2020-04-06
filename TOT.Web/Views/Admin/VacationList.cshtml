@@ -12,6 +12,7 @@
         <a asp-action="VacationList" class="btn btn-success" asp-route-currentFilter="Need a final approval">@Localizer["Need a final approval"]</a>
         <a asp-action="VacationList" class="btn btn-success" asp-route-currentFilter="Accepted">@Localizer["Accepted"]</a>
         <a asp-action="VacationList" class="btn btn-success" asp-route-currentFilter="Approved">@Localizer["Approved"]</a>
+        <a asp-action="VacationList" class="btn btn-success" asp-route-currentFilter="Self-cancelled">@Localizer["Self-cancelled"]</a>
     </div>
 <table class="table">
     <thead>
@@ -52,7 +53,11 @@
                 @Html.DisplayFor(modelItem => @Localizer[item.VacationType.GetDescription()].Value)
             </td>
             <td>
-                @if (item.StageOfApproving == 1)
+                @if (item.SelfCancelled == true)
+                {
+                    <text>@Localizer["Self-cancelled"].Value</text>
+                }
+                else if (item.StageOfApproving == 1)
                 {
                     <text>@Localizer["Just registered"].Value</text>
                 }

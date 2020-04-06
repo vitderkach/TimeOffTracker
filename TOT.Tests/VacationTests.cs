@@ -28,31 +28,33 @@ namespace TOT.Tests {
         VacationRequestDto vacationRequest;
         List<int> vacationsId;
 
-        [TestInitialize]
-        public void Initialize()
-        {
-            listVacationDto = new List<VacationRequestDto>() {
-                new VacationRequestDto() { VacationRequestId = 1, Notes = "test1",
-                                            VacationType = TimeOffType.ConfirmedSickLeave },
-                new VacationRequestDto() {VacationRequestId = 2, Notes = "test2",
-                                            VacationType = TimeOffType.StudyLeave },
-                new VacationRequestDto() {VacationRequestId = 3, Notes = "test3",
-                                            VacationType = TimeOffType.AdministrativeLeave }
-            };
-            listVacation = new List<VacationRequest>() {
-                new VacationRequest() { VacationRequestId = 1, Notes = "test1",
-                                        VacationType = TimeOffType.ConfirmedSickLeave,
-                UserInformationId = 1 },
-                new VacationRequest() {VacationRequestId = 2, Notes = "test2",
-                                        VacationType = TimeOffType.StudyLeave,
-                UserInformationId = 2 },
-                new VacationRequest() {VacationRequestId = 3, Notes = "test3",
-                                        VacationType = TimeOffType.AdministrativeLeave,
-                UserInformationId = 3 }
-          };
-            vacationsId = new List<int>() { 1, 2, 3 };
-            vacationRequest = listVacationDto[0];
-        }
+        // TODO: Reqrite tests
+
+        //[TestInitialize]
+        //public void Initialize()
+        //{
+        //    listVacationDto = new List<VacationRequestDto>() {
+        //        new VacationRequestDto() { VacationRequestId = 1, Notes = "test1",
+        //                                    VacationType = TimeOffType.ConfirmedSickLeave },
+        //        new VacationRequestDto() {VacationRequestId = 2, Notes = "test2",
+        //                                    VacationType = TimeOffType.StudyLeave },
+        //        new VacationRequestDto() {VacationRequestId = 3, Notes = "test3",
+        //                                    VacationType = TimeOffType.AdministrativeLeave }
+        //    };
+        //    listVacation = new List<VacationRequest>() {
+        //        new VacationRequest() { VacationRequestId = 1, Notes = "test1",
+        //                                VacationType = TimeOffType.ConfirmedSickLeave,
+        //        UserInformationId = 1 },
+        //        new VacationRequest() {VacationRequestId = 2, Notes = "test2",
+        //                                VacationType = TimeOffType.StudyLeave,
+        //        UserInformationId = 2 },
+        //        new VacationRequest() {VacationRequestId = 3, Notes = "test3",
+        //                                VacationType = TimeOffType.AdministrativeLeave,
+        //        UserInformationId = 3 }
+        //  };
+        //    vacationsId = new List<int>() { 1, 2, 3 };
+        //    vacationRequest = listVacationDto[0];
+        //}
 
         //[TestMethod]
         //public void VacationGetByIdReturnsCorrect()

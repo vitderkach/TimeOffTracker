@@ -9,7 +9,7 @@ using TOT.Interfaces.Repositories;
 namespace TOT.Data.Repositories
 {
 
-    internal class ManagerResponseRepository : IManagerResponseRepository<ManagerResponse>
+    internal class ManagerResponseRepository : IManagerResponseRepository<BaseManagerResponse, ManagerResponse, ManagerResponseHistory>
     {
         private readonly ApplicationDbContext _context;
         public ManagerResponseRepository(ApplicationDbContext context)
@@ -118,5 +118,25 @@ namespace TOT.Data.Repositories
 
         public ICollection<ManagerResponse> GetAllWithVacationRequestsAndUserInfos()
             => _context.ManagerResponses.Include(mr => mr.VacationRequest).ThenInclude(vr => vr.UserInformation).ToList();
+
+        public ICollection<ManagerResponseHistory> GetHistoryForOne(int id)
+           =>  _context.ManagerResponseHistories.FromSql(
+               $@"SELECT Id, Notes, DateResponse, VacationRequestId, ManagerId, Approval, SystemStart, SystemEnd, ForStageOfApproving
+                FROM dbo.ManagerResponses
+                FOR SYSTEM_TIME ALL WHERE Id = {id};")
+                .ToList();
+
+        public ICollection<ManagerResponseHistory> GetHistoryForAll()
+            => _context.ManagerResponseHistories.FromSql($@"SELECT Id, Notes, DateResponse, VacationRequestId, ManagerId, Approval, SystemStart, SystemEnd, ForStageOfApproving
+            FROM dbo.ManagerResponses
+            FOR SYSTEM_TIME ALL;")
+            .ToList();
+
+        public ICollection<ManagerResponseHistory> GetHistoryForAllForDefinedVacationRequest(int vacationRequestId)
+            => _context.ManagerResponseHistories.FromSql(
+                $@"SELECT Id, Notes, DateResponse, VacationRequestId, ManagerId, Approval, SystemStart, SystemEnd, ForStageOfApproving
+                FROM dbo.ManagerResponses
+                FOR SYSTEM_TIME ALL WHERE VacationRequestId = {vacationRequestId};")
+                .ToList();
     }
 }

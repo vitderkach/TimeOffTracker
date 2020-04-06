@@ -121,58 +121,6 @@ namespace TOT.Business.Services
             }
         }
 
-        public bool DeactivateVacation(int id)
-        {
-            if (_uow.VacationRequestRepository.GetOne(id) is VacationRequest vacationRequest && vacationRequest.Approval == null)
-            {
-                _uow.VacationRequestRepository.TransferToHistory(id);
-                _uow.Save();
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        private bool CalculateVacationDays(VacationRequest vacationRequest, bool overflowIsAllowed)
-        {
-            int requestedUsedDays = (vacationRequest.EndDate - vacationRequest.StartDate).Days;
-
-            if (requestedUsedDays < 0)
-            {
-                throw new ArgumentException("The count of used days cannot be less than 0!");
-            }
-
-            int userId = vacationRequest.UserInformationId;
-            TimeOffType vacationType = vacationRequest.VacationType;
-            var vacation = _uow.VacationTypeRepository.GetOne(vt => vt.Id == userId && vt.TimeOffType == vacationType);
-
-            if (overflowIsAllowed)
-            {
-                vacation.UsedDays += requestedUsedDays;
-                _uow.VacationTypeRepository.Update(vacation, v => v.UsedDays);
-                _uow.Save();
-
-                return true;
-            }
-            else
-            {
-                int allowedToUseDays = vacation.StatutoryDays - vacation.UsedDays;
-                if (allowedToUseDays < requestedUsedDays)
-                {
-                    return false;
-                }
-                else
-                {
-                    vacation.UsedDays += requestedUsedDays;
-                    _uow.VacationTypeRepository.Update(vacation, v => v.UsedDays);
-                    _uow.Save();
-
-                    return true;
-                }
-            }
-        }
-
         private void CleanUp(bool disposing)
         {
             if (!disposed)
@@ -216,6 +164,71 @@ namespace TOT.Business.Services
         {
             CleanUp(true);
             GC.SuppressFinalize(this);
+        }
+
+        public bool CancelVacation(int vacationRequestId)
+        {
+            var vacationRequest = _uow.VacationRequestRepository.GetOne(vacationRequestId);
+            if (vacationRequest is VacationRequest && vacationRequest.Approval != true)
+            {
+                vacationRequest.SelfCancelled = true;
+                _uow.VacationRequestRepository.Update(vacationRequest, vr => vr.SelfCancelled);
+                _uow.Save();
+                return true;
+            }
+            return false;
+        }
+
+        public void EditVacationRequest(ApplicationDto applicationDto)
+        {
+            VacationRequest vacationRequest = _uow.VacationRequestRepository.GetOne(vr => vr.VacationRequestId == applicationDto.Id, vr => vr.ManagersResponses);
+            if (vacationRequest is VacationRequest && applicationDto.UserId == vacationRequest.UserInformationId)
+            {
+                vacationRequest = _mapper.Map<ApplicationDto, VacationRequest>(applicationDto, vacationRequest);
+                _uow.VacationRequestRepository.Update(vacationRequest);
+
+            }
+            if (vacationRequest.StageOfApproving == 1)
+            {
+                List<ManagerResponse> managerResponses = _uow.ManagerResponseRepository.GetAll(mr => mr.VacationRequestId == vacationRequest.VacationRequestId && mr.ForStageOfApproving == 2).ToList();
+                var userInfos = _userInfoService.GetUsersInfo();
+                foreach (var email in applicationDto.RequiredManagersEmails)
+                {
+                    var userInfo = userInfos.Where(ui => ui.Email == email).First();
+                    if (managerResponses.Where(mr => mr.Manager.ApplicationUserId == userInfo.Id).FirstOrDefault() is ManagerResponse response)
+                    {
+                        managerResponses.Remove(response);
+                    }
+                    else
+                    {
+                        ManagerResponse newResponse = new ManagerResponse();
+                        newResponse.ForStageOfApproving = 2;
+                        newResponse.VacationRequest = vacationRequest;
+                        newResponse.Manager = _uow.UserInformationRepository.GetOne(userInfo.Id);
+                        _uow.ManagerResponseRepository.Create(newResponse);
+                    }
+                }
+
+                foreach (var item in managerResponses)
+                {
+                    _uow.ManagerResponseRepository.TransferToHistory(item.Id);
+                }
+            }
+            _uow.Save();
+        }
+
+        public VacationTimelineDto GetVacationTimeline(int vacationRequestId)
+        {
+            var vacationRequestHistories = _uow.VacationRequestRepository.GetHistoryForOne(vacationRequestId).OrderBy(vrh => vrh.SystemEnd).ToList();
+            var managerResponses = _uow.ManagerResponseRepository.GetAll(mr => mr.VacationRequestId == vacationRequestId);
+            VacationTimelineDto vacationTimelineDto = new VacationTimelineDto();
+            vacationTimelineDto.TemporalVacationRequests = _mapper.Map<IEnumerable<VacationRequestHistory>, IEnumerable<TemporalVacationRequest>>(vacationRequestHistories);
+            vacationTimelineDto.ManagerResponseForTimelines = _mapper.Map<IEnumerable<ManagerResponse>, IEnumerable<ManagerResponseForTimelineDto>>(managerResponses);
+            foreach (var item in vacationTimelineDto.ManagerResponseForTimelines)
+            {
+                item.Manager = _userInfoService.GetUserInfo(item.ManagerId);
+            }
+            return vacationTimelineDto;
         }
 
         ~VacationService()

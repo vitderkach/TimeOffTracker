@@ -28,11 +28,6 @@ namespace TOT.Data.Configuration
             entity.Property(vr => vr.StageOfApproving)
                 .HasDefaultValue(1);
 
-            entity.Property(c => c.CreationDate)
-               .HasColumnType("datetime")
-               .HasDefaultValueSql("GETUTCDATE()");
-            entity.HasIndex(cr => cr.CreationDate);
-
             var converter = new EnumToStringConverter<TimeOffType>();
             entity.Property(t => t.VacationType)
                 .HasColumnType("nvarchar(30)")

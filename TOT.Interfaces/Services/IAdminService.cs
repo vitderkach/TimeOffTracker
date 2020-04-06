@@ -21,10 +21,10 @@ namespace TOT.Interfaces.Services
         void ApproveVacationRequest(int adminResponseId, string adminNotes, bool approve);
         ICollection<VacationRequestsListForAdminsDTO> GetDefinedVacationRequestsForApproving(int userId, bool? approve);
         ICollection<VacationRequestsListForAdminsDTO> GetDefinedVacationRequestsForAcceptance(int userId, bool? approve);
+        ICollection<VacationRequestsListForAdminsDTO> GetSelfCancelledVacationRequests(int userId);
         ICollection<VacationRequestsListForAdminsDTO> GetApprovedVacationRequests(int userId, bool approve);
         ICollection<VacationRequestsListForAdminsDTO> GetAllVacationRequests(int userId);
-
-        bool CalculateDays(int daysCount, TimeOffType timeOffType, int userId, int year);
+        bool CalculateVacationDays(int vacationRequestId, int daysCount);
         void EditVacationRequest(ApplicationDto applicationDto);
         void Dispose();
     }

@@ -11,6 +11,8 @@
     <a asp-action="List" class="btn btn-success" asp-route-currentFilter="Approved">@Localizer["Approved"]</a>
     <a asp-action="List" class="btn btn-info" asp-route-currentFilter="In Proccess">@Localizer["In Proccess"]</a>
     <a asp-action="List" class="btn btn-danger" asp-route-currentFilter="Declined">@Localizer["Declined"]</a>
+    <a asp-action="List" class="btn btn-danger" asp-route-currentFilter="Self-cancelled">@Localizer["Self-cancelled"]</a>
+
 </div>
 <table class="table">
     <thead>
@@ -52,24 +54,37 @@
                 </td>
                 <td>
                     @{
-                        if (item.Approval == null)
-                        { <div> @Localizer["In Proccess"] </div> }
+                        if (item.SelfCancelled != true)
+                        {
+                            if (item.Approval == null)
+                            { <div> @Localizer["In Proccess"] </div> }
                         if (item.Approval == false)
                         { <div> @Localizer["Declined"] </div> }
-                        if (item.Approval == true)
-                        { <div> @Localizer["Approved"] </div> }
+                    if (item.Approval == true)
+                    { <div> @Localizer["Approved"] </div> }
+            }
+            else
+            {
+                <div> @Localizer["Self-cancelled"] </div>
+            }
+
                     }
                 </td>
                 <td>
                     <div class="row">
                         @{
-                            @Html.ActionLink("Edit", "Edit", new { id = item.VacationRequestId }, new { @class = "btn btn-outline-dark form-control col-5 m-1" })
-                            if (item.Approval == null)
+                            if (item.SelfCancelled != true && item.StageOfApproving == 1)
                             {
-                                //@Html.ActionLink("Delete", "Delete", new { id = item.VacationRequestId }, new { @class = "btn btn-outline-dark form-control col-5 m-1" })
-
+                                <a class="btn btn-outline-dark form-control col-5 m-1" asp-action="Edit" asp-route-id="@item.VacationRequestId">Edit</a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-outline-dark form-control col-5 m-1 disabled">Edit</a>
+                            }
+                            if (item.Approval == null && item.SelfCancelled != true)
+                            {
                                 <!--Разметка поплыла из-за смены кнопки Delete-->
-                                <form asp-action="Delete" asp-route-id="@item.VacationRequestId" method="post">
+                                <form asp-action="Delete" asp-route-vacationRequestId="@item.VacationRequestId" method="post">
                                     <button type="button" class="btn btn-outline-dark form-control m-1"
                                             data-toggle="modal" data-target="#@deleteVacation"
                                             data-whatever="@item.VacationRequestId">
@@ -106,6 +121,7 @@
                                 <button class="btn btn-outline-dark form-control col-5 m-1" disabled>@Localizer["Delete"]</button>
                             }
                         }
+                    <a class="btn btn-outline-dark form-control col-5 m-1" asp-action="VacationTimeline" asp-route-id="@item.VacationRequestId">@Localizer["Details"]</a>
                     </div>
                 </td>
             </tr>

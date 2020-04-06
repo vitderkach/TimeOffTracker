@@ -1,0 +1,313 @@
+﻿@using TOT.Dto
+@using System.Collections.Generic
+@model VacationTimelineDto
+@{
+    ViewData["Title"] = "VacationTimeline";
+    Queue<TemporalVacationRequest> requestsQueue = new Queue<TemporalVacationRequest>(Model.TemporalVacationRequests.OrderBy(tvr => tvr.ActionTime).AsEnumerable());
+    Queue<ManagerResponseForTimelineDto> responsesQueue = new Queue<ManagerResponseForTimelineDto>(Model.ManagerResponseForTimelines.OrderBy(tmr => tmr.ForStageOfApproving).ThenByDescending(tmr => tmr.Approval).AsEnumerable());
+    ManagerResponseForTimelineDto response = default;
+    TemporalVacationRequest request = default;
+    ManagerResponseForTimelineDto oldResponse = default;
+    TemporalVacationRequest oldRequest = default;
+    DateTime nextRequest = default;
+    DateTime nextResponse = default;
+    bool nextRequestExists = default;
+    bool nextResponseExists = default;
+    bool inverted = true;
+    void getNextRequest()
+    {
+
+        if (requestsQueue.Any() == false)
+        {
+        }
+        else
+        {
+            oldRequest = request;
+            nextRequest = (nextResponseExists == true) ? request.ActionTime : DateTime.MinValue;
+            request = requestsQueue.Dequeue();
+        }
+        nextRequestExists = requestsQueue.Any();
+    }
+
+    void getNextResponse()
+    {
+
+        if (responsesQueue.Any() == false)
+        {
+        }
+        else
+        {
+            oldResponse = response;
+            nextResponse = (nextResponseExists == true) ? response.DateResponse : DateTime.MinValue;
+            response = responsesQueue.Dequeue();
+        }
+        nextResponseExists = responsesQueue.Any();
+    }
+
+    string invert()
+    {
+        if (inverted)
+        {
+            inverted = !inverted;
+            return "timeline-inverted";
+        }
+        else
+        {
+            inverted = !inverted;
+            return "";
+        }
+
+
+    }
+
+    getNextRequest();
+    getNextResponse();
+}
+
+
+
+<div class="container">
+    <div class="page-header">
+        <h2>VacationTimeline</h2>
+        <h2>The history of vacation approving</h2>
+    </div>
+    <ul class="timeline">
+        <li class="@invert()">
+            <div class="timeline-badge primary"><div class="bi bi-clipboard"></div></div>
+            <div class="timeline-panel">
+                <div class="timeline-heading">
+                    <h4 class="timeline-title">Your application has been filed</h4>
+                    <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
+                </div>
+                <div class="timeline-body">
+                    <p>Your appication has been succesfully filed and transferred for admins for review. Wait the answer from admin.</p>
+                </div>
+            </div>
+        </li>
+
+        @while (true)
+        {
+            if (!(request.StageOfApproving == 1 && request.Approval == null && nextRequestExists != false))
+            {
+                break;
+            }
+                                getNextRequest();
+                    if (request.StageOfApproving == 2)
+                    {
+                        break;
+                    }
+            <li class="@invert()">
+                <div class="timeline-badge warning"><div class="bi bi-warning"></div></div>
+                <div class="timeline-panel">
+                    <div class="timeline-heading">
+                        <h4 class="timeline-title">Your details about application has been changed.</h4>
+                        <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
+                    </div>
+                    <div class="timeline-body">
+                        <p>Your details about application has been changed.</p>
+                    </div>
+                </div>
+            </li>
+        }
+        @if (request.SelfCancelled == true)
+        {
+            <li class="@invert()">
+                <div class="timeline-badge danger"><div class="bi bi-cancelling"></div></div>
+                <div class="timeline-panel">
+                    <div class="timeline-heading">
+                        <h4 class="timeline-title">The request has been cancelled.</h4>
+                        <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
+                    </div>
+                    <div class="timeline-body">
+                        <p>The appication has been cancelled by you.</p>
+                    </div>
+                </div>
+            </li>
+        }
+        @if (request.StageOfApproving == 1 && request.Approval == false)
+        {
+            <li class="@invert()">
+                <div class="timeline-badge danger"><div class="bi bi-decliying"></div></div>
+                <div class="timeline-panel">
+                    <div class="timeline-heading">
+                        <h4 class="timeline-title">The request has been declined.</h4>
+                        <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@response.DateResponse</small></p>
+                    </div>
+                    <div class="timeline-body">
+                        <p>Your request has been declined by admin during accepting.</p>
+                    </div>
+                </div>
+            </li>
+        }
+        else if (request.StageOfApproving == 2)
+        {
+            <li class="@invert()">
+                <div class="timeline-badge primary"><div class="bi bi-next-stage"></div></div>
+                <div class="timeline-panel">
+                    <div class="timeline-heading">
+                        <h4 class="timeline-title">The application has been accepted.</h4>
+                        <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
+                    </div>
+                    <div class="timeline-body">
+                        <p>Congratulations! The application has been accepted by admin for further review.</p>
+                    </div>
+                </div>
+            </li>
+
+            getNextResponse();
+            while (response.ForStageOfApproving == 2 && response.Approval == true && nextResponseExists != false)
+            {
+                <li class="@invert()">
+                    <div class="timeline-badge info"><div class="bi bi-accepting"></div></div>
+                    <div class="timeline-panel">
+                        <div class="timeline-heading">
+                            <h4 class="timeline-title">Manager accepting</h4>
+                            <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@response.DateResponse</small></p>
+                        </div>
+                        <div class="timeline-body">
+                            <p>The manager @response.Manager.FullName has approved your request.</p>
+                        </div>
+                    </div>
+                </li>
+                getNextResponse();
+            }
+            if (request.SelfCancelled == true)
+            {
+                <li class="@invert()">
+                    <div class="timeline-badge danger"><div class="bi bi-cancelling"></div></div>
+                    <div class="timeline-panel">
+                        <div class="timeline-heading">
+                            <h4 class="timeline-title">The request has been cancelled.</h4>
+                            <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
+                        </div>
+                        <div class="timeline-body">
+                            <p>The appication has been cancelled by you.</p>
+                        </div>
+                    </div>
+                </li>
+            }
+            else if (response.ForStageOfApproving == 2 && response.Approval == null)
+            {
+                <li class="@invert()">
+                    <div class="timeline-badge primary"><div class="bi bi-waiting"></div></div>
+                    <div class="timeline-panel">
+                        <div class="timeline-heading">
+                            <h4 class="timeline-title">Waiting for responses from others mangers</h4>
+                            <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@DateTime.Now</small></p>
+                        </div>
+                        <div class="timeline-body">
+                            <p>Other managers have not answered yet. Please, wait.</p>
+                        </div>
+                    </div>
+                </li>
+            }
+            else if (response.ForStageOfApproving == 2 && response.Approval == false)
+            {
+                <li class="@invert()">
+                    <div class="timeline-badge danger"><div class="bi bi-decliying"></div></div>
+                    <div class="timeline-panel">
+                        <div class="timeline-heading">
+                            <h4 class="timeline-title">Manager decliying</h4>
+                            <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@response.DateResponse</small></p>
+                        </div>
+                        <div class="timeline-body">
+                            <p>Unfortunately, the manager @response.Manager.FullName has declined your request with answer: "@response.Notes". The application has been declined properly</p>
+                        </div>
+                    </div>
+                </li>
+            }
+            else
+            {
+                getNextRequest();
+                <li class="@invert()">
+                    <div class="timeline-badge primary"><div class="bi bi-next-stage"></div></div>
+                    <div class="timeline-panel">
+                        <div class="timeline-heading">
+                            <h4 class="timeline-title">The application has been accepted by managers</h4>
+                            <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@response.DateResponse</small></p>
+                        </div>
+                        <div class="timeline-body">
+                            <p>Congratulations! The application has been accepted by all managers and has been tranferred for final admin review.</p>
+                        </div>
+                    </div>
+                </li>
+                getNextResponse();
+                @while (true)
+                {
+
+                    if (!(request.StageOfApproving == 3 && request.Approval == null && nextRequestExists != false))
+                    {
+                        break;
+                    }
+                    getNextRequest();
+                    if (request.StageOfApproving == 4)
+                    {
+                        break;
+                    }
+                    <li class="@invert()">
+                        <div class="timeline-badge warning"><div class="bi bi-warning"></div></div>
+                        <div class="timeline-panel">
+                            <div class="timeline-heading">
+                                <h4 class="timeline-title">Your details about application has been changed.</h4>
+                                <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
+                            </div>
+                            <div class="timeline-body">
+                                <p>Your details about application has been changed by admin.</p>
+                            </div>
+                        </div>
+                    </li>
+
+                }
+                if (request.SelfCancelled == true)
+                {
+                    <li class="@invert()">
+                        <div class="timeline-badge danger"><div class="bi bi-cancelling"></div></div>
+                        <div class="timeline-panel">
+                            <div class="timeline-heading">
+                                <h4 class="timeline-title">The request has been cancelled.</h4>
+                                <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
+                            </div>
+                            <div class="timeline-body">
+                                <p>The appication has been cancelled by you.</p>
+                            </div>
+                        </div>
+                    </li>
+                }
+                else if (response.Approval == false && response.ForStageOfApproving == 3)
+                {
+                    <li class="@invert()">
+                        <div class="timeline-badge danger"><div class="bi bi-decliying"></div></div>
+                        <div class="timeline-panel">
+                            <div class="timeline-heading">
+                                <h4 class="timeline-title">Admin declying</h4>
+                                <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@response.DateResponse</small></p>
+                            </div>
+                            <div class="timeline-body">
+                                <p>Unfortunately, the manager @response.Manager.FullName has declined your request with answer: "@response.Notes". The application has been declined properly.</p>
+                            </div>
+                        </div>
+                    </li>
+                }
+                else if(request.Approval == true)
+                {
+                    <li class="@invert()">
+                        <div class="timeline-badge success"><div class="bi bi-success"></div></div>
+                        <div class="timeline-panel">
+                            <div class="timeline-heading">
+                                <h4 class="timeline-title">Your application has been filed</h4>
+                                <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
+                            </div>
+                            <div class="timeline-body">
+                                <p>Congratulations! The application has been approved by admin and all needed stages have passed. Have a nice rest!</p>
+                            </div>
+                        </div>
+                    </li>
+                }
+            }
+        }
+    </ul>
+</div>
+
+@section css {
+    <link rel="stylesheet" href="~/css/vacation/timeline.css" />
+}

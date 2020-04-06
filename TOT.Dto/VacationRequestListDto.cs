@@ -18,9 +18,10 @@ namespace TOT.Dto {
         public TimeOffType VacationType { get; set; }
         [Display(Name = "Approval")]
         public bool? Approval { get; set; }
-
+        [Display(Name = "Self-cancelled")]
+        public bool? SelfCancelled { get; set; }
         public UserInformationDto User { get; set; }
-        
+        public int StageOfApproving { get; set; }
         public ICollection<ManagerResponseDto> ManagersResponses { get; set; }
         [Display(Name = "Request notes")]
         public string Notes { get; set; }

@@ -22,6 +22,7 @@ namespace TOT.Dto
         public int UserInformationId { get; set; }
         [Display(Name = "Full Name")]
         public string FullName { get; set; }
+        public bool? SelfCancelled { get; set; }
         public string Email { get; set; }
     }
 }

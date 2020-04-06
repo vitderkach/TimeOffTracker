@@ -9,7 +9,7 @@ using TOT.Interfaces.Repositories;
 
 namespace TOT.Data.Repositories
 {
-    internal class VacationRequestRepository : IVacationRequestRepository<VacationRequest>
+    internal class VacationRequestRepository : IVacationRequestRepository<BaseVacationRequest, VacationRequest, VacationRequestHistory>
     {
         private readonly ApplicationDbContext _context;
         public VacationRequestRepository(ApplicationDbContext context)
@@ -95,5 +95,21 @@ namespace TOT.Data.Repositories
 
             return query.ToList();
         }
+
+        public ICollection<VacationRequestHistory> GetHistoryForOne(int id)
+           => _context.VacationRequestHistories.FromSql(
+               $@"SELECT VacationRequestId, StartDate, EndDate, VacationType, Notes, Approval, 
+                SystemStart, SystemEnd, UserInformationId, StageOfApproving, SelfCancelled, TakenDays
+                FROM dbo.VacationRequests
+                FOR SYSTEM_TIME ALL
+                WHERE VacationRequestId = {id};")
+                .ToList();
+
+        public ICollection<VacationRequestHistory> GetHistoryForAll()
+           => _context.VacationRequestHistories.FromSql(
+               $@"SELECT VacationRequestId, StartDate, EndDate, VacationType, Notes, Approval, 
+                SystemStart, SystemEnd, UserInformationId, StageOfApproving, SelfCancelled, TakenDays
+                FROM dbo.VacationRequests
+                FOR SYSTEM_TIME ALL;").ToList();
     }
 }

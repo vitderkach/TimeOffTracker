@@ -28,7 +28,7 @@ namespace TOT.Dto
 
         [Display(Name = "Status")]
         public bool? ManagerApproval { get; set; }
-
+        public bool? SelfCancelled { get; set; }
         public bool? Approval { get; set; }
     }
 }

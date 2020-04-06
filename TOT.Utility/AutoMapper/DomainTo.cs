@@ -19,10 +19,6 @@ namespace TOT.Utility.AutoMapper
                 .ForMember(dest => dest.User, opt => opt.MapFrom(source => source.UserInformation))
                 .ForMember(dest => dest.AllManagerResponses, opt => opt.MapFrom(source => source.ManagersResponses));
 
-
-
-
-
             CreateMap<VacationRequest, ApplicationDto>()
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserInformationId))
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.VacationRequestId));
@@ -37,25 +33,6 @@ namespace TOT.Utility.AutoMapper
 
             CreateMap<VacationRequest, VacationRequestsListForAdminsDTO>();
             CreateMap<VacationRequest, VacationRequestListForManagersDTO>();
-            //CreateMap<ManagerResponseDto, ManagerResponseListDto>()
-            //    .ForMember(dest => dest.VacationRequestId, opt => opt.MapFrom(src => src.VacationRequest.VacationRequestId))
-            //    .ForMember(dest => dest.Employee, opt => opt.MapFrom(src => src.VacationRequest.User.FullName))
-            //    .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.VacationRequest.StartDate))
-            //    .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.VacationRequest.EndDate))
-            //    .ForMember(dest => dest.VacationType, opt => opt.MapFrom(src => src.VacationRequest.VacationType.GetDescription()))
-            //    .ForMember(dest => dest.Approval, opt => opt.MapFrom(src => src.Approval));
-
-            //CreateMap<ManagerResponseDto, VacationRequestApprovalDto>()
-            //    .ForMember(dest => dest.VacationRequestId, opt => opt.MapFrom(src => src.VacationRequest.VacationRequestId))
-            //    .ForMember(dest => dest.Employee, opt => opt.MapFrom(src => src.VacationRequest.User.FullName))
-            //    .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.VacationRequest.StartDate))
-            //    .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.VacationRequest.EndDate))
-            //    .ForMember(dest => dest.VacationType, opt => opt.MapFrom(src => src.VacationRequest.VacationType.GetDescription()))
-            //    .ForMember(dest => dest.EmployeeNotes, opt => opt.MapFrom(src => src.VacationRequest.Notes))
-            //    .ForMember(dest => dest.ManagerResponseId, opt => opt.MapFrom(src => src.Id))
-            //    .ForMember(dest => dest.EmployeeId, opt => opt.MapFrom(src => src.VacationRequest.UserId))
-            //    .ForMember(dest => dest.isApproval, opt => opt.MapFrom(src => src.Approval));
-
             CreateMap<ApplicationUser, UserInformationDto>()
                 .ForMember(dest => dest.FirstName, opt => opt.Ignore())
                 .ForMember(dest => dest.LastName, opt => opt.Ignore())
@@ -74,6 +51,10 @@ namespace TOT.Utility.AutoMapper
             CreateMap<VacationType, VacationTypeDto>();
             CreateMap<ICollection<VacationType>, VacationDaysDto>()
                 .ForMember(dest => dest.TimeOffTypes, opt => opt.MapFrom(src => src));
+
+            CreateMap<VacationRequestHistory, TemporalVacationRequest>()
+                .ForMember(dest => dest.ActionTime, opt => opt.MapFrom(src => src.SystemStart));
+            CreateMap<ManagerResponse, ManagerResponseForTimelineDto>();
         }
     }
     public static class ExtensionMethods

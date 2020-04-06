@@ -14,9 +14,9 @@ namespace TOT.Data.UnitOfWork
 
         public IUserInformationRepository<UserInformation> UserInformationRepository { get; }
 
-        public IVacationRequestRepository<VacationRequest> VacationRequestRepository { get; }
+        public IVacationRequestRepository<BaseVacationRequest, VacationRequest, VacationRequestHistory> VacationRequestRepository { get; }
 
-        public IManagerResponseRepository<ManagerResponse> ManagerResponseRepository { get; }
+        public IManagerResponseRepository<BaseManagerResponse, ManagerResponse, ManagerResponseHistory> ManagerResponseRepository { get; }
 
         public IVacationTypeRepository<VacationType> VacationTypeRepository { get; }
 

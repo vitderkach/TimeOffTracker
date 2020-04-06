@@ -300,6 +300,7 @@ namespace TOT.Business.Services
                 managerResponse.Approval = approve;
                 managerResponse.Notes = adminNotes;
                 managerResponse.ForStageOfApproving = 1;
+                managerResponse.DateResponse = DateTime.Now;
                 managerResponse.Manager = _unitOfWork.UserInformationRepository.GetOne(_userService.GetCurrentUser().Result.Id);
                 managerResponse.VacationRequest = vacationRequest;
                 _unitOfWork.ManagerResponseRepository.Create(managerResponse);
@@ -338,7 +339,8 @@ namespace TOT.Business.Services
                 VacationRequest vacationRequest = managerResponse.VacationRequest;
                 managerResponse.Approval = approve;
                 managerResponse.Notes = adminNotes;
-                _unitOfWork.ManagerResponseRepository.Update(managerResponse, mr => mr.Notes, mr => mr.Approval);
+                managerResponse.DateResponse = DateTime.Now;
+                _unitOfWork.ManagerResponseRepository.Update(managerResponse, mr => mr.Notes, mr => mr.Approval, mr => mr.DateResponse);
                 if (approve == true)
                 {
                     vacationRequest.StageOfApproving = 4;
@@ -356,14 +358,14 @@ namespace TOT.Business.Services
 
         public ICollection<VacationRequestsListForAdminsDTO> GetDefinedVacationRequestsForApproving(int userId, bool? approve)
         {
-            ICollection<VacationRequest> vacationRequests = _unitOfWork.VacationRequestRepository.GetAll(vr => vr.StageOfApproving == 3 && vr.Approval == approve, vr => vr.ManagersResponses);
+            ICollection<VacationRequest> vacationRequests = _unitOfWork.VacationRequestRepository.GetAll(vr => vr.StageOfApproving == 3 && vr.Approval == approve && vr.SelfCancelled != true, vr => vr.ManagersResponses);
             vacationRequests = vacationRequests.Where(vr => vr.ManagersResponses.Where(mr => mr.ManagerId == userId).Any()).ToList();
             return ConcatVacationRequestsWithUserInfos(vacationRequests);
         }
 
         public ICollection<VacationRequestsListForAdminsDTO> GetApprovedVacationRequests(int userId, bool approve)
         {
-            ICollection<VacationRequest> vacationRequests = _unitOfWork.VacationRequestRepository.GetAll(vr => vr.StageOfApproving == 4 && vr.Approval == approve, vr => vr.ManagersResponses);
+            ICollection<VacationRequest> vacationRequests = _unitOfWork.VacationRequestRepository.GetAll(vr => vr.StageOfApproving == 4 && vr.Approval == approve && vr.SelfCancelled != true, vr => vr.ManagersResponses);
             vacationRequests = vacationRequests.Where(vr => vr.ManagersResponses.Where(mr => mr.ManagerId == userId).Any()).ToList();
             return ConcatVacationRequestsWithUserInfos(vacationRequests);
         }
@@ -373,19 +375,26 @@ namespace TOT.Business.Services
             ICollection<VacationRequest> vacationRequests;
             if (approve == null)
             {
-                vacationRequests = _unitOfWork.VacationRequestRepository.GetAll(vr => vr.StageOfApproving == 1 && vr.Approval == approve, vr => vr.ManagersResponses);
+                vacationRequests = _unitOfWork.VacationRequestRepository.GetAll(vr => vr.StageOfApproving == 1 && vr.Approval == approve && vr.SelfCancelled != true, vr => vr.ManagersResponses);
             }
             else
             {
-                vacationRequests = _unitOfWork.VacationRequestRepository.GetAll(vr => vr.StageOfApproving >= 1 && vr.StageOfApproving < 3 && vr.Approval == approve, vr => vr.ManagersResponses);
+                vacationRequests = _unitOfWork.VacationRequestRepository.GetAll(vr => vr.StageOfApproving >= 1 && vr.StageOfApproving < 3 && vr.Approval == approve && vr.SelfCancelled != true, vr => vr.ManagersResponses);
             }
+            return ConcatVacationRequestsWithUserInfos(vacationRequests);
+        }
+
+        public ICollection<VacationRequestsListForAdminsDTO> GetSelfCancelledVacationRequests(int userId)
+        {
+            ICollection<VacationRequest> vacationRequests;
+            vacationRequests = _unitOfWork.VacationRequestRepository.GetAll(vr => vr.StageOfApproving > 1 && vr.SelfCancelled == true, vr => vr.ManagersResponses);
             return ConcatVacationRequestsWithUserInfos(vacationRequests);
         }
 
         public ICollection<VacationRequestsListForAdminsDTO> GetAllVacationRequests(int userId)
         {
             ICollection<VacationRequest> vacationRequests;
-            vacationRequests = _unitOfWork.VacationRequestRepository.GetAll(vr => vr.StageOfApproving == 1 && vr.Approval == null);
+            vacationRequests = _unitOfWork.VacationRequestRepository.GetAll(vr => vr.StageOfApproving == 1 && vr.Approval == null && vr.SelfCancelled != true);
             vacationRequests = vacationRequests
                 .Concat(_unitOfWork.VacationRequestRepository
                 .GetAll(vr => vr.ManagersResponses.Where(mr => mr.ManagerId == userId && mr.Approval != null && mr.ForStageOfApproving == 1).Any(), vr => vr.ManagersResponses).ToList())
@@ -446,30 +455,43 @@ namespace TOT.Business.Services
             _unitOfWork.Save();
         }
 
-        public bool CalculateDays(int daysCount, TimeOffType timeOffType, int userId, int year)
+        public bool CalculateVacationDays(int vacationRequestId, int daysCount)
         {
-            var vacation = _unitOfWork.VacationTypeRepository.GetOne(vt => vt.UserInformationId == userId && vt.Year == year && vt.TimeOffType == timeOffType);
-            if (timeOffType != TimeOffType.AdministrativeLeave || timeOffType != TimeOffType.ConfirmedSickLeave)
+            var vacationRequest = _unitOfWork.VacationRequestRepository.GetOne(vacationRequestId);
+            if (vacationRequest != null)
             {
-                int allowedDays = vacation.StatutoryDays - vacation.UsedDays;
-                if (daysCount > allowedDays)
+                TimeOffType timeOffType = vacationRequest.VacationType;
+                var vacation = _unitOfWork.VacationTypeRepository.GetOne(vt => vt.UserInformationId == vacationRequest.UserInformationId && vt.Year == DateTime.Now.Year && vt.TimeOffType == timeOffType);
+                if (timeOffType != TimeOffType.AdministrativeLeave || timeOffType != TimeOffType.ConfirmedSickLeave)
                 {
-                    return false;
+                    int allowedDays = vacation.StatutoryDays - vacation.UsedDays;
+                    if (daysCount > allowedDays)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        vacation.UsedDays += daysCount;
+                        _unitOfWork.VacationTypeRepository.Update(vacation, vt => vt.UsedDays);
+                        vacationRequest.TakenDays = daysCount;
+                        _unitOfWork.VacationRequestRepository.Update(vacationRequest, vr => vr.TakenDays);
+                        _unitOfWork.Save();
+                        return true;
+                    }
                 }
                 else
                 {
                     vacation.UsedDays += daysCount;
                     _unitOfWork.VacationTypeRepository.Update(vacation, vt => vt.UsedDays);
+                    vacationRequest.TakenDays = daysCount;
+                    _unitOfWork.VacationRequestRepository.Update(vacationRequest, vr => vr.TakenDays);
                     _unitOfWork.Save();
                     return true;
                 }
             }
             else
             {
-                vacation.UsedDays += daysCount;
-                _unitOfWork.VacationTypeRepository.Update(vacation, vt => vt.UsedDays);
-                _unitOfWork.Save();
-                return true;
+                return false;
             }
 
         }

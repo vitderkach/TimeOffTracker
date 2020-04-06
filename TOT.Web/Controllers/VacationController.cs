@@ -9,6 +9,7 @@ using TOT.Interfaces.Services;
 using TOT.Web.Models;
 using System.Security.Claims;
 using Microsoft.Extensions.Localization;
+using TOT.Entities;
 
 namespace TOT.Web.Controllers
 {
@@ -28,6 +29,15 @@ namespace TOT.Web.Controllers
         public ActionResult Index()
         {
             return View();
+        }
+
+        public IActionResult Delete(int vacationRequestId)
+        {
+            if (_vacationService.CancelVacation(vacationRequestId))
+            {
+                return RedirectToAction("List");
+            }
+            return BadRequest();
         }
 
         [HttpGet]
@@ -91,17 +101,22 @@ namespace TOT.Web.Controllers
                     }
                 case "In Proccess":
                     {
-                        vacations = _vacationService.GetAllByCurrentUser().Where(v => v.Approval == null);
+                        vacations = _vacationService.GetAllByCurrentUser().Where(v => v.Approval == null && v.SelfCancelled != true);
                         break;
                     }
                 case "Approved":
                     {
-                        vacations = _vacationService.GetAllByCurrentUser().Where(v => v.Approval == true);
+                        vacations = _vacationService.GetAllByCurrentUser().Where(v => v.Approval == true && v.SelfCancelled != true);
                         break;
                     }
                 case "Declined":
                     {
-                        vacations = _vacationService.GetAllByCurrentUser().Where(v => v.Approval == false);
+                        vacations = _vacationService.GetAllByCurrentUser().Where(v => v.Approval == false && v.SelfCancelled != true);
+                        break;
+                    }
+                case "Self-cancelled":
+                    {
+                        vacations = _vacationService.GetAllByCurrentUser().Where(v => v.SelfCancelled == true);
                         break;
                     }
                 default:
@@ -121,25 +136,43 @@ namespace TOT.Web.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            var vacation = _vacationService.GetVacationById(id);
-            if (vacation != null)
-            {
-                return View(vacation);
-            }
-            return RedirectToAction("List");
+            var vacationDto = _vacationService.GetVacationById(id);
+            ViewBag.TimeOffTypeList = _vacationService.GetTimeOffTypeList();
+            ViewBag.AvailableManagers = _vacationService.GetManagersForVacationApply(vacationDto.User.Id);
+            return View(vacationDto);
         }
         [HttpPost]
-        public IActionResult Edit(int Id, string Notes)
+        public IActionResult Edit(ApplicationDto applicationDto)
         {
-            _vacationService.UpdateVacation(Id, Notes);
-
-            return RedirectToAction("List");
+            if (ModelState.IsValid)
+            {
+                _vacationService.EditVacationRequest(applicationDto);
+                return RedirectToAction("List", new { id = applicationDto.Id });
+            }
+            else
+            {
+                return RedirectToAction("Edit", new { id = applicationDto.Id });
+            }
         }
-        public IActionResult Deactivate(int id)
+            public IActionResult Deactivate(int id)
         {
-            bool isRemoved = _vacationService.DeactivateVacation(id);
+            bool isRemoved = _vacationService.CancelVacation(id);
+            if (isRemoved)
+            {
+                return RedirectToAction("List");
+            }
+            else
+            {
+                return BadRequest();
+            }
 
-            return RedirectToAction("List");
+        }
+
+        [HttpGet]
+        public IActionResult VacationTimeline(int id)
+        {
+            var vacationTimelineDto = _vacationService.GetVacationTimeline(id);
+            return View("VacationTimeline", vacationTimelineDto);
         }
     }
 }

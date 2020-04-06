@@ -8,11 +8,11 @@ namespace TOT.Interfaces
 {
     public interface IUnitOfWork
     {
-        IVacationRequestRepository<VacationRequest> VacationRequestRepository { get; }
+        IVacationRequestRepository<BaseVacationRequest, VacationRequest, VacationRequestHistory> VacationRequestRepository { get; }
 
         IUserInformationRepository<UserInformation> UserInformationRepository { get; }
 
-        IManagerResponseRepository<ManagerResponse> ManagerResponseRepository { get; }
+        IManagerResponseRepository<BaseManagerResponse, ManagerResponse, ManagerResponseHistory> ManagerResponseRepository { get; }
 
         IVacationTypeRepository<VacationType> VacationTypeRepository { get; }
 

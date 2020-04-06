@@ -75,7 +75,12 @@ namespace TOT.Web.Controllers
                     {
                         responses = _adminService.GetApprovedVacationRequests(userId, true);
                         responses = responses.Concat(_adminService.GetApprovedVacationRequests(userId, false)).ToList();
-                        
+
+                        break;
+                    }
+                case "Self-cancelled":
+                    {
+                        responses = _adminService.GetSelfCancelledVacationRequests(userId);
                         break;
                     }
                 default:
@@ -213,11 +218,11 @@ namespace TOT.Web.Controllers
             if (ModelState.IsValid)
             {
                 _adminService.EditVacationRequest(applicationDto);
-                return RedirectToAction("Details", new {id = applicationDto.Id});
+                return RedirectToAction("Details", new { id = applicationDto.Id });
             }
             else
             {
-                return RedirectToAction("EditVacation", new {id = applicationDto.Id});
+                return RedirectToAction("EditVacation", new { id = applicationDto.Id });
             }
         }
 
@@ -226,6 +231,10 @@ namespace TOT.Web.Controllers
         {
 
             var vacationRequestDTO = _vacationService.GetVacationById(id);
+            if (vacationRequestDTO.SelfCancelled == true && vacationRequestDTO.Stage == 1)
+            {
+                return BadRequest();
+            }
             VacationDetailsDTO vacationDetailsDTO = null;
             if (vacationRequestDTO.Stage == 1)
             {
@@ -247,7 +256,7 @@ namespace TOT.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult ApproveVacationRequest(int responseId, int vacationRequestId, string notes, int totalDays)
+        public IActionResult ApproveVacationRequest(int responseId, int vacationRequestId, string notes, int? takenDays)
         {
             var vacationRequest = _vacationService.GetVacationById(vacationRequestId);
             if (vacationRequest.Stage == 1)
@@ -257,7 +266,15 @@ namespace TOT.Web.Controllers
             if (vacationRequest.Stage == 3)
             {
                 _adminService.ApproveVacationRequest(responseId, notes, true);
-                _adminService.CalculateDays(totalDays, vacationRequest.VacationType, vacationRequest.User.Id, DateTime.Now.Year);
+                if (takenDays != null)
+                {
+                    _adminService.CalculateVacationDays(vacationRequestId, takenDays.Value);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+                
             }
 
             return RedirectToAction("VacationList");

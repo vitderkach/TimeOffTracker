@@ -49,12 +49,13 @@ namespace TOT.Business.Services
 
         public IEnumerable<VacationRequestListForManagersDTO> GetAllManagerVacationRequests(int userId)
         {
-            IEnumerable<VacationRequestListForManagersDTO> vacationRequestsDTO = new List<VacationRequestListForManagersDTO>();
-            var managerResponses = _uow.ManagerResponseRepository.GetAllWithVacationRequestsAndUserInfos(mr => mr.ManagerId == userId && mr.VacationRequest.StageOfApproving > 1);
-            var userInfos = _userInfoService.GetUsersInfo();
-            var vacationRequests = managerResponses.Select(mr => mr.VacationRequest);
-            userInfos = userInfos.Where(ui => vacationRequests.Where(vr => vr.UserInformationId == ui.Id).Any()).ToList();
-            var vacationRequestsDto = _mapper.MergeInto<ICollection<VacationRequestListForManagersDTO>>(vacationRequests, userInfos);
+            var managerResponses = _uow.ManagerResponseRepository.GetAllWithVacationRequestsAndUserInfos(mr => mr.ManagerId == userId && mr.VacationRequest.StageOfApproving > 1).Where(mr => !(mr.Approval == null && mr.VacationRequest.SelfCancelled == true)).ToList();
+            var vacationRequests = managerResponses.Select(mr => mr.VacationRequest).ToList();
+            List<VacationRequestListForManagersDTO> vacationRequestsDto = new List<VacationRequestListForManagersDTO>();
+            foreach (var vacationRequest  in vacationRequests)
+            {
+                vacationRequestsDto.Add(_mapper.MergeInto<VacationRequestListForManagersDTO>(vacationRequest, _userInfoService.GetUserInfo(vacationRequest.UserInformationId)));
+            }
             foreach (var item in vacationRequestsDto)
             {
                 item.ManagerApproval = managerResponses.FirstOrDefault(mr => mr.VacationRequestId == item.VacationRequestId).Approval;
@@ -77,7 +78,8 @@ namespace TOT.Business.Services
             var managerResponse = _uow.ManagerResponseRepository.GetOne(mr => mr.Id == managerResponseId);
             managerResponse.Notes = managerNotes;
             managerResponse.Approval = approval;
-            _uow.ManagerResponseRepository.Update(managerResponse, mr => mr.Approval, mr => mr.Notes);
+            managerResponse.DateResponse = DateTime.Now;
+            _uow.ManagerResponseRepository.Update(managerResponse, mr => mr.Approval, mr => mr.Notes, mr => mr.DateResponse);
             _uow.Save();
             if (approval == true)
             {
