@@ -13,6 +13,8 @@ namespace TOT.Interfaces.Services
         Task<IdentityResult> RegistrationNewUser(RegistrationUserDto registrationForm);
         EditApplicationUserDto EditUserData(int userId);
         Task<IdentityResult> UserDataManipulation(int userId, int userRoleId);
+        EditVacationDaysDto GetUsersVacationDays(int id);
+        void EditUsersVacationDays(int id, EditVacationDaysDto editUsersVacationDays);
         bool FireEmployee(int userId);
         bool СhargeVacationDays(int userId, int count, TimeOffType vacationType, bool isAlreadyCharged);
         void ChangeCountOfGiftdays(int userId, int count);
