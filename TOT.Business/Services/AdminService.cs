@@ -391,6 +391,7 @@ namespace TOT.Business.Services
         {
             ICollection<VacationRequest> vacationRequests;
             vacationRequests = _unitOfWork.VacationRequestRepository.GetAll(vr => vr.StageOfApproving > 1 && vr.SelfCancelled == true, vr => vr.ManagersResponses).ToList();
+            vacationRequests = vacationRequests.Where(vr => vr.ManagersResponses.Where(mr => mr.ManagerId == userId).Any()).ToList();
             return ConcatVacationRequestsWithUserInfos(vacationRequests);
         }
 

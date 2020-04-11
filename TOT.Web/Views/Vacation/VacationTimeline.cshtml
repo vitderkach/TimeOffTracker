@@ -192,6 +192,7 @@
                 </li>
                 getNextResponse();
             }
+            getNextRequest();
             if (request.SelfCancelled == true)
             {
                 <li class="@invert()">
@@ -242,7 +243,6 @@
             }
             else
             {
-                getNextRequest();
                 <li class="@invert()">
                     <div class="timeline-badge primary"><div class="bi bi-next-stage"></div></div>
                     <div class="timeline-panel">

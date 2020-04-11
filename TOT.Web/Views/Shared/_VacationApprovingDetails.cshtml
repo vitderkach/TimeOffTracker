@@ -96,7 +96,7 @@
                     {
                         counter++;
                         ManagerResponseListDto managerResponse = Model.VacationRequestDto.AllManagerResponses.ElementAt(i);
-                        if (managerResponse.ManagerId == userId && managerResponse.Approval == null)
+                        if (managerResponse.ManagerId == userId && managerResponse.Approval == null && Model.VacationRequestDto.Approval != false)
                         {
                             counter--;
                             continue;
