@@ -144,9 +144,17 @@
     margin-bottom: 0;
 }
 
-    .timeline-body > p + p {
-        margin-top: 5px;
-    }
+.timeline-details{
+    margin-top:10px;
+}
+.timeline .timeline-inverted .timeline-details .btn.btn-info {
+    float: right;
+}
+
+
+.timeline-body > p + p {
+    margin-top: 5px;
+}
 
 @media (max-width: 767px) {
     ul.timeline:before {
@@ -185,7 +193,7 @@
 }
 
 .bi {
-    display:inline-block;
+    display: inline-block;
     content: "";
     background-repeat: no-repeat;
     width: 36px;
@@ -193,62 +201,55 @@
     background-size: 36px 36px;
     background-color: white;
     text-align: center;
-    top: .32rem;
     /*top:.125rem;*/
     position: relative;
+    -webkit-mask-size: cover;
+    mask-size: cover;
 }
 
 .bi-clipboard {
-    -webkit-mask-size: cover;
-    mask-size: cover;
+    top: .35rem;
     -webkit-mask-image: url("../../material-design-icons/file/svg/design/ic_cloud_upload_24px.svg");
     mask-image: url("../../material-design-icons/file/svg/design/ic_cloud_upload_24px.svg");
 }
 
 .bi-warning {
-    -webkit-mask-size: cover;
-    mask-size: cover;
+    top: .25rem;
     -webkit-mask-image: url("../../material-design-icons/alert/svg/design/ic_warning_24px.svg");
     mask-image: url("../../material-design-icons/alert/svg/design/ic_warning_24px.svg");
 }
 .bi-decliying {
-    -webkit-mask-size: cover;
-    mask-size: cover;
+    top: .45rem;
     -webkit-mask-image: url("../../material-design-icons/action/svg/design/ic_thumb_down_24px.svg");
     mask-image: url("../../material-design-icons/action/svg/design/ic_thumb_down_24px.svg");
 }
 
 .bi-accepting {
-    -webkit-mask-size: cover;
-    mask-size: cover;
+    top: .32rem;
     -webkit-mask-image: url("../../material-design-icons/action/svg/design/ic_thumb_up_24px.svg");
     mask-image: url("../../material-design-icons/action/svg/design/ic_thumb_up_24px.svg");
 }
 
 .bi-success {
-    -webkit-mask-size: cover;
-    mask-size: cover;
+    top: .35rem;
     -webkit-mask-image: url("../../material-design-icons/toggle/svg/design/ic_check_box_24px.svg");
     mask-image: url("../../material-design-icons/toggle/svg/design/ic_check_box_24px.svg");
 }
 
 .bi-cancelling {
-    -webkit-mask-size: cover;
-    mask-size: cover;
+    top: .4rem;
     -webkit-mask-image: url("../../material-design-icons/navigation/svg/design/ic_cancel_24px.svg");
     mask-image: url("../../material-design-icons/navigation/svg/design/ic_cancel_24px.svg");
 }
 
 .bi-next-stage {
-    -webkit-mask-size: cover;
-    mask-size: cover;
+    top: .5rem;
     -webkit-mask-image: url("../../material-design-icons/maps/svg/design/ic_beenhere_24px.svg");
     mask-image: url("../../material-design-icons/maps/svg/design/ic_beenhere_24px.svg");
 }
 
 .bi-waiting {
-    -webkit-mask-size: cover;
-    mask-size: cover;
+    top: .35rem;
     -webkit-mask-image: url("../../material-design-icons/device/svg/design/ic_access_time_24px.svg");
     mask-image: url("../../material-design-icons/device/svg/design/ic_access_time_24px.svg");
 }

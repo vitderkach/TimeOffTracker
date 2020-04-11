@@ -10,6 +10,7 @@ using TOT.Web.Models;
 using System.Security.Claims;
 using Microsoft.Extensions.Localization;
 using TOT.Entities;
+using System.Text.Json;
 
 namespace TOT.Web.Controllers
 {
@@ -172,7 +173,28 @@ namespace TOT.Web.Controllers
         public IActionResult VacationTimeline(int id)
         {
             var vacationTimelineDto = _vacationService.GetVacationTimeline(id);
+            var d = JsonSerializer.Serialize(vacationTimelineDto.TemporalVacationRequests);
             return View("VacationTimeline", vacationTimelineDto);
+        }
+
+        [HttpPost]
+        [Route("[controller]/VacationTimeline/VacationRequestTable")]
+        public IActionResult VacationRequestTable([FromBody] TemporalVacationRequestDto temporalVacationRequest) {
+            return PartialView("_VacationRequestTablePartial", temporalVacationRequest);
+        }
+
+        [HttpPost]
+        [Route("[controller]/VacationTimeline/ComparisonTable")]
+        public IActionResult ComparisonTable([FromBody] TemporalVacationRequestDto[] temporalVacationRequests)
+        {
+            return PartialView("_ComparisonTablePartial", new ComparisonTableDto { OldVacationRequest = temporalVacationRequests[0], NewVacationRequest = temporalVacationRequests[1] });
+        }
+
+        [HttpPost]
+        [Route("[controller]/VacationTimeline/ManagerResponseTable")]
+        public IActionResult ManagerResponseTable([FromBody] ManagerResponseForTimelineDto managerResponse)
+        {
+            return PartialView("_ManagerResponseTablePartial", managerResponse);
         }
     }
 }

@@ -11,9 +11,11 @@ using TOT.Web.Models;
 using PagedList;
 using System.Security.Claims;
 
-namespace TOT.Web.Controllers {
+namespace TOT.Web.Controllers
+{
     [Authorize(Roles = "Manager")]
-    public class ManagerController : Controller {
+    public class ManagerController : Controller
+    {
         private readonly IManagerService _managerService;
         private readonly IVacationService _vacationService;
         private readonly IMapper _mapper;
@@ -38,13 +40,6 @@ namespace TOT.Web.Controllers {
             {
                 ViewData["NameSortParm"] = searchString;
             }
-            else
-            {
-                if (currentFilter == null)
-                {
-                    pageNumber = 1;
-                }
-            }
 
             if (currentFilter != null)
                 ViewData["CurrentFilter"] = currentFilter;
@@ -55,34 +50,34 @@ namespace TOT.Web.Controllers {
             switch (currentFilter)
             {
                 case "Not handled yet":
-                {
-                    responses = _managerService.GetDefinedManagerVacationRequests(userId, null).Where(vr => vr.Approval == null);
-                    break;
-                }
+                    {
+                        responses = _managerService.GetDefinedManagerVacationRequests(userId, null).Where(vr => vr.Approval == null);
+                        break;
+                    }
                 case "Accepted":
-                {
-                    responses = _managerService.GetDefinedManagerVacationRequests(userId, true);
+                    {
+                        responses = _managerService.GetDefinedManagerVacationRequests(userId, true);
                         break;
-                }
+                    }
                 case "Declined":
-                {
-                    responses = _managerService.GetDefinedManagerVacationRequests(userId, false);
+                    {
+                        responses = _managerService.GetDefinedManagerVacationRequests(userId, false);
                         break;
-                }
+                    }
                 case "Declined by other manager":
                     {
                         responses = _managerService.GetDefinedManagerVacationRequests(userId, null).Where(vr => vr.Approval == false);
                         break;
                     }
                 default:
-                {
+                    {
                         responses = _managerService.GetAllManagerVacationRequests(userId);
-                    var name = ViewData["NameSortParm"] as string;
-                    if (name != null)
-                        responses = responses.Where(vrl => vrl.FullName.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0);
-                    break;
-                }
+                        break;
+                    }
             }
+            var name = ViewData["NameSortParm"] as string;
+            if (name != null)
+                responses = responses.Where(vrl => vrl.FullName.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0);
             int pageSize = 3;
             return View(await PaginatedList<VacationRequestListForManagersDTO>.CreateAsync(responses, pageNumber ?? 1, pageSize));
         }

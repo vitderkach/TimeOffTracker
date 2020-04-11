@@ -30,29 +30,11 @@ namespace TOT.Business.Services
         }
 
 
-        public IEnumerable<VacationRequestListForManagersDTO> GetDefinedManagerVacationRequests(int userId, bool? approval)
+        private IEnumerable<VacationRequestListForManagersDTO> CreateListForManagersDto(ICollection<ManagerResponse> managerResponses)
         {
-            IEnumerable<VacationRequestListForManagersDTO> vacationRequestsDTO = new List<VacationRequestListForManagersDTO>();
-            var managerResponses =
-                _uow.ManagerResponseRepository
-                .GetAllWithVacationRequestsAndUserInfos(mr => mr.Approval == approval && mr.ManagerId == userId && mr.VacationRequest.StageOfApproving > 1);
-            var userInfos = _userInfoService.GetUsersInfo();
-            var vacationRequests = managerResponses.Select(mr => mr.VacationRequest);
-            userInfos = userInfos.Where(ui => vacationRequests.Where(vr => vr.UserInformationId == ui.Id).Any()).ToList();
-            var vacationRequestsDto = _mapper.MergeInto<ICollection<VacationRequestListForManagersDTO>>(vacationRequests, userInfos);
-            foreach (var item in vacationRequestsDto)
-            {
-                item.ManagerApproval = managerResponses.FirstOrDefault(mr => mr.VacationRequestId == item.VacationRequestId).Approval;
-            }
-            return vacationRequestsDto;
-        }
-
-        public IEnumerable<VacationRequestListForManagersDTO> GetAllManagerVacationRequests(int userId)
-        {
-            var managerResponses = _uow.ManagerResponseRepository.GetAllWithVacationRequestsAndUserInfos(mr => mr.ManagerId == userId && mr.VacationRequest.StageOfApproving > 1).Where(mr => !(mr.Approval == null && mr.VacationRequest.SelfCancelled == true)).ToList();
-            var vacationRequests = managerResponses.Select(mr => mr.VacationRequest).ToList();
             List<VacationRequestListForManagersDTO> vacationRequestsDto = new List<VacationRequestListForManagersDTO>();
-            foreach (var vacationRequest  in vacationRequests)
+            var vacationRequests = managerResponses.Select(mr => mr.VacationRequest).ToList();
+            foreach (var vacationRequest in vacationRequests)
             {
                 vacationRequestsDto.Add(_mapper.MergeInto<VacationRequestListForManagersDTO>(vacationRequest, _userInfoService.GetUserInfo(vacationRequest.UserInformationId)));
             }
@@ -63,13 +45,35 @@ namespace TOT.Business.Services
             return vacationRequestsDto;
         }
 
+        public IEnumerable<VacationRequestListForManagersDTO> GetDefinedManagerVacationRequests(int userId, bool? approval)
+        {
+            var managerResponses =
+                _uow.ManagerResponseRepository
+                .GetAllWithVacationRequestsAndUserInfos(mr => mr.Approval == approval && mr.ManagerId == userId && mr.VacationRequest.StageOfApproving > 1)
+                .Where(mr => !(mr.Approval == null && mr.VacationRequest.SelfCancelled == true)).ToList();
+
+            return CreateListForManagersDto(managerResponses);
+        }
+
+        public IEnumerable<VacationRequestListForManagersDTO> GetAllManagerVacationRequests(int userId)
+        {
+            var managerResponses = 
+                _uow.ManagerResponseRepository
+                .GetAllWithVacationRequestsAndUserInfos(mr => mr.ManagerId == userId && mr.VacationRequest.StageOfApproving > 1)
+                .Where(mr => !(mr.Approval == null && mr.VacationRequest.SelfCancelled == true))
+                .ToList();
+            return CreateListForManagersDto(managerResponses);
+        }
+
         public bool CheckManagerResponsesByUserId(int userId)
             => _uow.ManagerResponseRepository
             .GetAll(mr => mr.ManagerId == userId && mr.Approval == null)
             .Any();
         public ManagerResponseDto GetManagerResponse(int vacationRequestId, int managerId)
         {
-            var managerResponse = _uow.ManagerResponseRepository.GetOneWithVacationRequestAndUserInfo(mr => mr.VacationRequestId == vacationRequestId && mr.ManagerId == managerId && mr.VacationRequest.StageOfApproving == 2);
+            var managerResponse = 
+                _uow.ManagerResponseRepository
+                .GetOneWithVacationRequestAndUserInfo(mr => mr.VacationRequestId == vacationRequestId && mr.ManagerId == managerId && mr.VacationRequest.StageOfApproving == 2);
             return _mapper.Map<ManagerResponse, ManagerResponseDto>(managerResponse);
         }
 
@@ -94,6 +98,7 @@ namespace TOT.Business.Services
                     response.ManagerId = _uow.ManagerResponseRepository.GetOne(mr => mr.VacationRequestId == vacationRequest.VacationRequestId && mr.ForStageOfApproving == 1).ManagerId;
                     response.VacationRequestId = vacationRequest.VacationRequestId;
                     response.ForStageOfApproving = 3;
+                    response.DateResponse = DateTime.MaxValue;
                     _uow.ManagerResponseRepository.Create(response);
                 }
             }

@@ -6,14 +6,14 @@
 @{
     var vacations = @Model.FirstOrDefault();
 }
-<div class="form-group">
-    <a asp-action="List" class="btn btn-dark" asp-route-currentFilter="All">@Localizer["All"]</a>
-    <a asp-action="List" class="btn btn-success" asp-route-currentFilter="Approved">@Localizer["Approved"]</a>
-    <a asp-action="List" class="btn btn-info" asp-route-currentFilter="In Proccess">@Localizer["In Proccess"]</a>
-    <a asp-action="List" class="btn btn-danger" asp-route-currentFilter="Declined">@Localizer["Declined"]</a>
-    <a asp-action="List" class="btn btn-danger" asp-route-currentFilter="Self-cancelled">@Localizer["Self-cancelled"]</a>
+    <div class="form-group">
+        <a asp-action="List" class="btn btn-info" asp-route-currentFilter="All">@Localizer["All"]</a>
+        <a asp-action="List" class="btn btn-primary" asp-route-currentFilter="In Proccess">@Localizer["In Proccess"]</a>
+        <a asp-action="List" class="btn btn-success" asp-route-currentFilter="Approved">@Localizer["Approved"]</a>
+        <a asp-action="List" class="btn btn-danger" asp-route-currentFilter="Declined">@Localizer["Declined"]</a>
+        <a asp-action="List" class="btn btn-dark" asp-route-currentFilter="Self-cancelled">@Localizer["Self-cancelled"]</a>
 
-</div>
+    </div>
 <table class="table">
     <thead>
         <tr>
@@ -73,7 +73,7 @@
                 <td>
                     <div class="row">
                         @{
-                            if (item.SelfCancelled != true && item.StageOfApproving == 1)
+                            if (item.SelfCancelled != true && item.StageOfApproving == 1 && item.Approval == null)
                             {
                                 <a class="btn btn-outline-dark form-control col-5 m-1" asp-action="Edit" asp-route-id="@item.VacationRequestId">Edit</a>
                             }

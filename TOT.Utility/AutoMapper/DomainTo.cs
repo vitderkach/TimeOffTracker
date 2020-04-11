@@ -52,7 +52,7 @@ namespace TOT.Utility.AutoMapper
             CreateMap<ICollection<VacationType>, VacationDaysDto>()
                 .ForMember(dest => dest.TimeOffTypes, opt => opt.MapFrom(src => src));
 
-            CreateMap<VacationRequestHistory, TemporalVacationRequest>()
+            CreateMap<VacationRequestHistory, TemporalVacationRequestDto>()
                 .ForMember(dest => dest.ActionTime, opt => opt.MapFrom(src => src.SystemStart));
             CreateMap<ManagerResponse, ManagerResponseForTimelineDto>();
         }

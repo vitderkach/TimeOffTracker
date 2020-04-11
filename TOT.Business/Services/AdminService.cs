@@ -358,15 +358,17 @@ namespace TOT.Business.Services
 
         public ICollection<VacationRequestsListForAdminsDTO> GetDefinedVacationRequestsForApproving(int userId, bool? approve)
         {
-            ICollection<VacationRequest> vacationRequests = _unitOfWork.VacationRequestRepository.GetAll(vr => vr.StageOfApproving == 3 && vr.Approval == approve && vr.SelfCancelled != true, vr => vr.ManagersResponses);
-            vacationRequests = vacationRequests.Where(vr => vr.ManagersResponses.Where(mr => mr.ManagerId == userId).Any()).ToList();
-            return ConcatVacationRequestsWithUserInfos(vacationRequests);
-        }
-
-        public ICollection<VacationRequestsListForAdminsDTO> GetApprovedVacationRequests(int userId, bool approve)
-        {
-            ICollection<VacationRequest> vacationRequests = _unitOfWork.VacationRequestRepository.GetAll(vr => vr.StageOfApproving == 4 && vr.Approval == approve && vr.SelfCancelled != true, vr => vr.ManagersResponses);
-            vacationRequests = vacationRequests.Where(vr => vr.ManagersResponses.Where(mr => mr.ManagerId == userId).Any()).ToList();
+            ICollection<VacationRequest> vacationRequests;
+            if (approve == true)
+            {
+                vacationRequests = _unitOfWork.VacationRequestRepository.GetAll(vr => vr.StageOfApproving == 4 && vr.Approval == approve && vr.SelfCancelled != true, vr => vr.ManagersResponses);
+                vacationRequests = vacationRequests.Where(vr => vr.ManagersResponses.Where(mr => mr.ManagerId == userId).Any()).ToList();
+            }
+            else
+            {
+                vacationRequests = _unitOfWork.VacationRequestRepository.GetAll(vr => vr.StageOfApproving == 3 && vr.Approval == approve && vr.SelfCancelled != true, vr => vr.ManagersResponses);
+                vacationRequests = vacationRequests.Where(vr => vr.ManagersResponses.Where(mr => mr.ManagerId == userId).Any()).ToList();
+            }
             return ConcatVacationRequestsWithUserInfos(vacationRequests);
         }
 
@@ -375,11 +377,12 @@ namespace TOT.Business.Services
             ICollection<VacationRequest> vacationRequests;
             if (approve == null)
             {
-                vacationRequests = _unitOfWork.VacationRequestRepository.GetAll(vr => vr.StageOfApproving == 1 && vr.Approval == approve && vr.SelfCancelled != true, vr => vr.ManagersResponses);
+                vacationRequests = _unitOfWork.VacationRequestRepository.GetAll(vr => vr.StageOfApproving == 1 && vr.Approval == approve && vr.SelfCancelled != true, vr => vr.ManagersResponses).ToList();
             }
             else
             {
-                vacationRequests = _unitOfWork.VacationRequestRepository.GetAll(vr => vr.StageOfApproving >= 1 && vr.StageOfApproving < 3 && vr.Approval == approve && vr.SelfCancelled != true, vr => vr.ManagersResponses);
+                vacationRequests = _unitOfWork.VacationRequestRepository.GetAll(vr => vr.StageOfApproving >= 1 && vr.StageOfApproving < 3 && vr.SelfCancelled != true, vr => vr.ManagersResponses)
+                    .Where(vr => vr.ManagersResponses.Where(mr => mr.ForStageOfApproving == 1 && mr.Approval == approve).Any()).ToList();
             }
             return ConcatVacationRequestsWithUserInfos(vacationRequests);
         }
@@ -387,7 +390,7 @@ namespace TOT.Business.Services
         public ICollection<VacationRequestsListForAdminsDTO> GetSelfCancelledVacationRequests(int userId)
         {
             ICollection<VacationRequest> vacationRequests;
-            vacationRequests = _unitOfWork.VacationRequestRepository.GetAll(vr => vr.StageOfApproving > 1 && vr.SelfCancelled == true, vr => vr.ManagersResponses);
+            vacationRequests = _unitOfWork.VacationRequestRepository.GetAll(vr => vr.StageOfApproving > 1 && vr.SelfCancelled == true, vr => vr.ManagersResponses).ToList();
             return ConcatVacationRequestsWithUserInfos(vacationRequests);
         }
 
@@ -424,7 +427,8 @@ namespace TOT.Business.Services
             {
                 vacationRequest = _mapper.Map<ApplicationDto, VacationRequest>(applicationDto, vacationRequest);
                 _unitOfWork.VacationRequestRepository.Update(vacationRequest);
-
+                //It's a hack, which is needed for history process storing. If only required managers change, the request won't be changed, and the process of vacation approving for user will become more complicated. 
+                _unitOfWork.VacationRequestRepository.Update(vacationRequest, vr => vr.UserInformationId);
             }
             if (vacationRequest.StageOfApproving == 1)
             {
@@ -441,6 +445,7 @@ namespace TOT.Business.Services
                     {
                         ManagerResponse newResponse = new ManagerResponse();
                         newResponse.ForStageOfApproving = 2;
+                        newResponse.DateResponse = DateTime.MaxValue;
                         newResponse.VacationRequest = vacationRequest;
                         newResponse.Manager = _unitOfWork.UserInformationRepository.GetOne(userInfo.Id);
                         _unitOfWork.ManagerResponseRepository.Create(newResponse);

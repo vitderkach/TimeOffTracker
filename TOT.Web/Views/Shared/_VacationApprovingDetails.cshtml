@@ -127,7 +127,7 @@
                         </li>
                         if (!(Model.VacationRequestDto.Approval == false && managerResponse.Approval == null))
                         {
-                            @if (Model.VacationRequestDto.Stage > 1 && ((Model.VacationRequestDto.SelfCancelled == true && managerResponse.Approval != null) || (Model.VacationRequestDto.SelfCancelled != true && managerResponse.Approval == null)))
+                            @if ((Model.VacationRequestDto.Stage > 1 && ((managerResponse.Approval != null) || (Model.VacationRequestDto.SelfCancelled != true && managerResponse.Approval == null))) || Model.VacationRequestDto.Approval == false)
                             {
                                 @if (managerResponse.Approval != null)
                                 {
@@ -200,13 +200,6 @@
                         </li>
                     }
                 </ul>
-
-                
-
-
-
-
-
             </div>
         </div>
         <div class="col-3 d-flex flex-column align-items-center justify-content-start" style="margin-top:53px;">

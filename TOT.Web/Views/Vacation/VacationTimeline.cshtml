@@ -1,19 +1,25 @@
 ﻿@using TOT.Dto
 @using System.Collections.Generic
+@using System.Text.Json;
+@using System.Text.Json.Serialization
 @model VacationTimelineDto
 @{
     ViewData["Title"] = "VacationTimeline";
-    Queue<TemporalVacationRequest> requestsQueue = new Queue<TemporalVacationRequest>(Model.TemporalVacationRequests.OrderBy(tvr => tvr.ActionTime).AsEnumerable());
-    Queue<ManagerResponseForTimelineDto> responsesQueue = new Queue<ManagerResponseForTimelineDto>(Model.ManagerResponseForTimelines.OrderBy(tmr => tmr.ForStageOfApproving).ThenByDescending(tmr => tmr.Approval).AsEnumerable());
+    Queue<TemporalVacationRequestDto> requestsQueue = new Queue<TemporalVacationRequestDto>(Model.TemporalVacationRequests);
+    Queue<ManagerResponseForTimelineDto> responsesQueue = new Queue<ManagerResponseForTimelineDto>(Model.ManagerResponseForTimelines);
     ManagerResponseForTimelineDto response = default;
-    TemporalVacationRequest request = default;
+    TemporalVacationRequestDto request = default;
     ManagerResponseForTimelineDto oldResponse = default;
-    TemporalVacationRequest oldRequest = default;
+    TemporalVacationRequestDto oldRequest = default;
     DateTime nextRequest = default;
     DateTime nextResponse = default;
     bool nextRequestExists = default;
     bool nextResponseExists = default;
     bool inverted = true;
+
+    int currentRequestIndex = -1;
+    int currentResponseIndex = -1;
+
     void getNextRequest()
     {
 
@@ -25,6 +31,7 @@
             oldRequest = request;
             nextRequest = (nextResponseExists == true) ? request.ActionTime : DateTime.MinValue;
             request = requestsQueue.Dequeue();
+            currentRequestIndex++;
         }
         nextRequestExists = requestsQueue.Any();
     }
@@ -40,6 +47,7 @@
             oldResponse = response;
             nextResponse = (nextResponseExists == true) ? response.DateResponse : DateTime.MinValue;
             response = responsesQueue.Dequeue();
+            currentResponseIndex++;
         }
         nextResponseExists = responsesQueue.Any();
     }
@@ -64,8 +72,6 @@
     getNextResponse();
 }
 
-
-
 <div class="container">
     <div class="page-header">
         <h2>VacationTimeline</h2>
@@ -81,6 +87,9 @@
                 </div>
                 <div class="timeline-body">
                     <p>Your appication has been succesfully filed and transferred for admins for review. Wait the answer from admin.</p>
+                    <div class="timeline-details">
+                        <button class="btn btn-info" onclick="showVacationRequestTable(@currentRequestIndex)">Show details</button>
+                    </div>
                 </div>
             </div>
         </li>
@@ -91,11 +100,11 @@
             {
                 break;
             }
-                                getNextRequest();
-                    if (request.StageOfApproving == 2)
-                    {
-                        break;
-                    }
+            getNextRequest();
+            if (request.StageOfApproving == 2 || request.Approval == false)
+            {
+                break;
+            }
             <li class="@invert()">
                 <div class="timeline-badge warning"><div class="bi bi-warning"></div></div>
                 <div class="timeline-panel">
@@ -105,6 +114,9 @@
                     </div>
                     <div class="timeline-body">
                         <p>Your details about application has been changed.</p>
+                        <div class="timeline-details">
+                            <button class="btn btn-info" onclick="showComparisonTable(@currentRequestIndex-1,@currentRequestIndex)">Show details</button>
+                        </div>
                     </div>
                 </div>
             </li>
@@ -135,6 +147,9 @@
                     </div>
                     <div class="timeline-body">
                         <p>Your request has been declined by admin during accepting.</p>
+                        <div class="timeline-details">
+                            <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">Show details</button>
+                        </div>
                     </div>
                 </div>
             </li>
@@ -150,6 +165,9 @@
                     </div>
                     <div class="timeline-body">
                         <p>Congratulations! The application has been accepted by admin for further review.</p>
+                        <div class="timeline-details">
+                            <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">Show details</button>
+                        </div>
                     </div>
                 </div>
             </li>
@@ -166,6 +184,9 @@
                         </div>
                         <div class="timeline-body">
                             <p>The manager @response.Manager.FullName has approved your request.</p>
+                            <div class="timeline-details">
+                                <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">Show details</button>
+                            </div>
                         </div>
                     </div>
                 </li>
@@ -211,7 +232,10 @@
                             <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@response.DateResponse</small></p>
                         </div>
                         <div class="timeline-body">
-                            <p>Unfortunately, the manager @response.Manager.FullName has declined your request with answer: "@response.Notes". The application has been declined properly</p>
+                            <p>Unfortunately, the manager @response.Manager.FullName has declined your request. The application has been declined properly</p>
+                            <div class="timeline-details">
+                                <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">Show details</button>
+                            </div>
                         </div>
                     </div>
                 </li>
@@ -224,14 +248,16 @@
                     <div class="timeline-panel">
                         <div class="timeline-heading">
                             <h4 class="timeline-title">The application has been accepted by managers</h4>
-                            <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@response.DateResponse</small></p>
+                            <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@oldResponse.DateResponse</small></p>
                         </div>
                         <div class="timeline-body">
                             <p>Congratulations! The application has been accepted by all managers and has been tranferred for final admin review.</p>
+                            <div class="timeline-details">
+                            </div>
                         </div>
                     </div>
                 </li>
-                getNextResponse();
+                //getNextResponse();
                 @while (true)
                 {
 
@@ -240,7 +266,7 @@
                         break;
                     }
                     getNextRequest();
-                    if (request.StageOfApproving == 4)
+                    if (request.StageOfApproving == 4 || request.Approval == false)
                     {
                         break;
                     }
@@ -253,6 +279,9 @@
                             </div>
                             <div class="timeline-body">
                                 <p>Your details about application has been changed by admin.</p>
+                                <div class="timeline-details">
+                                    <button class="btn btn-info" onclick="showComparisonTable(@currentRequestIndex-1,@currentRequestIndex)">Show details</button>
+                                </div>
                             </div>
                         </div>
                     </li>
@@ -284,11 +313,14 @@
                             </div>
                             <div class="timeline-body">
                                 <p>Unfortunately, the manager @response.Manager.FullName has declined your request with answer: "@response.Notes". The application has been declined properly.</p>
+                                <div class="timeline-details">
+                                    <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">Show details</button>
+                                </div>
                             </div>
                         </div>
                     </li>
                 }
-                else if(request.Approval == true)
+                else if (request.Approval == true)
                 {
                     <li class="@invert()">
                         <div class="timeline-badge success"><div class="bi bi-success"></div></div>
@@ -300,6 +332,9 @@
                             <div class="timeline-body">
                                 <p>Congratulations! The application has been approved by admin and all needed stages have passed. Have a nice rest!</p>
                             </div>
+                            <div class="timeline-details">
+                                <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">Show details</button>
+                            </div>
                         </div>
                     </li>
                 }
@@ -308,6 +343,73 @@
     </ul>
 </div>
 
+<div class="modal" tabindex="-1" role="dialog" id="infoModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="infoModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="infoModalBody">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section css {
     <link rel="stylesheet" href="~/css/vacation/timeline.css" />
+}
+
+@section Scripts{
+    <script>
+        var vacationRequests = @Html.Raw(JsonSerializer.Serialize(Model.TemporalVacationRequests) as string);
+        var managerResponses = @Html.Raw(JsonSerializer.Serialize(Model.ManagerResponseForTimelines) as string);
+        function showVacationRequestTable(indexNumber) {
+            let xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "VacationRequestTable", true);
+            xhttp.onload = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var modal = $("#infoModal");
+                    modal.find('#infoModalLabel').text("Vacation Request Table");
+                    modal.find('#infoModalBody').html(this.responseText);
+                    $("#infoModal").modal({ backdrop: true });
+                }
+            }
+            xhttp.setRequestHeader("Content-Type", "application/json; charset=utf-8");;
+            xhttp.send(JSON.stringify(vacationRequests[indexNumber]));
+        }
+        function showComparisonTable(oldIndexNumber, newIndexNumber) {
+            let xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "ComparisonTable", true);
+            xhttp.onload = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var modal = $("#infoModal");
+                    modal.find('#infoModalLabel').text("Vacation Request Comparison Table");
+                    modal.find('#infoModalBody').html(this.responseText);
+                    $("#infoModal").modal({ backdrop: true });
+                }
+            }
+            xhttp.setRequestHeader("Content-Type", "application/json; charset=utf-8");;
+            xhttp.send(JSON.stringify([vacationRequests[oldIndexNumber], vacationRequests[newIndexNumber]]));
+        }
+        function showManagerResponseTable(indexNumber) {
+            let xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "ManagerResponseTable", true);
+            xhttp.onload = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var modal = $("#infoModal");
+                    modal.find('#infoModalLabel').text("Manager Response Table");
+                    modal.find('#infoModalBody').html(this.responseText);
+                    $("#infoModal").modal({ backdrop: true });
+                }
+            }
+            xhttp.setRequestHeader("Content-Type", "application/json; charset=utf-8");;
+            xhttp.send(JSON.stringify(managerResponses[indexNumber]));
+        }
+    </script>
 }

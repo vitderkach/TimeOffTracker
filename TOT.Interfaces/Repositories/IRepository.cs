@@ -66,6 +66,11 @@ namespace TOT.Interfaces.Repositories
 
     }
 
+    public interface IAuxiliaryRepository
+    {
+        ICollection<int> GetHistoryManagerIdentificators(int historyVacationRequestId, DateTime systemStart);
+    }
+
     public interface IVacationRequestRepository<BaseEntity, TEntity, HEntity> : ICanUpdateEntity<TEntity>, ICanCreateEntity<TEntity>, ICanGetEntity<TEntity>, TemporalEntity<HEntity>
         where BaseEntity : class where TEntity : class, BaseEntity where HEntity : class, BaseEntity
     {

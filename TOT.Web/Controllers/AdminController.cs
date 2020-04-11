@@ -38,13 +38,7 @@ namespace TOT.Web.Controllers
             {
                 ViewData["NameSortParm"] = searchString;
             }
-            else
-            {
-                if (currentFilter == null)
-                {
-                    pageNumber = 1;
-                }
-            }
+
 
             if (currentFilter != null)
                 ViewData["CurrentFilter"] = currentFilter;
@@ -67,15 +61,19 @@ namespace TOT.Web.Controllers
                 case "Accepted":
                     {
                         responses = _adminService.GetDefinedVacationRequestsForAcceptance(userId, true);
-                        var k = _adminService.GetDefinedVacationRequestsForAcceptance(userId, false);
-                        responses = responses.Concat(k).ToList();
                         break;
                     }
                 case "Approved":
                     {
-                        responses = _adminService.GetApprovedVacationRequests(userId, true);
-                        responses = responses.Concat(_adminService.GetApprovedVacationRequests(userId, false)).ToList();
+                        responses = _adminService.GetDefinedVacationRequestsForApproving(userId, true);
 
+                        break;
+                    }
+                case "Declined":
+                    {
+                        responses = _adminService.GetDefinedVacationRequestsForAcceptance(userId, false);
+                        var nextResponses = _adminService.GetDefinedVacationRequestsForApproving(userId, false);
+                        responses = responses.Concat(nextResponses).ToList();
                         break;
                     }
                 case "Self-cancelled":
@@ -86,12 +84,12 @@ namespace TOT.Web.Controllers
                 default:
                     {
                         responses = _adminService.GetAllVacationRequests(userId);
-                        var name = ViewData["NameSortParm"] as string;
-                        if (name != null)
-                            responses = responses.Where(vrl => vrl.FullName.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
                         break;
                     }
             }
+            string name = ViewData["NameSortParm"] as string;
+            if (name != null)
+                responses = responses.Where(vrl => vrl.FullName.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
             int pageSize = 3;
             return View(await PaginatedList<VacationRequestsListForAdminsDTO>.CreateAsync(responses, pageNumber ?? 1, pageSize));
         }

@@ -22,7 +22,6 @@ namespace TOT.Interfaces.Services
         ICollection<VacationRequestsListForAdminsDTO> GetDefinedVacationRequestsForApproving(int userId, bool? approve);
         ICollection<VacationRequestsListForAdminsDTO> GetDefinedVacationRequestsForAcceptance(int userId, bool? approve);
         ICollection<VacationRequestsListForAdminsDTO> GetSelfCancelledVacationRequests(int userId);
-        ICollection<VacationRequestsListForAdminsDTO> GetApprovedVacationRequests(int userId, bool approve);
         ICollection<VacationRequestsListForAdminsDTO> GetAllVacationRequests(int userId);
         bool CalculateVacationDays(int vacationRequestId, int daysCount);
         void EditVacationRequest(ApplicationDto applicationDto);

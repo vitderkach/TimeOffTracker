@@ -19,7 +19,7 @@ gulp.task("less",
 
 gulp.task("material-design-icons",
     function () {
-        return gulp.src("node_modules/material-design-icons/**")
-            .pipe(gulp_cahced("node_modules/material-design-icons/**"))
+        return gulp.src("node_modules/material-design-icons/**/*.svg")
+            .pipe(gulp_cahced("node_modules/material-design-icons/**/*.svg"))
             .pipe(gulp.dest(paths.webroot + "material-design-icons"));
     });

@@ -53,6 +53,18 @@ namespace TOT.Business.Services
                 _unitOfWork.Save();
             }
         }
+        public IEnumerable<UserInformationDto> GetHistoryManagerInfos(int vacationRequestId, DateTime systemStart)
+        {
+            var managerIds = _unitOfWork.AuxiliaryRepository.GetHistoryManagerIdentificators(vacationRequestId, systemStart);
+            List<UserInformation> managerUIs = new List<UserInformation>();
+            List<ApplicationUser> managerAUs = new List<ApplicationUser>();
+            foreach (int id in managerIds)
+            {
+                managerUIs.Add(_unitOfWork.UserInformationRepository.GetOne(id));
+                managerAUs.Add(_userManager.Users.First(au => au.Id == id));
+            }
+            return _mapper.MergeInto<IEnumerable<UserInformationDto>>(managerAUs , managerUIs);
+        }
 
         private void CleanUp(bool disposing)
         {

@@ -49,8 +49,9 @@ namespace TOT.Business.Services
                 {
                     ManagerId = manager.Id,
                     VacationRequest = vacation,
-                    ForStageOfApproving = 2
-                };
+                    ForStageOfApproving = 2,
+                    DateResponse = DateTime.MaxValue
+            };
                 _uow.ManagerResponseRepository.Create(managerResponse);
             }
             _uow.Save();
@@ -186,6 +187,8 @@ namespace TOT.Business.Services
             {
                 vacationRequest = _mapper.Map<ApplicationDto, VacationRequest>(applicationDto, vacationRequest);
                 _uow.VacationRequestRepository.Update(vacationRequest);
+                //It's a hack, which is needed for history process storing. If only required managers change, the request won't be changed, and the process of vacation approving for user will become more complicated. 
+                _uow.VacationRequestRepository.Update(vacationRequest, vr => vr.UserInformationId);
 
             }
             if (vacationRequest.StageOfApproving == 1)
@@ -203,6 +206,7 @@ namespace TOT.Business.Services
                     {
                         ManagerResponse newResponse = new ManagerResponse();
                         newResponse.ForStageOfApproving = 2;
+                        newResponse.DateResponse = DateTime.MaxValue;
                         newResponse.VacationRequest = vacationRequest;
                         newResponse.Manager = _uow.UserInformationRepository.GetOne(userInfo.Id);
                         _uow.ManagerResponseRepository.Create(newResponse);
@@ -222,12 +226,18 @@ namespace TOT.Business.Services
             var vacationRequestHistories = _uow.VacationRequestRepository.GetHistoryForOne(vacationRequestId).OrderBy(vrh => vrh.SystemEnd).ToList();
             var managerResponses = _uow.ManagerResponseRepository.GetAll(mr => mr.VacationRequestId == vacationRequestId);
             VacationTimelineDto vacationTimelineDto = new VacationTimelineDto();
-            vacationTimelineDto.TemporalVacationRequests = _mapper.Map<IEnumerable<VacationRequestHistory>, IEnumerable<TemporalVacationRequest>>(vacationRequestHistories);
+            vacationTimelineDto.TemporalVacationRequests = _mapper.Map<IEnumerable<VacationRequestHistory>, IEnumerable<TemporalVacationRequestDto>>(vacationRequestHistories);
             vacationTimelineDto.ManagerResponseForTimelines = _mapper.Map<IEnumerable<ManagerResponse>, IEnumerable<ManagerResponseForTimelineDto>>(managerResponses);
             foreach (var item in vacationTimelineDto.ManagerResponseForTimelines)
             {
                 item.Manager = _userInfoService.GetUserInfo(item.ManagerId);
             }
+            foreach (var item in vacationTimelineDto.TemporalVacationRequests)
+            {
+                item.Managers = _userInfoService.GetHistoryManagerInfos(item.VacationRequestId, item.SystemStart);
+            }
+            vacationTimelineDto.TemporalVacationRequests = vacationTimelineDto.TemporalVacationRequests.OrderBy(tvr => tvr.ActionTime).ToList();
+            vacationTimelineDto.ManagerResponseForTimelines = vacationTimelineDto.ManagerResponseForTimelines.OrderBy(mrt => mrt.DateResponse).ThenByDescending(mrt => mrt.Approval).ToList();
             return vacationTimelineDto;
         }
 

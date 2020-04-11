@@ -7,11 +7,11 @@
     var vacations = @Model.FirstOrDefault();
 }
     <div class="form-group">
-        <a asp-action="VacationList" class="btn btn-dark" asp-route-currentFilter="">@Localizer["All"]</a>
-        <a asp-action="VacationList" class="btn btn-dark" asp-route-currentFilter="Not handled yet">@Localizer["Not handled yet"]</a>
+        <a asp-action="VacationList" class="btn btn-info" asp-route-currentFilter="">@Localizer["All"]</a>
+        <a asp-action="VacationList" class="btn btn-primary" asp-route-currentFilter="Not handled yet">@Localizer["Not handled yet"]</a>
         <a asp-action="VacationList" class="btn btn-success" asp-route-currentFilter="Accepted">@Localizer["Accepted"]</a>
-        <a asp-action="VacationList" class="btn btn-success" asp-route-currentFilter="Declined">@Localizer["Declined"]</a>
-        <a asp-action="VacationList" class="btn btn-success" asp-route-currentFilter="Declined by other manager">@Localizer["Declined by other manager"]</a>
+        <a asp-action="VacationList" class="btn btn-danger" asp-route-currentFilter="Declined">@Localizer["Declined"]</a>
+        <a asp-action="VacationList" class="btn btn-dark" asp-route-currentFilter="Declined by other manager">@Localizer["Declined by other manager"]</a>
     </div>
 <table class="table">
     <thead>
@@ -77,14 +77,14 @@
     var nextDisabled = !Model.HasNextPage ? "disabled" : "";
 }
 
-<a asp-action="List"
+<a asp-action="VacationList"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex - 1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"
    class="btn btn-secondary @prevDisabled">
     @Localizer["Previous"]
 </a>
-<a asp-action="List"
+<a asp-action="VacationList"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex + 1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"

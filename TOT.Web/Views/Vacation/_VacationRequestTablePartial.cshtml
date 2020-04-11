@@ -1,0 +1,37 @@
+﻿@model TOT.Dto.TemporalVacationRequestDto
+@using Microsoft.AspNetCore.Mvc.Localization
+@using TOT.Data.Extensions
+@inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
+@{ 
+    string description = Model.VacationType.GetDescription();
+}
+<table class="table table-striped table-bordered">
+    <tbody>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.VacationType)</th>
+            <td>@Html.DisplayFor(model => description)</td>
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.StartDate)</th>
+            <td>@Html.DisplayFor(model => model.StartDate)</td>
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.EndDate)</th>
+            <td>@Html.DisplayFor(model => model.EndDate)</td>
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Notes)</th>
+            <td>@Html.DisplayFor(model => model.Notes)</td>
+        </tr>
+@for (int i = 0; i < Model.Managers.Count(); i++)
+{
+    <tr>
+        <th>Manager @(i + 1):</th>
+        <td>
+            <div>@Html.DisplayFor(modelItem => Model.Managers.ElementAt(i).FullName)</div>
+            <div><small>@Html.DisplayFor(modelItem => Model.Managers.ElementAt(i).Email)</small></div>
+        </td>
+    </tr>
+}
+    </tbody>
+</table>
