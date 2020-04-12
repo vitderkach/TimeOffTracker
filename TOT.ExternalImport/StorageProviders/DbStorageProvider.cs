@@ -1,13 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TOT.Data.Repositories;
 using TOT.DataImport.Interfaces;
 using TOT.Entities;
 
 namespace TOT.DataImport.StorageProviders
 {
-    class DbStorageProvider : IStorageProvider
+    public class DbStorageProvider : IStorageProvider
     {
+        private UserInformationRepository UserRepository { get; }
+        private VacationRequestRepository VacationRequestRepository { get; }
+        private VacationTypeRepository VacationTypeRepository { get; }
+
+        public DbStorageProvider(
+            UserInformationRepository userRepository,
+            VacationRequestRepository vacationRequestRepository,
+            VacationTypeRepository vacationTypeRepository)
+        {
+            UserRepository = userRepository;
+            VacationRequestRepository = vacationRequestRepository;
+            VacationTypeRepository = vacationTypeRepository;
+        }
+
         public IEmployeeStorageProvider AddEmployeeIfNotExists(string name, DateTime? employmentDate = null, string teamName = null, string workPlace = null)
         {
             throw new NotImplementedException();

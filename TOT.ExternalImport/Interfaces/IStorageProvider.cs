@@ -5,7 +5,7 @@ using TOT.Entities;
 
 namespace TOT.DataImport.Interfaces
 {
-    interface IStorageProvider
+    public interface IStorageProvider
     {
         IEmployeeStorageProvider AddEmployeeIfNotExists(
             string name,
