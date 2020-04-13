@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.EquivalencyExpression;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace TOT.Utility.AutoMapper
         {
             var config = new MapperConfiguration(cfg =>
             {
+                cfg.AddCollectionMappers();
                 cfg.AddProfile<DomainTo>();
                 cfg.AddProfile<DTOTo>();
                 cfg.AddProfile<DtoToDto>();

@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TOT.Data\TOT.Data.csproj" />
+    <ProjectReference Include="..\TOT.Resources\TOT.Resources.csproj" />
   </ItemGroup>
 
 </Project>

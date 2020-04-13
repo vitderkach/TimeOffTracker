@@ -14,7 +14,7 @@ namespace TOT.Dto
 
         [DataType(DataType.Date)]
         [Display(Name = "Registered")]
-        public DateTime RegistrationDate { get; set; }
+        public DateTime RecruitmentDate { get; set; }
 
         public string FirstName { get; set; }
 

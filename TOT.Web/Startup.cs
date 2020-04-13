@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using TOT.Dto;
 using System.Reflection;
-
+using TOT.Web.Middlewares;
 
 namespace TOT.Web
 {
@@ -69,6 +69,7 @@ namespace TOT.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -86,7 +87,7 @@ namespace TOT.Web
             app.UseCookiePolicy();
 
             app.UseRequestLocalization();
-
+            app.UseMiddleware<CultureMiddleware>();
             app.UseAuthentication();
             app.UseMvc(routes =>
             {

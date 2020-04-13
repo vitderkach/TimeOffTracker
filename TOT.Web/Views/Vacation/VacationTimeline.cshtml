@@ -1,0 +1,415 @@
+﻿@using TOT.Dto
+@using System.Collections.Generic
+@using System.Text.Json;
+@using System.Text.Json.Serialization
+@model VacationTimelineDto
+@{
+    ViewData["Title"] = "VacationTimeline";
+    Queue<TemporalVacationRequestDto> requestsQueue = new Queue<TemporalVacationRequestDto>(Model.TemporalVacationRequests);
+    Queue<ManagerResponseForTimelineDto> responsesQueue = new Queue<ManagerResponseForTimelineDto>(Model.ManagerResponseForTimelines);
+    ManagerResponseForTimelineDto response = default;
+    TemporalVacationRequestDto request = default;
+    ManagerResponseForTimelineDto oldResponse = default;
+    TemporalVacationRequestDto oldRequest = default;
+    DateTime nextRequest = default;
+    DateTime nextResponse = default;
+    bool nextRequestExists = default;
+    bool nextResponseExists = default;
+    bool inverted = true;
+
+    int currentRequestIndex = -1;
+    int currentResponseIndex = -1;
+
+    void getNextRequest()
+    {
+
+        if (requestsQueue.Any() == false)
+        {
+        }
+        else
+        {
+            oldRequest = request;
+            nextRequest = (nextResponseExists == true) ? request.ActionTime : DateTime.MinValue;
+            request = requestsQueue.Dequeue();
+            currentRequestIndex++;
+        }
+        nextRequestExists = requestsQueue.Any();
+    }
+
+    void getNextResponse()
+    {
+
+        if (responsesQueue.Any() == false)
+        {
+        }
+        else
+        {
+            oldResponse = response;
+            nextResponse = (nextResponseExists == true) ? response.DateResponse : DateTime.MinValue;
+            response = responsesQueue.Dequeue();
+            currentResponseIndex++;
+        }
+        nextResponseExists = responsesQueue.Any();
+    }
+
+    string invert()
+    {
+        if (inverted)
+        {
+            inverted = !inverted;
+            return "timeline-inverted";
+        }
+        else
+        {
+            inverted = !inverted;
+            return "";
+        }
+
+
+    }
+
+    getNextRequest();
+    getNextResponse();
+}
+
+<div class="container">
+    <div class="page-header">
+        <h2>VacationTimeline</h2>
+        <h2>The history of vacation approving</h2>
+    </div>
+    <ul class="timeline">
+        <li class="@invert()">
+            <div class="timeline-badge primary"><div class="bi bi-clipboard"></div></div>
+            <div class="timeline-panel">
+                <div class="timeline-heading">
+                    <h4 class="timeline-title">Your application has been filed</h4>
+                    <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
+                </div>
+                <div class="timeline-body">
+                    <p>Your appication has been succesfully filed and transferred for admins for review. Wait the answer from admin.</p>
+                    <div class="timeline-details">
+                        <button class="btn btn-info" onclick="showVacationRequestTable(@currentRequestIndex)">Show details</button>
+                    </div>
+                </div>
+            </div>
+        </li>
+
+        @while (true)
+        {
+            if (!(request.StageOfApproving == 1 && request.Approval == null && nextRequestExists != false))
+            {
+                break;
+            }
+            getNextRequest();
+            if (request.StageOfApproving == 2 || request.Approval == false)
+            {
+                break;
+            }
+            <li class="@invert()">
+                <div class="timeline-badge warning"><div class="bi bi-warning"></div></div>
+                <div class="timeline-panel">
+                    <div class="timeline-heading">
+                        <h4 class="timeline-title">Your details about application has been changed.</h4>
+                        <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
+                    </div>
+                    <div class="timeline-body">
+                        <p>Your details about application has been changed.</p>
+                        <div class="timeline-details">
+                            <button class="btn btn-info" onclick="showComparisonTable(@currentRequestIndex-1,@currentRequestIndex)">Show details</button>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        }
+        @if (request.SelfCancelled == true)
+        {
+            <li class="@invert()">
+                <div class="timeline-badge danger"><div class="bi bi-cancelling"></div></div>
+                <div class="timeline-panel">
+                    <div class="timeline-heading">
+                        <h4 class="timeline-title">The request has been cancelled.</h4>
+                        <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
+                    </div>
+                    <div class="timeline-body">
+                        <p>The appication has been cancelled by you.</p>
+                    </div>
+                </div>
+            </li>
+        }
+        @if (request.StageOfApproving == 1 && request.Approval == false)
+        {
+            <li class="@invert()">
+                <div class="timeline-badge danger"><div class="bi bi-decliying"></div></div>
+                <div class="timeline-panel">
+                    <div class="timeline-heading">
+                        <h4 class="timeline-title">The request has been declined.</h4>
+                        <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@response.DateResponse</small></p>
+                    </div>
+                    <div class="timeline-body">
+                        <p>Your request has been declined by admin during accepting.</p>
+                        <div class="timeline-details">
+                            <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">Show details</button>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        }
+        else if (request.StageOfApproving == 2)
+        {
+            <li class="@invert()">
+                <div class="timeline-badge primary"><div class="bi bi-next-stage"></div></div>
+                <div class="timeline-panel">
+                    <div class="timeline-heading">
+                        <h4 class="timeline-title">The application has been accepted.</h4>
+                        <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
+                    </div>
+                    <div class="timeline-body">
+                        <p>Congratulations! The application has been accepted by admin for further review.</p>
+                        <div class="timeline-details">
+                            <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">Show details</button>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+            getNextResponse();
+            while (response.ForStageOfApproving == 2 && response.Approval == true && nextResponseExists != false)
+            {
+                <li class="@invert()">
+                    <div class="timeline-badge info"><div class="bi bi-accepting"></div></div>
+                    <div class="timeline-panel">
+                        <div class="timeline-heading">
+                            <h4 class="timeline-title">Manager accepting</h4>
+                            <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@response.DateResponse</small></p>
+                        </div>
+                        <div class="timeline-body">
+                            <p>The manager @response.Manager.FullName has approved your request.</p>
+                            <div class="timeline-details">
+                                <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">Show details</button>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                getNextResponse();
+            }
+            getNextRequest();
+            if (request.SelfCancelled == true)
+            {
+                <li class="@invert()">
+                    <div class="timeline-badge danger"><div class="bi bi-cancelling"></div></div>
+                    <div class="timeline-panel">
+                        <div class="timeline-heading">
+                            <h4 class="timeline-title">The request has been cancelled.</h4>
+                            <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
+                        </div>
+                        <div class="timeline-body">
+                            <p>The appication has been cancelled by you.</p>
+                        </div>
+                    </div>
+                </li>
+            }
+            else if (response.ForStageOfApproving == 2 && response.Approval == null)
+            {
+                <li class="@invert()">
+                    <div class="timeline-badge primary"><div class="bi bi-waiting"></div></div>
+                    <div class="timeline-panel">
+                        <div class="timeline-heading">
+                            <h4 class="timeline-title">Waiting for responses from others mangers</h4>
+                            <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@DateTime.Now</small></p>
+                        </div>
+                        <div class="timeline-body">
+                            <p>Other managers have not answered yet. Please, wait.</p>
+                        </div>
+                    </div>
+                </li>
+            }
+            else if (response.ForStageOfApproving == 2 && response.Approval == false)
+            {
+                <li class="@invert()">
+                    <div class="timeline-badge danger"><div class="bi bi-decliying"></div></div>
+                    <div class="timeline-panel">
+                        <div class="timeline-heading">
+                            <h4 class="timeline-title">Manager decliying</h4>
+                            <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@response.DateResponse</small></p>
+                        </div>
+                        <div class="timeline-body">
+                            <p>Unfortunately, the manager @response.Manager.FullName has declined your request. The application has been declined properly</p>
+                            <div class="timeline-details">
+                                <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">Show details</button>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            }
+            else
+            {
+                <li class="@invert()">
+                    <div class="timeline-badge primary"><div class="bi bi-next-stage"></div></div>
+                    <div class="timeline-panel">
+                        <div class="timeline-heading">
+                            <h4 class="timeline-title">The application has been accepted by managers</h4>
+                            <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@oldResponse.DateResponse</small></p>
+                        </div>
+                        <div class="timeline-body">
+                            <p>Congratulations! The application has been accepted by all managers and has been tranferred for final admin review.</p>
+                            <div class="timeline-details">
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                //getNextResponse();
+                @while (true)
+                {
+
+                    if (!(request.StageOfApproving == 3 && request.Approval == null && nextRequestExists != false))
+                    {
+                        break;
+                    }
+                    getNextRequest();
+                    if (request.StageOfApproving == 4 || request.Approval == false)
+                    {
+                        break;
+                    }
+                    <li class="@invert()">
+                        <div class="timeline-badge warning"><div class="bi bi-warning"></div></div>
+                        <div class="timeline-panel">
+                            <div class="timeline-heading">
+                                <h4 class="timeline-title">Your details about application has been changed.</h4>
+                                <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
+                            </div>
+                            <div class="timeline-body">
+                                <p>Your details about application has been changed by admin.</p>
+                                <div class="timeline-details">
+                                    <button class="btn btn-info" onclick="showComparisonTable(@currentRequestIndex-1,@currentRequestIndex)">Show details</button>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                }
+                if (request.SelfCancelled == true)
+                {
+                    <li class="@invert()">
+                        <div class="timeline-badge danger"><div class="bi bi-cancelling"></div></div>
+                        <div class="timeline-panel">
+                            <div class="timeline-heading">
+                                <h4 class="timeline-title">The request has been cancelled.</h4>
+                                <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
+                            </div>
+                            <div class="timeline-body">
+                                <p>The appication has been cancelled by you.</p>
+                            </div>
+                        </div>
+                    </li>
+                }
+                else if (response.Approval == false && response.ForStageOfApproving == 3)
+                {
+                    <li class="@invert()">
+                        <div class="timeline-badge danger"><div class="bi bi-decliying"></div></div>
+                        <div class="timeline-panel">
+                            <div class="timeline-heading">
+                                <h4 class="timeline-title">Admin declying</h4>
+                                <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@response.DateResponse</small></p>
+                            </div>
+                            <div class="timeline-body">
+                                <p>Unfortunately, the manager @response.Manager.FullName has declined your request with answer: "@response.Notes". The application has been declined properly.</p>
+                                <div class="timeline-details">
+                                    <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">Show details</button>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                }
+                else if (request.Approval == true)
+                {
+                    <li class="@invert()">
+                        <div class="timeline-badge success"><div class="bi bi-success"></div></div>
+                        <div class="timeline-panel">
+                            <div class="timeline-heading">
+                                <h4 class="timeline-title">Your application has been filed</h4>
+                                <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
+                            </div>
+                            <div class="timeline-body">
+                                <p>Congratulations! The application has been approved by admin and all needed stages have passed. Have a nice rest!</p>
+                            </div>
+                            <div class="timeline-details">
+                                <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">Show details</button>
+                            </div>
+                        </div>
+                    </li>
+                }
+            }
+        }
+    </ul>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="infoModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="infoModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="infoModalBody">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section css {
+    <link rel="stylesheet" href="~/css/vacation/timeline.css" />
+}
+
+@section Scripts{
+    <script>
+        var vacationRequests = @Html.Raw(JsonSerializer.Serialize(Model.TemporalVacationRequests) as string);
+        var managerResponses = @Html.Raw(JsonSerializer.Serialize(Model.ManagerResponseForTimelines) as string);
+        function showVacationRequestTable(indexNumber) {
+            let xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "VacationRequestTable", true);
+            xhttp.onload = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var modal = $("#infoModal");
+                    modal.find('#infoModalLabel').text("Vacation Request Table");
+                    modal.find('#infoModalBody').html(this.responseText);
+                    $("#infoModal").modal({ backdrop: true });
+                }
+            }
+            xhttp.setRequestHeader("Content-Type", "application/json; charset=utf-8");;
+            xhttp.send(JSON.stringify(vacationRequests[indexNumber]));
+        }
+        function showComparisonTable(oldIndexNumber, newIndexNumber) {
+            let xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "ComparisonTable", true);
+            xhttp.onload = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var modal = $("#infoModal");
+                    modal.find('#infoModalLabel').text("Vacation Request Comparison Table");
+                    modal.find('#infoModalBody').html(this.responseText);
+                    $("#infoModal").modal({ backdrop: true });
+                }
+            }
+            xhttp.setRequestHeader("Content-Type", "application/json; charset=utf-8");;
+            xhttp.send(JSON.stringify([vacationRequests[oldIndexNumber], vacationRequests[newIndexNumber]]));
+        }
+        function showManagerResponseTable(indexNumber) {
+            let xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "ManagerResponseTable", true);
+            xhttp.onload = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var modal = $("#infoModal");
+                    modal.find('#infoModalLabel').text("Manager Response Table");
+                    modal.find('#infoModalBody').html(this.responseText);
+                    $("#infoModal").modal({ backdrop: true });
+                }
+            }
+            xhttp.setRequestHeader("Content-Type", "application/json; charset=utf-8");;
+            xhttp.send(JSON.stringify(managerResponses[indexNumber]));
+        }
+    </script>
+}

@@ -225,9 +225,11 @@ namespace TOT.Data.Migrations
                     b.Property<bool?>("Approval");
 
                     b.Property<DateTime>("DateResponse")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<int>("ForStageOfApproving")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasDefaultValue(1);
 
                     b.Property<int>("ManagerId");
 
@@ -236,12 +238,8 @@ namespace TOT.Data.Migrations
 
                     b.Property<int>("VacationRequestId");
 
-                    b.Property<bool>("isRequested");
-
                     b.HasKey("Id")
                         .HasName("PK_ManagerResponse");
-
-                    b.HasIndex("DateResponse");
 
                     b.HasIndex("ManagerId");
 
@@ -313,19 +311,22 @@ namespace TOT.Data.Migrations
 
                     b.Property<bool?>("Approval");
 
-                    b.Property<DateTime>("CreationDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("date");
 
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<bool?>("SelfCancelled");
+
+                    b.Property<int>("StageOfApproving")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(1);
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("date");
+
+                    b.Property<int?>("TakenDays");
 
                     b.Property<int>("UserInformationId");
 
@@ -335,8 +336,6 @@ namespace TOT.Data.Migrations
 
                     b.HasKey("VacationRequestId")
                         .HasName("PK_VacationRequest");
-
-                    b.HasIndex("CreationDate");
 
                     b.HasIndex("EndDate");
 

@@ -70,9 +70,13 @@ namespace TOT.Data.Repositories
             .ThenInclude(vt => vt.Location)
             .FirstOrDefault();
 
-        public VacationType GetOne(Expression<Func<VacationType, bool>> filterExpression)
+        public VacationType GetOne(Expression<Func<VacationType, bool>> filterExpression, params Expression<Func<VacationType, object>>[] includes)
         {
             IQueryable<VacationType> query = _context.VacationTypes;
+            if (includes != null)
+            {
+                query = includes.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+            }
             if (filterExpression != null)
             {
                 query = query.Where(filterExpression);
@@ -81,9 +85,13 @@ namespace TOT.Data.Repositories
             return query.FirstOrDefault();
         }
 
-        public ICollection<VacationType> GetAll(Expression<Func<VacationType, bool>> filterExpression)
+        public ICollection<VacationType> GetAll(Expression<Func<VacationType, bool>> filterExpression, params Expression<Func<VacationType, object>>[] includes)
         {
             IQueryable<VacationType> query = _context.VacationTypes;
+            if (includes != null)
+            {
+                query = includes.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+            }
             if (filterExpression != null)
             {
                 query = query.Where(filterExpression);

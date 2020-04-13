@@ -1,0 +1,43 @@
+﻿@model TOT.Dto.EditVacationDaysDto
+
+@{
+    ViewData["Title"] = "EditVacationDays";
+}
+
+<h1>Edit Vacation Days</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditVacationDays" asp-controller="Admin" method="post">
+
+            <div class="form-group">
+                @Html.HiddenFor(m => m.PaidLeave.TimeOffType)
+                <label class="control-label">Paid Leave Days</label>
+                <input asp-for="@Model.PaidLeave.StatutoryDays" class="form-control" />
+            </div>
+            <div class="form-group">
+                @Html.HiddenFor(m => m.GiftLeave.TimeOffType)
+                <label class="control-label">Gift Leave Days</label>
+                <input asp-for="@Model.GiftLeave.StatutoryDays" class="form-control" />
+            </div>
+            <div class="form-group">
+                @Html.HiddenFor(m => m.SickLeave.TimeOffType)
+                <label class="control-label">Sick Leave Days</label>
+                <input asp-for="@Model.SickLeave.StatutoryDays" class="form-control" />
+            </div>
+            <div class="form-group">
+                @Html.HiddenFor(m => m.StudyLeave.TimeOffType)
+                <label class="control-label">Study Leave Days</label>
+                <input asp-for="@Model.StudyLeave.StatutoryDays" class="form-control" />
+            </div>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Save changes" class="btn btn-outline-dark" />
+                <a class="btn btn-outline-light text-dark" asp-controller="Admin" asp-action="UserList">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+

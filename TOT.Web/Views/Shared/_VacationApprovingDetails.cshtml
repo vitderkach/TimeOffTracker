@@ -1,0 +1,301 @@
+﻿@model TOT.Dto.VacationDetailsDTO
+@using Microsoft.AspNetCore.Identity
+@using TOT.Entities
+@using TOT.Interfaces.Services
+@using Microsoft.AspNetCore.Mvc.Localization
+@using TOT.Data.Extensions
+@using TOT.Dto
+@using Microsoft.AspNetCore.Http
+@inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
+@inject IVacationService VacationService
+@using System.Security.Claims
+@{
+    var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+    var claim = claimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+    var userId = int.Parse(claim.Value);
+    int counter = 0;
+    int takenDays = (Model.VacationRequestDto.EndDate.Date - Model.VacationRequestDto.StartDate.Date).Days + 1;
+    int firstDayEquivalenceСlass = (int)Model.VacationRequestDto.StartDate.DayOfWeek;
+    int weekdayCount = takenDays / 6 + takenDays / 7 + ((takenDays % 6 + firstDayEquivalenceСlass) / 6) + ((takenDays % 7 + firstDayEquivalenceСlass) / 7);
+}
+
+<link rel="stylesheet" href="~/lib/bootstrap-select/css/bootstrap-select.min.css" />
+<link rel="stylesheet" href="~/css/bootsrap-datepicker.css" />
+<style>
+    .list-group-item__vacdetails {
+        display: flex;
+    }
+
+    #vacation-details {
+        max-height: calc(100% - 100px);
+        overflow-y: auto;
+    }
+
+    #vacation-container {
+        height: 550px;
+    }
+
+    .scrollbar::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        border-radius: 10px;
+        background-color: #F5F5F5;
+    }
+
+    .scrollbar::-webkit-scrollbar {
+        width: 12px;
+        background-color: #F5F5F5;
+    }
+
+    .scrollbar::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+        background-color: #555;
+    }
+</style>
+<div class="justify-content-center row">
+    <div class="container col-12 row">
+        <div class="container col-8" id="vacation-container">
+            <h2 class="text-center">@Localizer["Vacation application"]</h2>
+            <hr class="row mx-0" />
+            <div class="row col-12 scrollbar mx-0" id="vacation-details">
+                <ul class="list-group  col-12 pr-1">
+                    <li class="row list-group-item list-group-item__vacdetails list-group-item-info">
+                        <div class=" row col-12">
+                            <span class="font-weight-bold">@Localizer["Details"]</span>
+                        </div>
+                    </li>
+                    <li class="row list-group-item list-group-item__vacdetails">
+                        <div class="col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => model.VacationRequestDto.User.FullName)]: </div>
+                        <div class="col-8">@Model.VacationRequestDto.User.FullName</div>
+                    </li>
+
+                    <li class="row list-group-item list-group-item__vacdetails">
+                        <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => model.VacationRequestDto.StartDate)]: </span>
+                        <span class=" col-8">@Model.VacationRequestDto.StartDate</span>
+                    </li>
+
+                    <li class="row list-group-item list-group-item__vacdetails">
+                        <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => model.VacationRequestDto.EndDate)]: </span>
+                        <span class=" col-8">@Model.VacationRequestDto.EndDate</span>
+                    </li>
+
+                    <li class="row list-group-item list-group-item__vacdetails">
+                        <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => model.VacationRequestDto.User.Email)]: </span>
+                        <span class=" col-8">@Model.VacationRequestDto.User.Email</span>
+                    </li>
+
+                    <li class=" row list-group-item list-group-item__vacdetails">
+                        <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => model.VacationRequestDto.VacationType)]: </span>
+                        <span class=" col-8">@Localizer[Model.VacationRequestDto.VacationType.GetDescription()]</span>
+                    </li>
+                    <li class=" row list-group-item list-group-item__vacdetails">
+                        <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => model.VacationRequestDto.ApplicationDto.Notes)]: </span>
+                        <div class=" col-8">@Model.VacationRequestDto.ApplicationDto.Notes</div>
+                    </li>
+                    @for (int i = 0; i < Model.VacationRequestDto.AllManagerResponses.Count; i++)
+                    {
+                        counter++;
+                        ManagerResponseListDto managerResponse = Model.VacationRequestDto.AllManagerResponses.ElementAt(i);
+                        if (managerResponse.ManagerId == userId && managerResponse.Approval == null && Model.VacationRequestDto.Approval != false)
+                        {
+                            counter--;
+                            continue;
+                        }
+                        <li class="row list-group-item list-group-item__vacdetails list-group-item-info">
+                            <div class=" row col-12">
+                                @if (managerResponse.ForStageOfApproving == 2)
+                                {
+                                    <span class="font-weight-bold">@Localizer["Manager"] @(counter): </span>
+                                }
+                                @if (managerResponse.ForStageOfApproving == 1)
+                                {
+                                    <span class="font-weight-bold">@Localizer["Administrator preliminary answer"]: </span>
+                                }
+                                @if (managerResponse.ForStageOfApproving == 3)
+                                {
+                                    <span class="font-weight-bold">@Localizer["Administrator finally answer"]: </span>
+                                }
+                            </div>
+                        </li>
+                        <li class="row list-group-item list-group-item__vacdetails">
+                            <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => managerResponse.FullName)]: </span>
+                            <span class=" col-8">@managerResponse.FullName</span>
+                        </li>
+                        <li class=" row list-group-item list-group-item__vacdetails">
+                            <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => managerResponse.Email)]: </span>
+                            <span class=" col-8">@managerResponse.Email</span>
+                        </li>
+                        if (!(Model.VacationRequestDto.Approval == false && managerResponse.Approval == null))
+                        {
+                            @if ((Model.VacationRequestDto.Stage > 1 && ((managerResponse.Approval != null) || (Model.VacationRequestDto.SelfCancelled != true && managerResponse.Approval == null))) || Model.VacationRequestDto.Approval == false)
+                            {
+                                @if (managerResponse.Approval != null)
+                                {
+                                    <li class="row list-group-item list-group-item__vacdetails">
+                                        <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => managerResponse.ResponseDate)]: </span>
+                                        <span class=" col-8">@managerResponse.ResponseDate.Date</span>
+                                    </li>
+                                }
+                                @if (managerResponse.Approval == null)
+                                {
+                                    <li class="row list-group-item list-group-item-warning list-group-item__vacdetails">
+                                        <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => managerResponse.Approval)]: </span>
+
+                                        <span class=" col-8">@Localizer["not handled yet"]</span>
+                                    </li>
+                                }
+                                else if (managerResponse.Approval == true)
+                                {
+                                    <li class="row list-group-item list-group-item-success list-group-item__vacdetails">
+                                        <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => managerResponse.Approval)]: </span>
+
+                                        <span class=" col-8">@Localizer["accepted"]</span>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="row list-group-item list-group-item-danger list-group-item__vacdetails">
+                                        <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => managerResponse.Approval)]: </span>
+
+                                        <span class=" col-8">@Localizer["declined"]</span>
+                                    </li>
+                                }
+                            }
+                            if (managerResponse.Approval != null)
+                            {
+                                <li class="row list-group-item list-group-item__vacdetails">
+                                    <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => managerResponse.Notes)]: </span>
+                                    <div class=" col-8">@managerResponse.Notes</div>
+                                </li>
+                            }
+
+                        }
+                        else
+                        {
+                            if (Model.VacationRequestDto.SelfCancelled == true)
+                            {
+                                <li class="row list-group-item list-group-item-danger list-group-item__vacdetails">
+                                    <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => managerResponse.Approval)]: </span>
+
+                                    <span class=" col-8">@Localizer["cancelled by employer"]</span>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="row list-group-item list-group-item-danger list-group-item__vacdetails">
+                                    <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => managerResponse.Approval)]: </span>
+
+                                    <span class=" col-8">@Localizer["declined by other manager"]</span>
+                                </li>
+                            }
+
+                        }
+                    }
+                    @if (Model.VacationRequestDto.SelfCancelled == true)
+                    {
+                        <li class="row list-group-item list-group-item-danger list-group-item__vacdetails">
+                            <span class=" col-4 font-weight-bold">@Localizer[Html.DisplayNameFor(model => model.VacationRequestDto.SelfCancelled)]: </span>
+
+                            <span class=" col-8">@Localizer["cancelled by employer"]</span>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="col-3 d-flex flex-column align-items-center justify-content-start" style="margin-top:53px;">
+            @if (User.Identity.IsAuthenticated && User.IsInRole("Administrator") && Model.ManagerResponseDto != null)
+            {
+                var vacationDays = VacationService.GetVacationDays(Model.VacationRequestDto.User.Id);
+                <partial name="_VacationDaysPartial" model="vacationDays" />
+            }
+
+        </div>
+    </div>
+    @if (((User.Identity.IsAuthenticated && User.IsInRole("Manager") && Model.VacationRequestDto.Stage == 2 && Model.VacationRequestDto.AllManagerResponses.FirstOrDefault(mr => mr.ManagerId == userId).Approval == null && Model.VacationRequestDto.Approval == null)
+   || ((User.Identity.IsAuthenticated && User.IsInRole("Administrator") && ((Model.VacationRequestDto.Stage == 1 && Model.VacationRequestDto.Approval == null) || (Model.VacationRequestDto.Stage == 3 && Model.VacationRequestDto.Approval == null))))) && Model.VacationRequestDto.SelfCancelled != true)
+    {
+<div class="row col-12">
+    <div class="col-8 container justify-content-center">
+        <form class="col-12 row pr-0" method="post">
+            <div class="form-group col-12 row pr-0">
+                <label class="control-label col-4 font-weight-bold row" asp-for="ManagerResponseDto.Notes">@Localizer[Html.DisplayNameFor(model => model.ManagerResponseDto.Notes)]:</label>
+                <div class="w-100"></div>
+                <textarea name="notes" class="form-control col-12" rows="6"></textarea>
+            </div>
+            <input type="hidden" name="vacationRequestId" value="@Model.VacationRequestDto.ApplicationDto.Id" />
+            @if (Model.VacationRequestDto.Stage > 1 && Model.VacationRequestDto.Stage < 4)
+            {
+                <input type="hidden" name="responseId" value="@Model.ManagerResponseDto.Id" />
+            }
+            @if (Model.VacationRequestDto.Stage == 3)
+            {
+                <div class="form-check col-12">
+                    <input class="form-check-input" type="checkbox" value="false" onchange="weekdays(this)" id="weekdaycheck" />
+                    <label class="form-check-label" for="weekdaycheck">@Localizer["Take into account weekdays"]</label>
+                </div>
+                <div class="form-group col-12 row">
+                    <label class="control-label col-6 font-weight-bold row align-self-center">@Localizer["The count of high days"]:</label>
+                    <input class="form-control col-2" type="number" step="1" min="0" max="@takenDays" value="0" onchange="highdays(this)" />
+                </div>
+                <div class="form-group col-12 row">
+                    <label class="form-check-label font-weight-bold col-6 row align-self-center">@Localizer["Requested vacation days in total"]:</label>
+                    <input class="form-control col-2" name="takenDays" value="@takenDays" id="freeDays" readonly />
+                </div>
+            }
+            <div class="row col-12 justify-content-around form-group">
+                <input class="btn btn-success" type="submit" value="Confirm" formaction="/@ViewBag.Controller/ApproveVacationRequest" />
+                @if (User.IsInRole("Administrator"))
+                {
+                    <a class="btn btn-info" asp-action="EditVacation" asp-route-id="@Model.VacationRequestDto.ApplicationDto.Id">Edit</a>
+                }
+                <input class="btn btn-danger" type="submit" value="Decline" formaction="/@ViewBag.Controller/DeclineVacationRequest" />
+            </div>
+        </form>
+    </div>
+    <div class="col-3"></div>
+</div>
+    }
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/lib/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="~/lib/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script>
+        var takendayscount = @takenDays;
+        var highdayscount = 0;
+        var weekdayscount = @weekdayCount;
+        var offDays = takendayscount;
+        window.onload = runDatePicker();
+        function goBack() {
+            window.history.back();
+        }
+
+        function runDatePicker() {
+            $('input-group, .input-daterange').datepicker({
+                weekStart: 1,
+                container: '#datepicker',
+                format: 'dd-mm-yyyy'
+            });
+            $('.input-group, .input-daterange').datepicker();
+        }
+
+        function weekdays(item) {
+
+            if (item.checked == true) {
+                offDays =  takendayscount -  highdayscount - weekdayscount;
+            }
+            else {
+                offDays = takendayscount - highdayscount;
+            }
+            document.getElementById("freeDays").value = (offDays >= 0) ? offDays : 0;
+        }
+
+        function highdays(item) {
+            offDays = (highdayscount - Number(item.value)) + offDays;
+            highdayscount = Number(item.value);
+            document.getElementById("freeDays").value = (offDays >= 0) ? offDays : 0;
+        }
+    </script>
+}

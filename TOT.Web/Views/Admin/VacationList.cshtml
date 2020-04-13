@@ -1,0 +1,98 @@
+﻿@model PaginatedList<TOT.Dto.VacationRequestsListForAdminsDTO>
+@using PagedList.Mvc;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using TOT.Data.Extensions
+@inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
+@{
+    var vacations = @Model.FirstOrDefault();
+}
+    <div class="form-group">
+        <a asp-action="VacationList" class="btn btn-info" asp-route-currentFilter="">@Localizer["All"]</a>
+        <a asp-action="VacationList" class="btn btn-primary" asp-route-currentFilter="Just registered">@Localizer["Just registered"]</a>
+        <a asp-action="VacationList" class="btn btn-success" asp-route-currentFilter="Accepted">@Localizer["Accepted"]</a>
+        <a asp-action="VacationList" class="btn btn-primary" asp-route-currentFilter="Need a final approval">@Localizer["Need a final approval"]</a>
+        <a asp-action="VacationList" class="btn btn-success" asp-route-currentFilter="Approved">@Localizer["Approved"]</a>
+        <a asp-action="VacationList" class="btn btn-danger" asp-route-currentFilter="Declined">@Localizer["Declined"]</a>
+        <a asp-action="VacationList" class="btn btn-dark" asp-route-currentFilter="Self-cancelled">@Localizer["Self-cancelled"]</a>
+    </div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => vacations.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => vacations.StartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => vacations.EndDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => vacations.VacationType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => vacations.StageOfApproving)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                <div>@Html.DisplayFor(modelItem => item.FullName)</div>
+                <div><small>@Html.DisplayFor(modelItem => item.Email)</small></div>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => @Localizer[item.VacationType.GetDescription()].Value)
+            </td>
+            <td>
+                @if (item.SelfCancelled == true)
+                {
+                    <text>@Localizer["Self-cancelled"].Value</text>
+                }
+                else if (item.StageOfApproving == 1)
+                {
+                    <text>@Localizer["Just registered"].Value</text>
+                }
+                else if (item.StageOfApproving == 3)
+                {
+                    <text>@Localizer["Need a final approval"].Value</text>
+                }
+            </td>
+            <td>
+                <div class="row align-items-center">
+                    <a class="btn btn-outline-dark form-control m-1" asp-action="Details" asp-route-id="@item.VacationRequestId">Details</a>
+                </div>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="VacationList"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-secondary @prevDisabled">
+    @Localizer["Previous"]
+</a>
+<a asp-action="VacationList"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-secondary @nextDisabled">
+    @Localizer["Next"]
+</a>

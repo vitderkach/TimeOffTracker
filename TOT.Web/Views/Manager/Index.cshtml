@@ -1,4 +1,4 @@
-﻿@model PaginatedList<TOT.Dto.ManagerResponseListDto>
+﻿@model PaginatedList<TOT.Dto.VacationRequestListForManagersDTO>
 @using PagedList.Mvc;
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
@@ -34,7 +34,7 @@
     <thead>
         <tr>
             <th>
-                @Localizer[Html.DisplayNameFor(model => response.Employee)]
+                @Localizer[Html.DisplayNameFor(model => response.FullName)]
             </th>
             <th>
                 @Localizer[Html.DisplayNameFor(model => response.VacationType)]
@@ -56,7 +56,7 @@
             @Html.HiddenFor(model => item.VacationRequestId)
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Employee)
+                    @Html.DisplayFor(modelItem => item.FullName)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.VacationType)

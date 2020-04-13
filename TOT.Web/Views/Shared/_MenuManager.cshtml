@@ -5,16 +5,17 @@
 @inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
 
 @{
-    var permission = User.IsInRole("Manager") || User.IsInRole("Administrator");
+    var permission = User.IsInRole("Manager");
 }
 
 @inject SignInManager<ApplicationUser> SignInManager
-@inject UserManager<ApplicationUser> UserManager
 
 @if (SignInManager.IsSignedIn(User) && permission)
 {
     <li class="nav-item dropdown">
-        <a class="nav-link" asp-controller="Manager" asp-action="Index">@Localizer["Manager"]</a>
-
+        <div class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">@Localizer["Manager"]</div>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" asp-controller="Manager" asp-action="VacationList">@Localizer["Vacation requests"]</a>
+        </div>
     </li>
 }

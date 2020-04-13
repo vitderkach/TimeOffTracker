@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
+using AutoMapper.EquivalencyExpression;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using TOT.Dto;
 using TOT.Entities;
-
 namespace TOT.Utility.AutoMapper
 {
     public class DTOTo : Profile
@@ -19,16 +19,14 @@ namespace TOT.Utility.AutoMapper
             CreateMap<UserInformationDto, UserInformation>()
                 .ForMember(dest => dest.ApplicationUserId, opt => opt.MapFrom(src => src.Id));
 
-            CreateMap<UserInformationDto, UserInformation>();
-
             CreateMap<ManagerResponseDto, ManagerResponse>();
-            CreateMap<ApplyForRequestGetDto, VacationRequestDto>()
-                .ForMember(dest => dest.VacationType, opt => opt.MapFrom(
-                    src => src.SelectedTimeOffType.ToEnum<TimeOffType>()));
-
-            CreateMap<VacationRequestListDto, VacationRequest>()
-                .ForMember(dest => dest.VacationType, opt => opt.MapFrom(
-                    src => src.VacationType.ToEnum<TimeOffType>()));
+            CreateMap<ApplicationDto, VacationRequest>()
+            .ForMember(dest => dest.UserInformationId, opt => opt.MapFrom(src => src.UserId))
+            .ForMember(dest => dest.Approval, opt => opt.Ignore())
+            .ForMember(dest => dest.StageOfApproving, opt => opt.Ignore())
+            .ForMember(dest => dest.UserInformationId, opt => opt.MapFrom(src => src.UserId))
+            .EqualityComparison((odto, o) => odto.Id == o.VacationRequestId);
+            CreateMap<VacationRequestListDto, VacationRequest>();
 
             CreateMap<UserInformationListDto, ApplicationUser>();
             CreateMap<UserInformationListDto, UserInformation>()

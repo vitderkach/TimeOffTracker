@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using TOT.Business.Services;
 using TOT.Dto;
-using TOT.Entities;
 using TOT.Interfaces;
 using TOT.Interfaces.Services;
 using TOT.Web.Models;
-using PagedList;
+using System.Security.Claims;
 using Microsoft.Extensions.Localization;
+using TOT.Entities;
+using System.Text.Json;
 
 namespace TOT.Web.Controllers
 {
@@ -24,65 +20,57 @@ namespace TOT.Web.Controllers
         private readonly IMapper _mapper;
         private readonly IVacationService _vacationService;
         private readonly IUserService _userService;
-        private readonly IStringLocalizer<Resources.Resources> _localizer;
 
-        public VacationController(IVacationService vacationService, IMapper mapper,
-            IUserService userService, IStringLocalizer<Resources.Resources> localizer)
+        public VacationController(IVacationService vacationService, IMapper mapper, IUserService userService)
         {
             _vacationService = vacationService;
             _mapper = mapper;
             _userService = userService;
-            _localizer = localizer;
         }
         public ActionResult Index()
         {
             return View();
         }
 
+        public IActionResult Delete(int vacationRequestId)
+        {
+            if (_vacationService.CancelVacation(vacationRequestId))
+            {
+                return RedirectToAction("List");
+            }
+            return BadRequest();
+        }
+
         [HttpGet]
         public ActionResult Apply()
         {
-            /*var managers = _userService.GetAllByRole("Manager");
-            var selectListManagers = new SelectList(managers, "Id", "UserInformation.FullName");
-            var userId = _userService.GetCurrentUser().Result.Id; */
-
-            //ApplyForRequestGetDto apply = new ApplyForRequestGetDto();
-            ViewBag.TimeOffTypeList = GetTimeOffTypeList();
-            ViewBag.Excitingmanagers = GetExcitingManagersList(0, new List<UserInformation>());
-            return View();
+            int userId = int.Parse((User.FindFirstValue(ClaimTypes.NameIdentifier)));
+            ApplicationDto apply = new ApplicationDto();
+            apply.UserId = userId;
+            ViewBag.TimeOffTypeList = _vacationService.GetTimeOffTypeList();
+            ViewBag.AvailableManagers = _vacationService.GetManagersForVacationApply(userId);
+            return View(apply);
         }
         [HttpPost]
-        public ActionResult Apply([FromBody]ApplyForRequestGetDto applyForRequestGetDto)
+        public ActionResult Apply(ApplicationDto applyForRequestGetDto)
         {
             if (applyForRequestGetDto != null)
             {
-                int left = (int)(applyForRequestGetDto.EndDate - applyForRequestGetDto.StartDate).TotalDays;
-                if (applyForRequestGetDto.RequiredManagers.Count() == 0)
+                if (applyForRequestGetDto.RequiredManagersEmails.Count() == 0)
                 {
                     ModelState.AddModelError("RequiredManagers", "At least 1 manager is required");
-                }
-                if (left > 30)
-                {
-                    ModelState.AddModelError("StartDate", "Maximum interval between dates is 30 days");
-                }
-                if (left < 0)
-                {
-                    ModelState.AddModelError("StartDate", "End date must be later than start date");
                 }
             }
             if (ModelState.IsValid)
             {
-
-                var user = _userService.GetCurrentUser().Result;
-                applyForRequestGetDto.UserId = user.Id;
-
-                var vacationRequest = _mapper.Map<ApplyForRequestGetDto, VacationRequestDto>(applyForRequestGetDto);
-
-                _vacationService.ApplyForVacation(vacationRequest);
+                _vacationService.ApplyForVacation(applyForRequestGetDto);
                 return RedirectToAction("List");
             }
             else
             {
+                int userId = int.Parse((User.FindFirstValue(ClaimTypes.NameIdentifier)));
+                ViewBag.TimeOffTypeList = _vacationService.GetTimeOffTypeList();
+                ViewBag.AvailableManagers = _vacationService.GetManagersForVacationApply(userId);
                 return View(applyForRequestGetDto);
             }
         }
@@ -114,17 +102,22 @@ namespace TOT.Web.Controllers
                     }
                 case "In Proccess":
                     {
-                        vacations = _vacationService.GetAllByCurrentUser().Where(v => v.Approval == null);
+                        vacations = _vacationService.GetAllByCurrentUser().Where(v => v.Approval == null && v.SelfCancelled != true);
                         break;
                     }
                 case "Approved":
                     {
-                        vacations = _vacationService.GetAllByCurrentUser().Where(v => v.Approval == true);
+                        vacations = _vacationService.GetAllByCurrentUser().Where(v => v.Approval == true && v.SelfCancelled != true);
                         break;
                     }
                 case "Declined":
                     {
-                        vacations = _vacationService.GetAllByCurrentUser().Where(v => v.Approval == false);
+                        vacations = _vacationService.GetAllByCurrentUser().Where(v => v.Approval == false && v.SelfCancelled != true);
+                        break;
+                    }
+                case "Self-cancelled":
+                    {
+                        vacations = _vacationService.GetAllByCurrentUser().Where(v => v.SelfCancelled == true);
                         break;
                     }
                 default:
@@ -144,59 +137,64 @@ namespace TOT.Web.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            var vacation = _vacationService.GetVacationById(id);
-            if (vacation != null)
-            {
-                return View(vacation);
-            }
-            return RedirectToAction("List");
+            var vacationDto = _vacationService.GetVacationById(id);
+            ViewBag.TimeOffTypeList = _vacationService.GetTimeOffTypeList();
+            ViewBag.AvailableManagers = _vacationService.GetManagersForVacationApply(vacationDto.User.Id);
+            return View(vacationDto);
         }
         [HttpPost]
-        public IActionResult Edit(int Id, string Notes)
+        public IActionResult Edit(ApplicationDto applicationDto)
         {
-            _vacationService.UpdateVacation(Id, Notes);
-
-            return RedirectToAction("List");
-        }
-        public IActionResult Deactivate(int id)
-        {
-            bool isRemoved = _vacationService.DeactivateVacation(id);
-
-            return RedirectToAction("List");
-        }
-
-
-
-        public List<SelectListItem> GetTimeOffTypeList()
-        {
-            var list = new List<SelectListItem>();
-            foreach (TimeOffType item in Enum.GetValues(typeof(TimeOffType)))
+            if (ModelState.IsValid)
             {
-                list.Add(new SelectListItem
-                {
-                    Text = _localizer[item.GetDescription()],
-                    Value = item.ToString()
-                });
+                _vacationService.EditVacationRequest(applicationDto);
+                return RedirectToAction("List", new { id = applicationDto.Id });
             }
-            return list.OrderBy(x => x.Text).ToList();
+            else
+            {
+                return RedirectToAction("Edit", new { id = applicationDto.Id });
+            }
+        }
+            public IActionResult Deactivate(int id)
+        {
+            bool isRemoved = _vacationService.CancelVacation(id);
+            if (isRemoved)
+            {
+                return RedirectToAction("List");
+            }
+            else
+            {
+                return BadRequest();
+            }
+
         }
 
-        public List<SelectListItem> GetExcitingManagersList(int userId, List<UserInformation> excitingManagers)
+        [HttpGet]
+        public IActionResult VacationTimeline(int id)
         {
-            var list = new List<SelectListItem>();
-            foreach (var manager in excitingManagers)
-            {
-                if (manager.ApplicationUserId == userId)
-                {
-                    continue;
-                }
-                list.Add(new SelectListItem
-                {
-                    Text = manager.FirstName + " " + manager.LastName,
-                    Value = manager.ApplicationUserId.ToString()
-                });
-            }
-            return list.OrderBy(x => x.Text).ToList();
+            var vacationTimelineDto = _vacationService.GetVacationTimeline(id);
+            var d = JsonSerializer.Serialize(vacationTimelineDto.TemporalVacationRequests);
+            return View("VacationTimeline", vacationTimelineDto);
+        }
+
+        [HttpPost]
+        [Route("[controller]/VacationTimeline/VacationRequestTable")]
+        public IActionResult VacationRequestTable([FromBody] TemporalVacationRequestDto temporalVacationRequest) {
+            return PartialView("_VacationRequestTablePartial", temporalVacationRequest);
+        }
+
+        [HttpPost]
+        [Route("[controller]/VacationTimeline/ComparisonTable")]
+        public IActionResult ComparisonTable([FromBody] TemporalVacationRequestDto[] temporalVacationRequests)
+        {
+            return PartialView("_ComparisonTablePartial", new ComparisonTableDto { OldVacationRequest = temporalVacationRequests[0], NewVacationRequest = temporalVacationRequests[1] });
+        }
+
+        [HttpPost]
+        [Route("[controller]/VacationTimeline/ManagerResponseTable")]
+        public IActionResult ManagerResponseTable([FromBody] ManagerResponseForTimelineDto managerResponse)
+        {
+            return PartialView("_ManagerResponseTablePartial", managerResponse);
         }
     }
 }

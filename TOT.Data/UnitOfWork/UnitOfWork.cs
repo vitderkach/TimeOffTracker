@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using TOT.Data.Repositories;
 using TOT.Entities;
 using TOT.Interfaces;
@@ -14,9 +15,9 @@ namespace TOT.Data.UnitOfWork
 
         public IUserInformationRepository<UserInformation> UserInformationRepository { get; }
 
-        public IVacationRequestRepository<VacationRequest> VacationRequestRepository { get; }
+        public IVacationRequestRepository<BaseVacationRequest, VacationRequest, VacationRequestHistory> VacationRequestRepository { get; }
 
-        public IManagerResponseRepository<ManagerResponse> ManagerResponseRepository { get; }
+        public IManagerResponseRepository<BaseManagerResponse, ManagerResponse, ManagerResponseHistory> ManagerResponseRepository { get; }
 
         public IVacationTypeRepository<VacationType> VacationTypeRepository { get; }
 
@@ -24,7 +25,9 @@ namespace TOT.Data.UnitOfWork
 
         public ILocationRepository<Location> LocationRepository { get; }
 
-        public UnitOfWork(ApplicationDbContext context)
+        public IAuxiliaryRepository AuxiliaryRepository { get; }
+
+        public UnitOfWork(ApplicationDbContext context, IConfiguration configuration)
         {
             UserInformationRepository = new UserInformationRepository(context);
             VacationRequestRepository = new VacationRequestRepository(context);
@@ -32,6 +35,7 @@ namespace TOT.Data.UnitOfWork
             VacationTypeRepository = new VacationTypeRepository(context);
             LocationRepository = new LocationRepository(context);
             TeamRepository = new TeamRepository(context);
+            AuxiliaryRepository = new AuxiliaryRepository(configuration);
             _context = context;
         }
 

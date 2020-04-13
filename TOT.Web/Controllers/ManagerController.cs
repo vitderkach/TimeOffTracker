@@ -9,24 +9,28 @@ using TOT.Interfaces;
 using TOT.Interfaces.Services;
 using TOT.Web.Models;
 using PagedList;
+using System.Security.Claims;
 
-namespace TOT.Web.Controllers {
-    [Authorize(Roles = "Manager, Administrator")]
-    public class ManagerController : Controller {
+namespace TOT.Web.Controllers
+{
+    [Authorize(Roles = "Manager")]
+    public class ManagerController : Controller
+    {
         private readonly IManagerService _managerService;
         private readonly IVacationService _vacationService;
-
+        private readonly IMapper _mapper;
         public ManagerController(IManagerService managerService,
             IVacationService vacationService,
             IMapper mapper)
         {
             _managerService = managerService;
             _vacationService = vacationService;
+            _mapper = mapper;
         }
 
         // вывод всех активных запросов на имя менеджера
         // todo - routing
-        public async Task<IActionResult> Index(
+        public async Task<IActionResult> VacationList(
             string sortOrder,
             string currentFilter,
             string searchString,
@@ -36,100 +40,89 @@ namespace TOT.Web.Controllers {
             {
                 ViewData["NameSortParm"] = searchString;
             }
-            else
-            {
-                if (currentFilter == null)
-                {
-                    pageNumber = 1;
-                }
-            }
 
             if (currentFilter != null)
                 ViewData["CurrentFilter"] = currentFilter;
 
-            IEnumerable<ManagerResponseListDto> responses;
+            int userId = int.Parse((User.FindFirstValue(ClaimTypes.NameIdentifier)));
+
+            IEnumerable<VacationRequestListForManagersDTO> responses;
             switch (currentFilter)
             {
-                case "In Proccess":
-                {
-                    var requestsByCurrentManager = _managerService.GetAllCurrentManagerResponses();
-                    responses = _managerService
-                        .GetCurrentManagerRequests(requestsByCurrentManager).Where(m => m.Approval == null);
-                    break;
-                }
-                case "Approved":
-                {
-                    responses = _managerService.GetAllMyManagerResponses().Where(m => m.Approval == true);
-                    break;
-                }
+                case "Not handled yet":
+                    {
+                        responses = _managerService.GetDefinedManagerVacationRequests(userId, null).Where(vr => vr.Approval == null);
+                        break;
+                    }
+                case "Accepted":
+                    {
+                        responses = _managerService.GetDefinedManagerVacationRequests(userId, true);
+                        break;
+                    }
                 case "Declined":
-                {
-                    responses = _managerService.GetAllMyManagerResponses().Where(m => m.Approval == false);
-                    break;
-                }
+                    {
+                        responses = _managerService.GetDefinedManagerVacationRequests(userId, false);
+                        break;
+                    }
+                case "Declined by other manager":
+                    {
+                        responses = _managerService.GetDefinedManagerVacationRequests(userId, null).Where(vr => vr.Approval == false);
+                        break;
+                    }
                 default:
-                {
-                    var requestsByCurrentManager = _managerService.GetAllCurrentManagerResponses();
-                    responses = _managerService
-                        .GetCurrentManagerRequests(requestsByCurrentManager).Where(m => m.Approval == null);
-                    var name = ViewData["NameSortParm"] as string;
-                    if (name != null)
-                        responses = responses.Where(m => m.VacationRequest.User.FullName.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0);
-                    break;
-                }
+                    {
+                        responses = _managerService.GetAllManagerVacationRequests(userId);
+                        break;
+                    }
             }
+            var name = ViewData["NameSortParm"] as string;
+            if (name != null)
+                responses = responses.Where(vrl => vrl.FullName.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0);
             int pageSize = 3;
-            return View(await PaginatedList<ManagerResponseListDto>.CreateAsync(responses, pageNumber ?? 1, pageSize));
-        }
-
-        // вывод обработанных запросов менеджера
-        public IActionResult Processed()
-        {
-            var processedRequestsByCurrentManager =
-                _managerService.GetProcessedRequestsByCurrentManager();
-
-            var resultViewModel = _managerService
-                .GetCurrentManagerRequests(processedRequestsByCurrentManager);
-
-            return View(resultViewModel);
+            return View(await PaginatedList<VacationRequestListForManagersDTO>.CreateAsync(responses, pageNumber ?? 1, pageSize));
         }
 
         // вывод страницы для Approve/Reject выбранного запроса
-        public IActionResult Approval(int id)
+        public IActionResult Details(int id)
         {
-            var vacationRequest = _vacationService.GetVacationById(id);
-
-            var managerResponse = _managerService
-                .GetResponseByVacationId(vacationRequest.VacationRequestId);
-            var resultViewModel = _managerService.VacationApproval(managerResponse);
-
-            return View(resultViewModel);
-        }
-
-        [HttpPost]
-        public IActionResult Approval(string submit,
-            VacationRequestApprovalDto response)
-        {
-            if (submit == "Approve")
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var vacationRequestDTO = _vacationService.GetVacationById(id);
+            VacationDetailsDTO vacationDetailsDTO = null;
+            if (vacationRequestDTO.Stage == 2)
             {
-                response.isApproval = true;
-            }
-            else if (submit == "Decline")
-            {
-                response.isApproval = false;
+                var managerResponse = _managerService.GetManagerResponse(id, userId);
+                vacationDetailsDTO = _mapper.MergeInto<VacationDetailsDTO>(vacationRequestDTO, managerResponse);
             }
             else
             {
-                return NotFound();
+                vacationDetailsDTO = _mapper.Map<VacationRequestDto, VacationDetailsDTO>(vacationRequestDTO);
             }
+            ViewBag.Controller = "Manager";
+            return View("_VacationApprovingDetails", vacationDetailsDTO);
+        }
 
-            if (response.ManagerResponseId != 0)
+        [HttpPost]
+        public IActionResult ApproveVacationRequest(int responseId, int vacationRequestId, string notes)
+        {
+            var vacationRequest = _vacationService.GetVacationById(vacationRequestId);
+            if (vacationRequest.Stage == 2)
             {
-                _managerService.ApproveUserRequest(response.ManagerResponseId,
-                    response.ManagerNotes, response.isApproval, response.OverflowIsAllowed);
+                _managerService.GiveManagerResponse(responseId, notes, true);
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("VacationList");
+        }
+
+        [HttpPost]
+        public IActionResult DeclineVacationRequest(int responseId, int vacationRequestId, string notes)
+        {
+            var vacationRequest = _vacationService.GetVacationById(vacationRequestId);
+            if (vacationRequest.Stage == 2)
+            {
+                _managerService.GiveManagerResponse(responseId, notes, false);
+            }
+
+            return RedirectToAction("VacationList");
         }
     }
 }

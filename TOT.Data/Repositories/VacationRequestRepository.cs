@@ -9,7 +9,7 @@ using TOT.Interfaces.Repositories;
 
 namespace TOT.Data.Repositories
 {
-    internal class VacationRequestRepository : IVacationRequestRepository<VacationRequest>
+    internal class VacationRequestRepository : IVacationRequestRepository<BaseVacationRequest, VacationRequest, VacationRequestHistory>
     {
         private readonly ApplicationDbContext _context;
         public VacationRequestRepository(ApplicationDbContext context)
@@ -26,7 +26,8 @@ namespace TOT.Data.Repositories
 
         public void Update(VacationRequest item, params Expression<Func<VacationRequest, object>>[] updatedProperties)
         {
-            var entry = _context.Entry<VacationRequest>(item);
+            var entry = _context.Entry<VacationRequest>(_context.VacationRequests.Find(item.VacationRequestId));
+            entry.CurrentValues.SetValues(item);
             if (updatedProperties.Any())
             {
                 foreach (var property in updatedProperties)
@@ -38,8 +39,8 @@ namespace TOT.Data.Repositories
             {
                 foreach (var property in entry.OriginalValues.Properties)
                 {
-                    var original = entry.OriginalValues.GetValue<object>(property);
-                    var current = entry.CurrentValues.GetValue<object>(property);
+                    var original = entry.Property(property.Name).OriginalValue;
+                    var current = entry.Property(property.Name).CurrentValue;
                     if (original != null && !original.Equals(current))
                         entry.Property(property.Name).IsModified = true;
                 }
@@ -65,9 +66,13 @@ namespace TOT.Data.Repositories
             .Include(vr => vr.ManagersResponses)
             .ThenInclude(mr => mr.Manager).ToList();
 
-        public VacationRequest GetOne(Expression<Func<VacationRequest, bool>> filterExpression)
+        public VacationRequest GetOne(Expression<Func<VacationRequest, bool>> filterExpression, params Expression<Func<VacationRequest, object>>[] includes)
         {
             IQueryable<VacationRequest> query = _context.VacationRequests;
+            if (includes != null)
+            {
+                query = includes.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+            }
             if (filterExpression != null)
             {
                 query = query.Where(filterExpression);
@@ -76,9 +81,13 @@ namespace TOT.Data.Repositories
             return query.FirstOrDefault();
         }
 
-        public ICollection<VacationRequest> GetAll(Expression<Func<VacationRequest, bool>> filterExpression)
+        public ICollection<VacationRequest> GetAll(Expression<Func<VacationRequest, bool>> filterExpression, params Expression<Func<VacationRequest, object>>[] includes)
         {
             IQueryable<VacationRequest> query = _context.VacationRequests;
+            if (includes != null)
+            {
+                query = includes.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+            }
             if (filterExpression != null)
             {
                 query = query.Where(filterExpression);
@@ -86,5 +95,21 @@ namespace TOT.Data.Repositories
 
             return query.ToList();
         }
+
+        public ICollection<VacationRequestHistory> GetHistoryForOne(int id)
+           => _context.VacationRequestHistories.FromSql(
+               $@"SELECT VacationRequestId, StartDate, EndDate, VacationType, Notes, Approval, 
+                SystemStart, SystemEnd, UserInformationId, StageOfApproving, SelfCancelled, TakenDays
+                FROM dbo.VacationRequests
+                FOR SYSTEM_TIME ALL
+                WHERE VacationRequestId = {id};")
+                .ToList();
+
+        public ICollection<VacationRequestHistory> GetHistoryForAll()
+           => _context.VacationRequestHistories.FromSql(
+               $@"SELECT VacationRequestId, StartDate, EndDate, VacationType, Notes, Approval, 
+                SystemStart, SystemEnd, UserInformationId, StageOfApproving, SelfCancelled, TakenDays
+                FROM dbo.VacationRequests
+                FOR SYSTEM_TIME ALL;").ToList();
     }
 }

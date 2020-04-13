@@ -1,58 +1,22 @@
-﻿@model TOT.Dto.ApplyForRequestGetDto
-@using Microsoft.AspNetCore.Identity
-@using TOT.Entities
+﻿@model TOT.Dto.ApplicationDto
 @using TOT.Interfaces.Services
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
-
-@{
-    var userId = UserManager.GetUserId(User);
-}
-@inject UserManager<ApplicationUser> UserManager
 @inject IVacationService VacationService
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
 
 <div class="row justify-content-between">
-    <div class="container col-6">
+    <div class="container col-5">
         <h2 class="text-center">@Localizer["Apply for vacation"]</h2>
-        <hr />
-        <form asp-action="Apply" name="form" id="form">
+        <hr class="row  ml-0" />
+        <form asp-action="Apply" name="form" id="form" method="post">
 
-            <div class="form-group row">
-                <label asp-for="TimeOffType" class="control-label col-4"></label>
-                <select asp-for="TimeOffType" asp-items="@ViewBag.TimeOffTypeList" class="form-control col-8"></select>
-                <span asp-validation-for="TimeOffType" class="text-danger"></span>
-            </div>
-
-            <div class="form-group row">
-                <label asp-for="StartDate" class="control-label col-4"></label>
-                <input id="StartDate" asp-for="StartDate" class="form-control col-8" />
-                <span id="StartDateVal" asp-validation-for="StartDate" class="text-danger"></span>
-            </div>
-
-            <div class="form-group row">
-                <label asp-for="EndDate" class="control-label col-4"></label>
-                <input id="EndDate" asp-for="EndDate" class="form-control col-8" />
-                <span asp-validation-for="EndDate" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Notes" class="control-label"></label>
-                <textarea style="resize:none" asp-for="Notes" class="form-control" rows="4"></textarea>
-                <span asp-validation-for="Notes" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label class="control-label">@Localizer["Managers"]</label>
-                <select class="selectpicker" data-live-search="true" asp-items="ViewBag.ExcitingManagers" multiple></select>
-                <span asp-validation-for="RequiredManagers" class="text-danger"></span>
-            </div>
+@await Html.PartialAsync("_ApplyVacationPartial", Model)
         </form>
     </div>
     <div class="col-3 d-flex flex-column align-items-center justify-content-center">
         @{
-            var vacationDays = VacationService.GetVacationDays(int.Parse(userId));
+            var vacationDays = VacationService.GetVacationDays(Model.UserId);
         }
         <partial name="_VacationDaysPartial" model="vacationDays" />
     </div>
@@ -60,6 +24,27 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
+    <script src="~/lib/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="~/lib/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script>
+        window.onload = runDatePicker();
 
+        function goBack() {
+            window.history.back();
+        }
+
+        function confirm() {
+            var form = document.getElementById("form");
+            form.submit();
+        }
+
+        function runDatePicker() {
+            $('input-group, .input-daterange').datepicker({
+                weekStart: 1,
+                container: '#datepicker',
+                format: 'dd-mm-yyyy'
+            });
+            $('.input-group, .input-daterange').datepicker();
+        }
+    </script>
 }

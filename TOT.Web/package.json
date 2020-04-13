@@ -1,0 +1,12 @@
+{
+  "version": "1.0.0",
+  "name": "asp.net",
+  "private": true,
+  "devDependencies": {
+    "gulp": "4.0.2",
+    "gulp-less": "4.0.1",
+    "path": "0.12.7",
+    "material-design-icons": "3.0.1",
+    "gulp-cached": "1.1.1"
+  }
+}

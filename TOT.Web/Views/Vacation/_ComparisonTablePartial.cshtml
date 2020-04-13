@@ -1,0 +1,64 @@
+﻿@model TOT.Dto.ComparisonTableDto
+@using Microsoft.AspNetCore.Mvc.Localization
+@using TOT.Data.Extensions
+@inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
+@{
+    int oldManagerCount = Model.OldVacationRequest.Managers.Count();
+    int newManagerCount = Model.NewVacationRequest.Managers.Count();
+}
+@{ 
+
+    string oldDescription = Model.OldVacationRequest.VacationType.GetDescription();
+    string newDescription = Model.OldVacationRequest.VacationType.GetDescription();
+}
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>@Localizer["Column"]</th>
+            <th>@Localizer["Old Request"]</th>
+            <th>@Localizer["New Request"]</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.OldVacationRequest.VacationType)</th>
+            <td>@Html.DisplayFor(model => oldDescription)</td>
+            <td>@Html.DisplayFor(model => newDescription)</td>
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.OldVacationRequest.StartDate)</th>
+            <td>@Html.DisplayFor(model => model.OldVacationRequest.StartDate)</td>
+            <td>@Html.DisplayFor(model => model.NewVacationRequest.StartDate)</td>
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.OldVacationRequest.EndDate)</th>
+            <td>@Html.DisplayFor(model => model.OldVacationRequest.EndDate)</td>
+            <td>@Html.DisplayFor(model => model.NewVacationRequest.EndDate)</td>
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.OldVacationRequest.Notes)</th>
+            <td>@Html.DisplayFor(model => model.OldVacationRequest.Notes)</td>
+            <td>@Html.DisplayFor(model => model.NewVacationRequest.Notes)</td>
+        </tr>
+        @for (int i = 0; i < ((newManagerCount > oldManagerCount) ? newManagerCount : oldManagerCount); i++)
+        {
+            <tr>
+                <th>@Localizer["Manager"] @(i + 1):</th>
+                <td>
+                    @{
+                        var oldManager = Model.OldVacationRequest.Managers.ElementAtOrDefault(i);
+                    }
+                    <div>@oldManager?.FullName</div>
+                    <div><small>@oldManager?.Email</small></div>
+                </td>
+                <td>
+                    @{
+                        var newManager = Model.NewVacationRequest.Managers.ElementAtOrDefault(i);
+                    }
+                    <div>@newManager?.FullName</div>
+                    <div><small>@newManager?.Email</small></div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

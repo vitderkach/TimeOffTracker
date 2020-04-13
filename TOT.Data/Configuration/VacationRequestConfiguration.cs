@@ -25,10 +25,8 @@ namespace TOT.Data.Configuration
             entity.Property(n => n.Notes)
                 .HasColumnType("nvarchar(200)");
 
-            entity.Property(c => c.CreationDate)
-               .HasColumnType("datetime")
-               .HasDefaultValueSql("GETUTCDATE()");
-            entity.HasIndex(cr => cr.CreationDate);
+            entity.Property(vr => vr.StageOfApproving)
+                .HasDefaultValue(1);
 
             var converter = new EnumToStringConverter<TimeOffType>();
             entity.Property(t => t.VacationType)

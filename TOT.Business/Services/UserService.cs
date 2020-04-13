@@ -36,28 +36,13 @@ namespace TOT.Business.Services
 
         public IEnumerable<UserInformationDto> GetAllByRole(string role)
         {
-            var managers = _userManager.GetUsersInRoleAsync(role).Result;
-            var userInformation = _uow.UserInformationRepository.GetAll();
-            if (managers != null)
+            var users = _userManager.GetUsersInRoleAsync(role).Result;
+            var usersInformation = new List<UserInformation>();
+            foreach (var user in users)
             {
-                for (int i = 0; i < managers.Count; i++)
-                {
-                    var userInfo = userInformation
-                        .Where(u => u.ApplicationUserId == managers[i].UserInformationId)
-                        .FirstOrDefault();
-                    if (userInfo != null)
-                        managers[i].UserInformation = userInfo;
-                }
+                usersInformation.Add(_uow.UserInformationRepository.GetOne(user.Id));
             }
-
-            List<UserInformation> managersInfo = new List<UserInformation>();
-            foreach (var manager in managers)
-            {
-                _uow.UserInformationRepository.GetOne(manager.Id);
-            }
-
-            IEnumerable<UserInformationDto> managersDto  = _mapper.MergeInto<IEnumerable<UserInformationDto>>(managers, managersInfo);
-
+            List <UserInformationDto> managersDto  = _mapper.MergeInto<List<UserInformationDto>>(usersInformation, users);
             return managersDto;
         }
 

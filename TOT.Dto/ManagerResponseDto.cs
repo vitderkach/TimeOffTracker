@@ -8,18 +8,10 @@ namespace TOT.Dto
     public class ManagerResponseDto
     {
         public int Id { get; set; }
+        public int VacationRequestId { get; set; }
         [Display(Name = "Manager notes")]
         public string Notes { get; set; }
         [Display(Name = "Date response")]
         public DateTime DateResponse { get; set; }
-        [Display(Name = "Status")]
-        public bool? Approval { get; set; }
-        public bool isRequested { get; set; }
-
-        public int VacationRequestDtoId { get; set; }
-        public VacationRequestDto VacationRequest { get; set; }
-
-        public int ManagerId { get; set; }
-        public UserInformationDto Manager { get; set; }
     }
 }
