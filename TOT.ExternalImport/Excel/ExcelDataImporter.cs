@@ -66,6 +66,7 @@ namespace TOT.DataImport.Excel
                     for (; i < daysCount; ++i)
                     {
                         value = vacationDaysCell.StringCellValue;
+                        Console.Write(vacationDaysCell.CellStyle.FillBackgroundColor + " ");
 
                         if (type != excelConfiguration.AttendanceTableConfiguration.CellValueTimeOffTypePairs.GetValueOrDefault(value))
                         {

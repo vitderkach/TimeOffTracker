@@ -15,7 +15,7 @@ namespace TOT.DataImport.StorageProviders
             string name, DateTime? employmentDate = null, string teamName = null, string workPlace = null)
         {
             Employee employee;
-            int index = employees.FindIndex(employee => employee.Name == name);
+            int index = employees.FindIndex(e => e.Name == name);
             if (index != -1)
             {
                 employee = employees[index];

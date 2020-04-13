@@ -13,6 +13,11 @@ namespace TOT.DataImport.StorageProviders
         private VacationRequestRepository VacationRequestRepository { get; }
         private VacationTypeRepository VacationTypeRepository { get; }
 
+        public DbStorageProvider()
+        {
+
+        }
+
         public DbStorageProvider(
             UserInformationRepository userRepository,
             VacationRequestRepository vacationRequestRepository,
