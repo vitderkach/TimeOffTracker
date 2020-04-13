@@ -12,6 +12,7 @@ using TOT.Utility.Validation.Alerts;
 using System.Security.Claims;
 using TOT.Interfaces;
 using System.Collections.Generic;
+using TOT.Entities;
 
 namespace TOT.Web.Controllers
 {
@@ -29,10 +30,10 @@ namespace TOT.Web.Controllers
         }
 
         public async Task<IActionResult> VacationList(
-    string sortOrder,
-    string currentFilter,
-    string searchString,
-    int? pageNumber)
+            string sortOrder,
+            string currentFilter,
+            string searchString,
+            int? pageNumber)
         {
             if (searchString != null)
             {
@@ -222,6 +223,26 @@ namespace TOT.Web.Controllers
             {
                 return RedirectToAction("EditVacation", new { id = applicationDto.Id });
             }
+        }
+
+        [ImportModelState]
+        public IActionResult EditVacationDays(int id)
+        {
+            var editUsersVacationDays = _adminService.GetUsersVacationDays(id);
+            if (editUsersVacationDays == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return View(editUsersVacationDays);
+        }
+
+        [HttpPost]
+        [ExportModelState]
+        public IActionResult EditVacationDays(int id, EditVacationDaysDto editVacationDaysDto)
+        {
+            _adminService.EditUsersVacationDays(id, editVacationDaysDto);
+
+            return RedirectToAction("UserList");
         }
 
         // вывод страницы для Approve/Reject выбранного запроса

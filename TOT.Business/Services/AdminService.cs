@@ -211,6 +211,43 @@ namespace TOT.Business.Services
             return result;
         }
 
+        // [HttpGet] Edit/{id} Вывод данных о днях отпусков пользователя
+        public EditVacationDaysDto GetUsersVacationDays(int id)
+        {
+            var UsersVacationDays = _vacationService.GetVacationDays(id);
+            var editUsersVacationDays = new EditVacationDaysDto
+            {
+                PaidLeave = UsersVacationDays.TimeOffTypes.FirstOrDefault(tot => tot.TimeOffType == TimeOffType.PaidLeave),
+                GiftLeave = UsersVacationDays.TimeOffTypes.FirstOrDefault(tot => tot.TimeOffType == TimeOffType.GiftLeave),
+                SickLeave = UsersVacationDays.TimeOffTypes.FirstOrDefault(tot => tot.TimeOffType == TimeOffType.ConfirmedSickLeave),
+                StudyLeave = UsersVacationDays.TimeOffTypes.FirstOrDefault(tot => tot.TimeOffType == TimeOffType.StudyLeave)
+            };
+
+            return editUsersVacationDays;
+        }
+
+        // [HttpPost] Edit/{id} Изменение данных о днях отпусков пользователя
+        public void EditUsersVacationDays(int userId, EditVacationDaysDto editUsersVacationDays)
+        {
+            var editPaidVacation = _unitOfWork.VacationTypeRepository.GetOne(vt => vt.UserInformationId == userId && vt.TimeOffType == TimeOffType.PaidLeave);
+            editPaidVacation.StatutoryDays = editUsersVacationDays.PaidLeave.StatutoryDays;
+            _unitOfWork.VacationTypeRepository.Update(editPaidVacation, pv => pv.StatutoryDays);
+
+            var editGiftVacation = _unitOfWork.VacationTypeRepository.GetOne(vt => vt.UserInformationId == userId && vt.TimeOffType == TimeOffType.GiftLeave);
+            editGiftVacation.StatutoryDays = editUsersVacationDays.GiftLeave.StatutoryDays;
+            _unitOfWork.VacationTypeRepository.Update(editGiftVacation, gv => gv.StatutoryDays);
+
+            var editSickVacation = _unitOfWork.VacationTypeRepository.GetOne(vt => vt.UserInformationId == userId && vt.TimeOffType == TimeOffType.ConfirmedSickLeave);
+            editSickVacation.StatutoryDays = editUsersVacationDays.SickLeave.StatutoryDays;
+            _unitOfWork.VacationTypeRepository.Update(editSickVacation, sv => sv.StatutoryDays);
+            
+            var editStudyVacation = _unitOfWork.VacationTypeRepository.GetOne(vt => vt.UserInformationId == userId && vt.TimeOffType == TimeOffType.StudyLeave);
+            editStudyVacation.StatutoryDays = editUsersVacationDays.StudyLeave.StatutoryDays;
+            _unitOfWork.VacationTypeRepository.Update(editStudyVacation, stv => stv.StatutoryDays);
+
+            _unitOfWork.Save();
+        }
+
         public bool СhargeVacationDays(int userId, int count, TimeOffType vacationType, bool isAlreadyCharged)
         {
             if (count < 0)
