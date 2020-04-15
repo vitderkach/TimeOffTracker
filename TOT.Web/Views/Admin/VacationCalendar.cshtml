@@ -1,0 +1,72 @@
+﻿@model TOT.Dto.VacationCalendarDto
+
+@{ 
+    Dictionary<string, string> daysOfWeekDict = new Dictionary<string, string>();
+    daysOfWeekDict["Monday"] = "Mon";
+    daysOfWeekDict["Tuesday"] = "Tue";
+    daysOfWeekDict["Wednesday"] = "Wed";
+    daysOfWeekDict["Thursday"] = "Thu";
+    daysOfWeekDict["Friday"] = "Fri";
+    daysOfWeekDict["Saturday"] = "Sat";
+    daysOfWeekDict["Sunday"] = "Sun";
+}
+
+<div class="container-fluid">
+    <h2>Days Off</h2>
+
+    <ul class="calendar-description">
+        <li class="calendar-description-group official-sick-leave">
+            <div class="calendar-description-group-item--left calendar-description-group-item">Official sick leave</div>
+            <div class="calendar-description-group--border-item calendar-description-group-item"></div>
+            <div class="calendar-description-group-item--right calendar-description-group-item">OS</div>
+        </li>
+        <li class="calendar-description-group unofficial-sick-leave">
+            <div class="calendar-description-group-item--left calendar-description-group-item">Unofficial sick leave</div>
+            <div class="calendar-description-group--border-item calendar-description-group-item"></div>
+            <div class="calendar-description-group-item--right calendar-description-group-item">US</div>
+        </li>
+        <li class="calendar-description-group admin-leave">
+            <div class="calendar-description-group-item--left calendar-description-group-item">Administrative leave</div>
+            <div class="calendar-description-group--border-item calendar-description-group-item calendar-description-group-item"></div>
+            <div class="calendar-description-group-item--right calendar-description-group-item">A</div>
+        </li>
+        <li class="calendar-description-group paid-leave">
+            <div class="calendar-description-group-item--left calendar-description-group-item">Paid leave</div>
+            <div class="calendar-description-group--border-item calendar-description-group-item"></div>
+            <div class="calendar-description-group-item--right calendar-description-group-item">A</div>
+        </li>
+        <li class="calendar-description-group study-leave">
+            <div class="calendar-description-group-item--left calendar-description-group-item">Study Leave</div>
+            <div class="calendar-description-group--border-item calendar-description-group-item"></div>
+            <div class="calendar-description-group-item--right calendar-description-group-item">S</div>
+        </li>
+    </ul>
+</div>
+
+<table class="table table-bordered calendar">
+    <thead>
+        <tr>
+            <th rowspan="2" class="calendar--col calendar--col--6">Employee Name</th>
+            @for (int i = 1; i <= DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month); i++)
+            {
+                <th class="calendar--col calendar--col--1">@i</th>
+            }
+            <th colspan="6" class="calendar--col calendar--col-6">Totals</th>
+        </tr>
+        <tr>
+            @for (int i = 1; i <= DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month); i++)
+            {
+                <th class="calendar--col calendar--col--1">@(daysOfWeekDict[(new DateTime(DateTime.Now.Year, DateTime.Now.Month, i)).DayOfWeek.ToString()])</th>
+            }
+            <th class="calendar--col calendar--col--1 paid-leave">P</th>
+            <th class="calendar--col calendar--col--1 official-sick-leave">OS</th>
+            <th class="calendar--col calendar--col--1 unofficial-sick-leave">US</th>
+            <th class="calendar--col calendar--col--1 admin-leave">A</th>
+            <th class="calendar--col calendar--col--1 study-leave">S</th>
+        </tr>
+    </thead>
+</table>
+
+@section css{
+    <link rel="stylesheet" href="~/css/admin/vacation-calendar.css" />
+}

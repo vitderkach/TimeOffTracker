@@ -293,5 +293,12 @@ namespace TOT.Web.Controllers
 
             return RedirectToAction("VacationList");
         }
+
+        [HttpGet]
+        [ActionName("VacationCalendar")]
+        public IActionResult GetVacationCalendar()
+        {
+            return View("VacationCalendar");
+        }
     }
 }

@@ -13,7 +13,9 @@
 @if (SignInManager.IsSignedIn(User) && permission)
 {
     <li class="nav-item dropdown">
-        <div class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">@Localizer["Manager"]</div>
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            @Localizer["Manager"]
+        </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" asp-controller="Manager" asp-action="VacationList">@Localizer["Vacation requests"]</a>
         </div>

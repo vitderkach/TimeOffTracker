@@ -1,0 +1,118 @@
+﻿:root {
+    --base-calendar-col-width: 2.5rem;
+}
+
+.calendar-description {
+    width: 18.5rem;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.calendar-description-group{
+    position: relative;
+    display: flex;
+    padding: 0px 1.25rem;
+    margin-bottom: -1px;
+    background-color: #fff;
+    border: 1px solid white;
+    height:2rem;
+}
+.calendar-description-group-item:not(.calendar-description-group--border-item) {
+    display: inline-block;
+}
+
+.calendar-description-group-item:not(.calendar-description-group--border-item) {
+    align-self: center;
+}
+
+.calendar-description-group--border-item {
+    border-right: 1px solid white;
+}
+
+.calendar-description-group-item--left {
+    float: left;
+    width: calc(14rem - 0.5px);
+}
+
+.calendar-description-group-item--right {
+    float: right;
+    width: calc(2rem - 0.5px);
+    text-align:center;
+}
+
+.admin-leave {
+    background-color: orange;
+    color: white;
+}
+
+.unofficial-sick-leave {
+    background-color: cadetblue;
+    color:white;
+}
+
+.official-sick-leave {
+    background-color: darkblue;
+    color: white;
+}
+
+.paid-leave {
+    background-color: forestgreen;
+    color: white;
+}
+.admin-leave {
+    background-color: orange;
+    color: white;
+}
+.study-leave {
+    background-color: mediumpurple;
+    color: white;
+}
+.calendar .calendar--col {
+    vertical-align: middle;
+    text-align: center;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.table.calendar{
+    width:initial;
+}
+
+.calendar .calendar--col {
+    vertical-align: middle;
+    text-align: center;
+}
+
+.calendar--col--1 {
+    min-width: var(--base-calendar-col-width);
+    max-width: calc(var(--base-calendar-col-width));
+}
+
+.calendar--col--2 {
+    min-width: calc(var(--base-calendar-col-width) * 2);
+    max-width: calc(var(--base-calendar-col-width) * 2);
+}
+
+.calendar--col--3 {
+    min-width: calc(var(--base-calendar-col-width) * 3);
+    max-width: calc(var(--base-calendar-col-width) * 3);
+}
+
+.calendar--col--4 {
+    min-width: calc(var(--base-calendar-col-width) * 4);
+    max-width: calc(var(--base-calendar-col-width) * 4);
+}
+
+.calendar--col--5 {
+    min-width: calc(var(--base-calendar-col-width) * 5);
+    max-width: calc(var(--base-calendar-col-width) * 5);
+}
+
+.calendar--col--6 {
+    min-width: calc(var(--base-calendar-col-width) * 6);
+    max-width: calc(var(--base-calendar-col-width) * 6);
+}
