@@ -11,6 +11,7 @@ using System.Security.Claims;
 using Microsoft.Extensions.Localization;
 using TOT.Entities;
 using System.Text.Json;
+using System;
 
 namespace TOT.Web.Controllers
 {
@@ -167,6 +168,20 @@ namespace TOT.Web.Controllers
                 return BadRequest();
             }
 
+        }
+
+        public IActionResult Report()
+        {
+            var endDate = DateTime.Today;
+            var startDate = endDate.AddMonths(-1);
+            var reportInfo = _vacationService.GetReportInfo(startDate, endDate, 0);
+            return View(reportInfo);
+        }
+
+        public IActionResult VacationReport(DateTime startDate, DateTime endDate, int teamId)
+        {
+            var reportInfo = _vacationService.GetReportInfo(startDate, endDate, teamId);
+            return View("Report", reportInfo);
         }
 
         [HttpGet]

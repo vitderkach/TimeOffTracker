@@ -1,0 +1,70 @@
+﻿@model TOT.Dto.ReportDto
+@{
+    ViewData["Title"] = "Report";
+    var teams = new SelectList(Model.AllTeams, "Id", "Name", selectedValue: Model.TeamId);
+}
+
+<h3>Report of used vacation days</h3>
+<hr />
+<div class="container">
+    <form method="get" asp-controller="Vacation" asp-action="VacationReport">
+        <div class="row">
+            <label class="control-label col">Dates:</label>
+            <input asp-for="StartDate" class="form-control col-2" />
+            to
+            <input asp-for="EndDate" class="form-control col-2" />
+
+            <label class="control-label col">Team:</label>
+            <select class="form-control col-3" asp-for="TeamId" asp-items=@teams>
+                <option value="0">All</option>
+            </select>
+            <button class="btn btn-sm btn-outline-dark col-3" type="submit">Show</button>
+        </div>
+    </form>
+</div>
+<br />
+<div class="container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Paid Leave
+                </th>
+                <th>
+                    Sick Leave
+                </th>
+                <th>
+                    Study Leave
+                </th>
+                <th>
+                    Admin Leave
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ReportUsedDays)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserInformation.FullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(moelItem => item.UsedPaidLeaveDays)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(moelItem => item.UsedSickLeaveDays)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(moelItem => item.UsedStudyLeaveDays)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(moelItem => item.UsedAdministrativeLeaveDays)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

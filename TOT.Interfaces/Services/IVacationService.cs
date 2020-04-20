@@ -11,6 +11,7 @@ namespace TOT.Interfaces.Services
         void ApplyForVacation(ApplicationDto applicationDto);
         IEnumerable<VacationRequestListDto> GetAllByCurrentUser();
         VacationRequestDto GetVacationById(int id);
+        ReportDto GetReportInfo(DateTime startDate, DateTime endDate, int teamId);
         void UpdateVacation(int id, string notes);
         VacationDaysDto GetVacationDays(int userId);
         List<int> GetAllVacationIdsByUser(int userId);
