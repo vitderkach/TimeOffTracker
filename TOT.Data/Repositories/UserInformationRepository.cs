@@ -92,7 +92,6 @@ namespace TOT.Data.Repositories
             {
                 query = query.Where(filterExpression);
             }
-
             return query.ToList();
         }
     }

@@ -314,6 +314,8 @@ namespace TOT.Data.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("date");
 
+                    b.Property<bool?>("ExcelFormat");
+
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(200)");
 

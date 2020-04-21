@@ -19,6 +19,7 @@ namespace TOT.Entities
         public bool? Approval { get; set; }
         [Range(1, 4)]
         public int StageOfApproving { get; set; }
+        public bool? ExcelFormat { get; set; }
         public int? TakenDays { get; set; }
 
         public bool? SelfCancelled { get; set; }
