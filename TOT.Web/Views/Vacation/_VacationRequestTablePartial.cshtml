@@ -3,7 +3,7 @@
 @using TOT.Data.Extensions
 @inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
 @{ 
-    string description = Model.VacationType.GetDescription();
+    string description = @Localizer[Model.VacationType.GetDescription()].Value;
 }
 <table class="table table-striped table-bordered">
     <tbody>

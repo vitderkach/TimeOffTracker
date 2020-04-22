@@ -8,13 +8,13 @@
 }
 @{ 
 
-    string oldDescription = Model.OldVacationRequest.VacationType.GetDescription();
-    string newDescription = Model.OldVacationRequest.VacationType.GetDescription();
+    string oldDescription = @Localizer[Model.OldVacationRequest.VacationType.GetDescription()].Value;
+    string newDescription = @Localizer[Model.OldVacationRequest.VacationType.GetDescription()].Value;
 }
 <table class="table table-striped table-bordered">
     <thead>
         <tr>
-            <th>@Localizer["Column"]</th>
+            <th></th>
             <th>@Localizer["Old Request"]</th>
             <th>@Localizer["New Request"]</th>
         </tr>

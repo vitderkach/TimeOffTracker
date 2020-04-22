@@ -2,6 +2,8 @@
 @using System.Collections.Generic
 @using System.Text.Json;
 @using System.Text.Json.Serialization
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
 @model VacationTimelineDto
 @{
     ViewData["Title"] = "VacationTimeline";
@@ -74,21 +76,21 @@
 
 <div class="container">
     <div class="page-header">
-        <h2>VacationTimeline</h2>
-        <h2>The history of vacation approving</h2>
+        <h2>@Localizer["Vacation Request Timeline"]</h2>
+        <h2>@Localizer["The history of vacation approving"]</h2>
     </div>
     <ul class="timeline">
         <li class="@invert()">
             <div class="timeline-badge primary"><div class="bi bi-clipboard"></div></div>
             <div class="timeline-panel">
                 <div class="timeline-heading">
-                    <h4 class="timeline-title">Your application has been filed</h4>
+                    <h4 class="timeline-title">@Localizer["Your application has been filed"]</h4>
                     <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
                 </div>
                 <div class="timeline-body">
-                    <p>Your appication has been succesfully filed and transferred for admins for review. Wait the answer from admin.</p>
+                    <p>@Localizer["Your appication has been succesfully filed and transferred for admins for review. Wait the answer from admin"].</p>
                     <div class="timeline-details">
-                        <button class="btn btn-info" onclick="showVacationRequestTable(@currentRequestIndex)">Show details</button>
+                        <button class="btn btn-info" onclick="showVacationRequestTable(@currentRequestIndex)">@Localizer["Show details"]</button>
                     </div>
                 </div>
             </div>
@@ -109,13 +111,13 @@
                 <div class="timeline-badge warning"><div class="bi bi-warning"></div></div>
                 <div class="timeline-panel">
                     <div class="timeline-heading">
-                        <h4 class="timeline-title">Your details about application has been changed.</h4>
+                        <h4 class="timeline-title">@Localizer["Your details about application has been changed"]</h4>
                         <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
                     </div>
                     <div class="timeline-body">
-                        <p>Your details about application has been changed.</p>
+                        <p>@Localizer["Your details about application has been changed"].</p>
                         <div class="timeline-details">
-                            <button class="btn btn-info" onclick="showComparisonTable(@currentRequestIndex-1,@currentRequestIndex)">Show details</button>
+                            <button class="btn btn-info" onclick="showComparisonTable(@currentRequestIndex-1,@currentRequestIndex)">@Localizer["Show details"]</button>
                         </div>
                     </div>
                 </div>
@@ -127,11 +129,11 @@
                 <div class="timeline-badge danger"><div class="bi bi-cancelling"></div></div>
                 <div class="timeline-panel">
                     <div class="timeline-heading">
-                        <h4 class="timeline-title">The request has been cancelled.</h4>
+                        <h4 class="timeline-title">@Localizer["The request has been cancelled"]</h4>
                         <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
                     </div>
                     <div class="timeline-body">
-                        <p>The appication has been cancelled by you.</p>
+                        <p>@Localizer["The appication has been cancelled by you"].</p>
                     </div>
                 </div>
             </li>
@@ -142,13 +144,13 @@
                 <div class="timeline-badge danger"><div class="bi bi-decliying"></div></div>
                 <div class="timeline-panel">
                     <div class="timeline-heading">
-                        <h4 class="timeline-title">The request has been declined.</h4>
+                        <h4 class="timeline-title">@Localizer["The request has been declined"]</h4>
                         <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@response.DateResponse</small></p>
                     </div>
                     <div class="timeline-body">
-                        <p>Your request has been declined by admin during accepting.</p>
+                        <p>@Localizer["Your request has been declined by admin during accepting"].</p>
                         <div class="timeline-details">
-                            <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">Show details</button>
+                            <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">@Localizer["Show details"]</button>
                         </div>
                     </div>
                 </div>
@@ -160,13 +162,13 @@
                 <div class="timeline-badge primary"><div class="bi bi-next-stage"></div></div>
                 <div class="timeline-panel">
                     <div class="timeline-heading">
-                        <h4 class="timeline-title">The application has been accepted.</h4>
+                        <h4 class="timeline-title">@Localizer["The application has been accepted"]</h4>
                         <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
                     </div>
                     <div class="timeline-body">
-                        <p>Congratulations! The application has been accepted by admin for further review.</p>
+                        <p>@Localizer["The application has been accepted by admin for further review"].</p>
                         <div class="timeline-details">
-                            <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">Show details</button>
+                            <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">@Localizer["Show details"]</button>
                         </div>
                     </div>
                 </div>
@@ -179,13 +181,13 @@
                     <div class="timeline-badge info"><div class="bi bi-accepting"></div></div>
                     <div class="timeline-panel">
                         <div class="timeline-heading">
-                            <h4 class="timeline-title">Manager accepting</h4>
+                            <h4 class="timeline-title">@Localizer["Manager accepting"]</h4>
                             <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@response.DateResponse</small></p>
                         </div>
                         <div class="timeline-body">
-                            <p>The manager @response.Manager.FullName has approved your request.</p>
+                            <p>@Localizer["The manager"] @response.Manager.FullName @Localizer["has approved your request"].</p>
                             <div class="timeline-details">
-                                <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">Show details</button>
+                                <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">@Localizer["Show details"]</button>
                             </div>
                         </div>
                     </div>
@@ -199,11 +201,11 @@
                     <div class="timeline-badge danger"><div class="bi bi-cancelling"></div></div>
                     <div class="timeline-panel">
                         <div class="timeline-heading">
-                            <h4 class="timeline-title">The request has been cancelled.</h4>
+                            <h4 class="timeline-title">@Localizer["The request has been cancelled"]</h4>
                             <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
                         </div>
                         <div class="timeline-body">
-                            <p>The appication has been cancelled by you.</p>
+                            <p>@Localizer["The appication has been cancelled by you"].</p>
                         </div>
                     </div>
                 </li>
@@ -214,11 +216,11 @@
                     <div class="timeline-badge primary"><div class="bi bi-waiting"></div></div>
                     <div class="timeline-panel">
                         <div class="timeline-heading">
-                            <h4 class="timeline-title">Waiting for responses from others mangers</h4>
+                            <h4 class="timeline-title">@Localizer["Waiting for responses from others managers"]</h4>
                             <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@DateTime.Now</small></p>
                         </div>
                         <div class="timeline-body">
-                            <p>Other managers have not answered yet. Please, wait.</p>
+                            <p>@Localizer["Other managers have not answered yet. Please, wait"].</p>
                         </div>
                     </div>
                 </li>
@@ -229,13 +231,13 @@
                     <div class="timeline-badge danger"><div class="bi bi-decliying"></div></div>
                     <div class="timeline-panel">
                         <div class="timeline-heading">
-                            <h4 class="timeline-title">Manager decliying</h4>
+                            <h4 class="timeline-title">@Localizer["Manager decliying"]</h4>
                             <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@response.DateResponse</small></p>
                         </div>
                         <div class="timeline-body">
-                            <p>Unfortunately, the manager @response.Manager.FullName has declined your request. The application has been declined properly</p>
+                            <p>@Localizer["The manager"] @response.Manager.FullName @Localizer["has declined your request. The application has been declined properly"].</p>
                             <div class="timeline-details">
-                                <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">Show details</button>
+                                <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">@Localizer["Show details"]</button>
                             </div>
                         </div>
                     </div>
@@ -247,11 +249,11 @@
                     <div class="timeline-badge primary"><div class="bi bi-next-stage"></div></div>
                     <div class="timeline-panel">
                         <div class="timeline-heading">
-                            <h4 class="timeline-title">The application has been accepted by managers</h4>
+                            <h4 class="timeline-title">@Localizer["The application has been accepted by managers"]</h4>
                             <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@oldResponse.DateResponse</small></p>
                         </div>
                         <div class="timeline-body">
-                            <p>Congratulations! The application has been accepted by all managers and has been tranferred for final admin review.</p>
+                            <p>@Localizer["The application has been accepted by all managers and has been tranferred for final admin review"].</p>
                             <div class="timeline-details">
                             </div>
                         </div>
@@ -274,13 +276,13 @@
                         <div class="timeline-badge warning"><div class="bi bi-warning"></div></div>
                         <div class="timeline-panel">
                             <div class="timeline-heading">
-                                <h4 class="timeline-title">Your details about application has been changed.</h4>
+                                <h4 class="timeline-title">@Localizer["Your details about application has been changed"].</h4>
                                 <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
                             </div>
                             <div class="timeline-body">
-                                <p>Your details about application has been changed by admin.</p>
+                                <p>@Localizer["Your details about application has been changed by admin"].</p>
                                 <div class="timeline-details">
-                                    <button class="btn btn-info" onclick="showComparisonTable(@currentRequestIndex-1,@currentRequestIndex)">Show details</button>
+                                    <button class="btn btn-info" onclick="showComparisonTable(@currentRequestIndex-1,@currentRequestIndex)">@Localizer["Show details"]</button>
                                 </div>
                             </div>
                         </div>
@@ -293,11 +295,11 @@
                         <div class="timeline-badge danger"><div class="bi bi-cancelling"></div></div>
                         <div class="timeline-panel">
                             <div class="timeline-heading">
-                                <h4 class="timeline-title">The request has been cancelled.</h4>
+                                <h4 class="timeline-title">@Localizer["The request has been cancelled"]</h4>
                                 <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
                             </div>
                             <div class="timeline-body">
-                                <p>The appication has been cancelled by you.</p>
+                                <p>@Localizer["The appication has been cancelled by you"].</p>
                             </div>
                         </div>
                     </li>
@@ -308,13 +310,13 @@
                         <div class="timeline-badge danger"><div class="bi bi-decliying"></div></div>
                         <div class="timeline-panel">
                             <div class="timeline-heading">
-                                <h4 class="timeline-title">Admin declying</h4>
+                                <h4 class="timeline-title">@Localizer["Admin declying"]</h4>
                                 <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@response.DateResponse</small></p>
                             </div>
                             <div class="timeline-body">
-                                <p>Unfortunately, the manager @response.Manager.FullName has declined your request with answer: "@response.Notes". The application has been declined properly.</p>
+                                <p>@Localizer["The manager"] @response.Manager.FullName @Localizer["has declined your request with answer"]: "@response.Notes". @Localizer["The application has been declined properly"].</p>
                                 <div class="timeline-details">
-                                    <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">Show details</button>
+                                    <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">@Localizer["Show details"]</button>
                                 </div>
                             </div>
                         </div>
@@ -326,14 +328,14 @@
                         <div class="timeline-badge success"><div class="bi bi-success"></div></div>
                         <div class="timeline-panel">
                             <div class="timeline-heading">
-                                <h4 class="timeline-title">Your application has been filed</h4>
+                                <h4 class="timeline-title">@Localizer["Your application has been approved"]</h4>
                                 <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
                             </div>
                             <div class="timeline-body">
-                                <p>Congratulations! The application has been approved by admin and all needed stages have passed. Have a nice rest!</p>
+                                <p>@Localizer["The application has been approved by admin and all needed stages have passed."]</p>
                             </div>
                             <div class="timeline-details">
-                                <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">Show details</button>
+                                <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">@Localizer["Show details"]</button>
                             </div>
                         </div>
                     </li>
@@ -355,7 +357,7 @@
             <div class="modal-body" id="infoModalBody">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-info" data-dismiss="modal">@Localizer["Close"]</button>
             </div>
         </div>
     </div>
@@ -375,7 +377,7 @@
             xhttp.onload = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     var modal = $("#infoModal");
-                    modal.find('#infoModalLabel').text("Vacation Request Table");
+                    modal.find('#infoModalLabel').text("@Localizer["Vacation Request Table"]");
                     modal.find('#infoModalBody').html(this.responseText);
                     $("#infoModal").modal({ backdrop: true });
                 }
@@ -389,7 +391,7 @@
             xhttp.onload = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     var modal = $("#infoModal");
-                    modal.find('#infoModalLabel').text("Vacation Request Comparison Table");
+                    modal.find('#infoModalLabel').text("@Localizer["Vacation Request Comparison Table"]");
                     modal.find('#infoModalBody').html(this.responseText);
                     $("#infoModal").modal({ backdrop: true });
                 }
@@ -403,7 +405,7 @@
             xhttp.onload = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     var modal = $("#infoModal");
-                    modal.find('#infoModalLabel').text("Manager Response Table");
+                    modal.find('#infoModalLabel').text("@Localizer["Manager Response Table"]");
                     modal.find('#infoModalBody').html(this.responseText);
                     $("#infoModal").modal({ backdrop: true });
                 }

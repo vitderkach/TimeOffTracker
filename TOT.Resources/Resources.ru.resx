@@ -123,6 +123,9 @@
   <data name="A user with this login already exists." xml:space="preserve">
     <value>Пользователь с таким логином уже существует.</value>
   </data>
+  <data name="Accepted" xml:space="preserve">
+    <value>Принято</value>
+  </data>
   <data name="Access denied" xml:space="preserve">
     <value>Доступ запрещен</value>
   </data>
@@ -134,6 +137,9 @@
   </data>
   <data name="Admin" xml:space="preserve">
     <value>Админ</value>
+  </data>
+  <data name="Admin declying" xml:space="preserve">
+    <value>Заявка отменена администратором</value>
   </data>
   <data name="Administrative Leave" xml:space="preserve">
     <value>Административный</value>
@@ -174,6 +180,12 @@
   <data name="click here to log in" xml:space="preserve">
     <value>нажмите сюда, чтобы войти</value>
   </data>
+  <data name="Close" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="Confirm changes" xml:space="preserve">
+    <value>Подтвердить изменения</value>
+  </data>
   <data name="Confirm email" xml:space="preserve">
     <value>Подтверждение E-mail</value>
   </data>
@@ -195,11 +207,17 @@
   <data name="Date response" xml:space="preserve">
     <value>Дата ответа</value>
   </data>
+  <data name="Dates" xml:space="preserve">
+    <value>Даты</value>
+  </data>
   <data name="Decline" xml:space="preserve">
     <value>Отклонить</value>
   </data>
   <data name="Declined" xml:space="preserve">
     <value>Отклонено</value>
+  </data>
+  <data name="Declined by other manager" xml:space="preserve">
+    <value>Отклонено другим менеджером</value>
   </data>
   <data name="Delete" xml:space="preserve">
     <value>Удалить</value>
@@ -213,11 +231,20 @@
   <data name="Do you really want to decline the request from" xml:space="preserve">
     <value>Вы точно хотите отклонить запрос от</value>
   </data>
+  <data name="Do you really want to delete the vacation request for the following dates?" xml:space="preserve">
+    <value>Вы уверены, что хотите удалить запрос на указанные даты?</value>
+  </data>
   <data name="Do you really want to delete user" xml:space="preserve">
     <value>Вы точно хотите удалить пользователя</value>
   </data>
   <data name="Edit" xml:space="preserve">
     <value>Редактировать</value>
+  </data>
+  <data name="Edit days" xml:space="preserve">
+    <value>Редактировать дни</value>
+  </data>
+  <data name="Edit Vacation Days" xml:space="preserve">
+    <value>Редактировать дни отпусков</value>
   </data>
   <data name="Employee" xml:space="preserve">
     <value>Работник</value>
@@ -240,6 +267,15 @@
   <data name="Gift Leave" xml:space="preserve">
     <value>Бонусный</value>
   </data>
+  <data name="has approved your request" xml:space="preserve">
+    <value>подтвердил(-а) Ваш запрос</value>
+  </data>
+  <data name="has declined your request with answer:" xml:space="preserve">
+    <value>отменил(-а) с таким ответом</value>
+  </data>
+  <data name="has declined your request. The application has been declined properly" xml:space="preserve">
+    <value>отклонил(-а) Ваш запрос. Заявка отклонена </value>
+  </data>
   <data name="Home" xml:space="preserve">
     <value>Главная</value>
   </data>
@@ -249,11 +285,14 @@
   <data name="In Proccess" xml:space="preserve">
     <value>В процессе</value>
   </data>
+  <data name="Invalid login attempt." xml:space="preserve">
+    <value>Неверная попытка входа.</value>
+  </data>
+  <data name="Just registered" xml:space="preserve">
+    <value>Только зарегистрировано</value>
+  </data>
   <data name="Language:" xml:space="preserve">
     <value>Язык:</value>
-  </data>
-  <data name="Learn more" xml:space="preserve">
-    <value>Подробнее</value>
   </data>
   <data name="List of users" xml:space="preserve">
     <value>Список пользователей</value>
@@ -273,8 +312,17 @@
   <data name="Manager" xml:space="preserve">
     <value>Менеджер</value>
   </data>
+  <data name="Manager accepting" xml:space="preserve">
+    <value>Заявка принята менеджером</value>
+  </data>
+  <data name="Manager decliying" xml:space="preserve">
+    <value>Заявка отклонена менеджером</value>
+  </data>
   <data name="Manager notes" xml:space="preserve">
     <value>Примечания менеджера</value>
+  </data>
+  <data name="Manager Response Table" xml:space="preserve">
+    <value>Ответ менеджера</value>
   </data>
   <data name="Managers" xml:space="preserve">
     <value>Менеджеры</value>
@@ -285,8 +333,14 @@
   <data name="My Requests" xml:space="preserve">
     <value>Мои заявки</value>
   </data>
+  <data name="Name" xml:space="preserve">
+    <value>Имя</value>
+  </data>
   <data name="Name*" xml:space="preserve">
     <value>Имя*</value>
+  </data>
+  <data name="Need a final approval" xml:space="preserve">
+    <value>Требуется финальное подтверждение</value>
   </data>
   <data name="Need to review" xml:space="preserve">
     <value>Требует рассмотрения </value>
@@ -294,14 +348,26 @@
   <data name="New password" xml:space="preserve">
     <value>Новый пароль</value>
   </data>
+  <data name="New Request" xml:space="preserve">
+    <value>Новый запрос</value>
+  </data>
   <data name="Next" xml:space="preserve">
     <value>Следующая</value>
+  </data>
+  <data name="Not handled yet" xml:space="preserve">
+    <value>Еще не разсмотрено</value>
   </data>
   <data name="Notes" xml:space="preserve">
     <value>Примечания</value>
   </data>
   <data name="Notes to current request" xml:space="preserve">
     <value>Примечания к текущему запросу</value>
+  </data>
+  <data name="Old Request" xml:space="preserve">
+    <value>Старый запрос</value>
+  </data>
+  <data name="Other managers have not answered yet. Please, wait" xml:space="preserve">
+    <value>Остальные менеджеры еще не ответили. Пожалуйста, ожидайте</value>
   </data>
   <data name="Paid Leave" xml:space="preserve">
     <value>Оплачиваемый</value>
@@ -336,6 +402,12 @@
   <data name="Remember me?" xml:space="preserve">
     <value>Запомнить?</value>
   </data>
+  <data name="Report" xml:space="preserve">
+    <value>Отчет</value>
+  </data>
+  <data name="Report of used vacation days" xml:space="preserve">
+    <value>Отчет про использованные дни отпуска</value>
+  </data>
   <data name="Request from" xml:space="preserve">
     <value>Запрос от</value>
   </data>
@@ -369,8 +441,20 @@
   <data name="Search" xml:space="preserve">
     <value>Поиск</value>
   </data>
+  <data name="Self-cancelled" xml:space="preserve">
+    <value>Отменено пользователем</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Отправить</value>
+  </data>
   <data name="Send verification email" xml:space="preserve">
     <value>Отправить письмо с подтверждением</value>
+  </data>
+  <data name="Show" xml:space="preserve">
+    <value>Показать</value>
+  </data>
+  <data name="Show details" xml:space="preserve">
+    <value>Показать детали</value>
   </data>
   <data name="Sick Leave" xml:space="preserve">
     <value>Больничный</value>
@@ -379,7 +463,7 @@
     <value>Статус</value>
   </data>
   <data name="Study Leave" xml:space="preserve">
-    <value>Студенческий</value>
+    <value>Учебный</value>
   </data>
   <data name="Submit" xml:space="preserve">
     <value>Отправить</value>
@@ -387,8 +471,30 @@
   <data name="Surname*" xml:space="preserve">
     <value>Фамилия*</value>
   </data>
+  <data name="Team" xml:space="preserve">
+    <value>Команда</value>
+  </data>
   <data name="Thank you for confirming your email." xml:space="preserve">
     <value>Спасибо, что подтвердити свой E-mail.</value>
+  </data>
+  <data name="The appication has been cancelled by you" xml:space="preserve">
+    <value>Заявка отменена Вами</value>
+  </data>
+  <data name="The application has been accepted" xml:space="preserve">
+    <value>Заявка принята</value>
+  </data>
+  <data name="The application has been accepted by admin for further review" xml:space="preserve">
+    <value>Заявка принята администратором для дальнейшого разсмотрения</value>
+  </data>
+  <data name="The application has been accepted by all managers and has been tranferred for final admin review" xml:space="preserve">
+    <value>Заявка принята всеми менеджерами и передана администратору для финального разсмотрения</value>
+  </data>
+  <data name="The application has been accepted by managers" xml:space="preserve">
+    <value>Заявка принята всеми менеджерами
+</value>
+  </data>
+  <data name="The application has been approved by admin and all needed stages have passed." xml:space="preserve">
+    <value>Заявка подтверждена администратором и пройдено все необходимые стадии.</value>
   </data>
   <data name="The application is meant to ease the process of employees' vacations tracking" xml:space="preserve">
     <value>Приложение предназначено для облегчения процесса отслеживания отпусков сотрудников</value>
@@ -402,8 +508,14 @@
   <data name="The E-mail field is required." xml:space="preserve">
     <value>Поле E-mail должно быть заполнено.</value>
   </data>
+  <data name="The history of vacation approving" xml:space="preserve">
+    <value>История подтверждений запроса на отпуск</value>
+  </data>
   <data name="The Login field can not exceed 40 characters." xml:space="preserve">
     <value>Поле Логин не может содержать более 40 знаков.</value>
+  </data>
+  <data name="The manager" xml:space="preserve">
+    <value>Менеджер</value>
   </data>
   <data name="The Name field can contain only letters." xml:space="preserve">
     <value>Поле Имя может содержать только буквы.</value>
@@ -416,6 +528,12 @@
   </data>
   <data name="The new password and confirmation password do not match." xml:space="preserve">
     <value>Новый пароль и пароль подтверждения не совпадают.</value>
+  </data>
+  <data name="The request has been cancelled" xml:space="preserve">
+    <value>Запрос отменен</value>
+  </data>
+  <data name="The request has been declined" xml:space="preserve">
+    <value>Запрос отклонен</value>
   </data>
   <data name="The Surname field can contain only letters." xml:space="preserve">
     <value>Поле Фамилия может содержать только буквы.</value>
@@ -447,11 +565,32 @@
   <data name="User Profile" xml:space="preserve">
     <value>Профиль пользователя</value>
   </data>
+  <data name="User with specified E-mail not found" xml:space="preserve">
+    <value>Пользователь с указанным E-mail не найден</value>
+  </data>
   <data name="Users List" xml:space="preserve">
     <value>Список пользователей</value>
   </data>
   <data name="Vacation" xml:space="preserve">
     <value>Отпуск</value>
+  </data>
+  <data name="Vacation application" xml:space="preserve">
+    <value>Заявка на отпуск</value>
+  </data>
+  <data name="Vacation Request Comparison Table" xml:space="preserve">
+    <value>Сравнение запроса на отпуск</value>
+  </data>
+  <data name="Vacation request from" xml:space="preserve">
+    <value>Запрос на отпуск от</value>
+  </data>
+  <data name="Vacation Request Table" xml:space="preserve">
+    <value>Запрос на отпуск</value>
+  </data>
+  <data name="Vacation Request Timeline" xml:space="preserve">
+    <value>Хронология запроса</value>
+  </data>
+  <data name="Vacation requests" xml:space="preserve">
+    <value>Запросы на отпуск</value>
   </data>
   <data name="Vacation type" xml:space="preserve">
     <value>Тип отпуска</value>
@@ -462,6 +601,9 @@
   <data name="Verification email sent. Please check your email." xml:space="preserve">
     <value>Електронное письмо для подтверждения отправлено. Пожалуйста, проверте свою електронную почту.</value>
   </data>
+  <data name="Waiting for responses from others managers" xml:space="preserve">
+    <value>Ожидаются ответы от остальных менеджеров</value>
+  </data>
   <data name="You do not have access to this resource." xml:space="preserve">
     <value>У Вас нет доступа к даному ресурсу.</value>
   </data>
@@ -471,6 +613,21 @@
   <data name="You Reached the limits" xml:space="preserve">
     <value>Вы достигли лимита</value>
   </data>
+  <data name="Your appication has been succesfully filed and transferred for admins for review. Wait the answer from admin" xml:space="preserve">
+    <value>Ваша заявка успешно подана и передана администраторам на разсмотрение. Ожидайте ответа от администратора</value>
+  </data>
+  <data name="Your application has been approved" xml:space="preserve">
+    <value>Заявка подтверждена администратором</value>
+  </data>
+  <data name="Your application has been filed" xml:space="preserve">
+    <value>Ваша заявка подана</value>
+  </data>
+  <data name="Your details about application has been changed" xml:space="preserve">
+    <value>Детали Вашей заявки изменены</value>
+  </data>
+  <data name="Your details about application has been changed by admin" xml:space="preserve">
+    <value>Детали Вашей заявки изменены администратором</value>
+  </data>
   <data name="Your password has been changed." xml:space="preserve">
     <value>Ваш пароль изменен.</value>
   </data>
@@ -479,5 +636,8 @@
   </data>
   <data name="Your profile has been updated" xml:space="preserve">
     <value>Ваш профиль изменен</value>
+  </data>
+  <data name="Your request has been declined by admin during accepting" xml:space="preserve">
+    <value>Ваш запрос отклонен администратором</value>
   </data>
 </root>

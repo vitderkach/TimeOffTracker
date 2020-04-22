@@ -95,6 +95,11 @@
                 <partial name="_MenuManager" />
                 <partial name="_MenuAdmin" />
             </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <partial name="_SelectLanguagePartial" />
+                </li>
+            </ul>
             <partial name="_LoginPartial" />
         </div>
     </nav>
@@ -102,10 +107,6 @@
     <div class="main container body-content my-5">
         @RenderBody()
     </div>
-    <div class="col-md-6 text-right">
-        @await Html.PartialAsync("_SelectLanguagePartial")
-    </div>
-    @RenderBody()
 
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>

@@ -24,11 +24,11 @@
 </div>
 
 <div class="form-group row">
-    <label class="control-label col-4">Date range</label>
+    <label class="control-label col-4">@Localizer["Dates"]</label>
     <div class="input-group input-daterange col row align-items-center justify-content-between" id="datepicker">
-        <div class="input-group-addon col-auto">from</div>
+        <div class="input-group-addon col-auto">@Localizer["From"]</div>
         <input asp-for="StartDate" type="text" class="form-control col-auto mx-1" value=@startDate>
-        <div class="input-group-addon col-auto">to</div>
+        <div class="input-group-addon col-auto">@Localizer["To"]</div>
         <input asp-for="EndDate" type="text" class="form-control col-auto mx-1" value=@endDate>
     </div>
     <span id="StartDateVal" asp-validation-for="StartDate" class="text-danger"></span>
@@ -60,6 +60,6 @@
 </div>
 <div asp-validation-summary="ModelOnly" class="text-danger row"></div>
 <div class="form-group row justify-content-center">
-    <input class="btn btn-success col-2 mr-3" type="button" value="Send" onclick="confirm()" />
-    <input class="btn btn-danger col-2 ml-3" type="button" value="Cancel" onclick="goBack()" />
+    <input class="btn btn-success col-3 mr-3" type="button" value=@Localizer["Send"] onclick="confirm()" />
+    <input class="btn btn-danger col-3 ml-3" type="button" value=@Localizer["Cancel"] onclick="goBack()" />
 </div>

@@ -67,8 +67,8 @@
                 </td>
                 <td>
                     <form asp-action="Delete" asp-route-id="@item.Id" method="post">
-                        @Html.ActionLink("Profile", "Edit", new { id = item.Id }, new { @class = "btn btn-sm btn-outline-dark" })
-                        @Html.ActionLink("Edit days", "EditVacationDays", new { id = item.Id }, new { @class = "btn btn-sm btn-outline-dark" })
+                        @Html.ActionLink(@Localizer["Profile"].Value, "Edit", new { id = item.Id }, new { @class = "btn btn-sm btn-outline-dark" })
+                        @Html.ActionLink(Localizer["Edit days"].Value, "EditVacationDays", new { id = item.Id }, new { @class = "btn btn-sm btn-outline-dark" })
                         <button type="button" class="btn btn-sm btn-outline-danger"
                                 data-toggle="modal" data-target="#@deleteUser"
                                 data-whatever="@item.Id">
