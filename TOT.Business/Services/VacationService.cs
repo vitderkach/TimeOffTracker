@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using TOT.Data.Extensions;
 using TOT.Dto;
@@ -51,7 +52,7 @@ namespace TOT.Business.Services
                     VacationRequest = vacation,
                     ForStageOfApproving = 2,
                     DateResponse = DateTime.MaxValue
-            };
+                };
                 _uow.ManagerResponseRepository.Create(managerResponse);
             }
             _uow.Save();
@@ -94,7 +95,7 @@ namespace TOT.Business.Services
 
         public VacationRequestDto GetVacationById(int id)
         {
-            var vacation = _uow.VacationRequestRepository.GetOne(vr => vr.VacationRequestId == id, vr=> vr.ManagersResponses);
+            var vacation = _uow.VacationRequestRepository.GetOne(vr => vr.VacationRequestId == id, vr => vr.ManagersResponses);
             var usersListDto = _userInfoService.GetUsersInfo();
             var vacationDto = _mapper.Map<VacationRequest, VacationRequestDto>(vacation);
             vacationDto.User.Email = vacation.UserInformation.ApplicationUser.Email;
@@ -109,6 +110,125 @@ namespace TOT.Business.Services
                 vacationDto.ApplicationDto.RequiredManagersEmails.Add(item.Email);
             }
             return vacationDto;
+        }
+
+        public ReportDto GetReportInfo(DateTime startDate, DateTime endDate, int teamId)
+        {
+            var reportDto = new ReportDto
+            {
+                StartDate = startDate,
+                EndDate = endDate,
+                TeamId = teamId,
+                AllTeams = _uow.TeamRepository.GetAll()
+            };
+            reportDto.ReportUsedDays = GetReportUsedDaysInfo(reportDto);
+            return reportDto;
+        }
+
+        public ICollection<ReportUsedDaysDto> GetReportUsedDaysInfo(ReportDto reportDto)
+        {
+            ICollection<ReportUsedDaysDto> reportUsedDaysDtoList = new Collection<ReportUsedDaysDto>();
+
+            if (reportDto.TeamId != 0)
+            {
+                foreach (UserInformation userInfo in _uow.UserInformationRepository.GetAll(ui => ui.TeamId == reportDto.TeamId))
+                {
+                    reportUsedDaysDtoList.Add(new ReportUsedDaysDto
+                    {
+                        UserInformation = _mapper.Map<UserInformation, UserInformationDto>(userInfo)
+                    });
+                }
+            }
+            else
+            {
+                var usersInfo = _uow.UserInformationRepository.GetAll();
+                foreach (UserInformation userInfo in _uow.UserInformationRepository.GetAll())
+                {
+                    reportUsedDaysDtoList.Add(new ReportUsedDaysDto
+                    {
+                        UserInformation = _mapper.Map<UserInformation, UserInformationDto>(userInfo)
+                    });
+                }
+            }
+
+            ICollection<VacationRequest> vacationRequests = new Collection<VacationRequest>();
+            if (reportDto.TeamId != 0)
+            {
+                vacationRequests = _uow.VacationRequestRepository.GetAll(t => t.UserInformation.TeamId == reportDto.TeamId && t.UserInformation.IsFired == false);
+            }
+            else
+            {
+                vacationRequests = _uow.VacationRequestRepository.GetAll(t => t.UserInformation.IsFired == false);
+            }
+
+            foreach (var vRequest in vacationRequests)
+            {
+                if (vRequest.Approval == true)
+                {
+                    if (vRequest.StartDate > reportDto.StartDate && vRequest.StartDate < reportDto.EndDate)
+                    {
+                        if (vRequest.EndDate < reportDto.EndDate)
+                        {
+                            CountUsedDays(
+                                vRequest.StartDate,
+                                vRequest.EndDate,
+                                reportUsedDaysDtoList.First(i => i.UserInformation.Id == vRequest.UserInformationId),
+                                vRequest.VacationType
+                                );
+                        }
+                        else
+                        {
+                            CountUsedDays(
+                                vRequest.StartDate,
+                                reportDto.EndDate,
+                                reportUsedDaysDtoList.First(i => i.UserInformation.Id == vRequest.UserInformationId),
+                                vRequest.VacationType
+                                );
+                        }
+                    }
+                    else if (vRequest.EndDate > reportDto.StartDate && vRequest.EndDate < reportDto.EndDate)
+                    {
+                        CountUsedDays(
+                                reportDto.StartDate,
+                                vRequest.EndDate,
+                                reportUsedDaysDtoList.First(i => i.UserInformation.Id == vRequest.UserInformationId),
+                                vRequest.VacationType
+                                );
+                    }
+                    else if (vRequest.EndDate > reportDto.EndDate)
+                    {
+                        CountUsedDays(
+                                reportDto.StartDate,
+                                reportDto.EndDate,
+                                reportUsedDaysDtoList.First(i => i.UserInformation.Id == vRequest.UserInformationId),
+                                vRequest.VacationType
+                                );
+                    }
+                }
+            }
+
+            return reportUsedDaysDtoList;
+        }
+
+        public void CountUsedDays(DateTime startDate, DateTime endDate, ReportUsedDaysDto reportUsedDays, TimeOffType vacationType)
+        {
+            switch (vacationType)
+            {
+                case TimeOffType.PaidLeave:
+                case TimeOffType.GiftLeave:
+                    reportUsedDays.UsedPaidLeaveDays += (endDate - startDate).Days + 1;
+                    break;
+                case TimeOffType.ConfirmedSickLeave:
+                case TimeOffType.UnofficialSickLeave:
+                    reportUsedDays.UsedSickLeaveDays += (endDate - startDate).Days + 1;
+                    break;
+                case TimeOffType.StudyLeave:
+                    reportUsedDays.UsedStudyLeaveDays += (endDate - startDate).Days + 1;
+                    break;
+                case TimeOffType.AdministrativeLeave:
+                    reportUsedDays.UsedAdministrativeLeaveDays += (endDate - startDate).Days + 1;
+                    break;
+            }
         }
 
         public void UpdateVacation(int id, string notes)

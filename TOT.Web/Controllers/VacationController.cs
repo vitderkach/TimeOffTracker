@@ -11,6 +11,7 @@ using System.Security.Claims;
 using Microsoft.Extensions.Localization;
 using TOT.Entities;
 using System.Text.Json;
+using System;
 
 namespace TOT.Web.Controllers
 {
@@ -169,11 +170,25 @@ namespace TOT.Web.Controllers
 
         }
 
+        public IActionResult Report()
+        {
+            var endDate = DateTime.Today;
+            var startDate = endDate.AddMonths(-1);
+            var reportInfo = _vacationService.GetReportInfo(startDate, endDate, 0);
+            return View(reportInfo);
+        }
+
+        [HttpPost]
+        public IActionResult VacationReport(ReportDto report)
+        {
+            var reportInfo = _vacationService.GetReportInfo(report.StartDate, report.EndDate, report.TeamId);
+            return View("Report", reportInfo);
+        }
+
         [HttpGet]
         public IActionResult VacationTimeline(int id)
         {
             var vacationTimelineDto = _vacationService.GetVacationTimeline(id);
-            var d = JsonSerializer.Serialize(vacationTimelineDto.TemporalVacationRequests);
             return View("VacationTimeline", vacationTimelineDto);
         }
 

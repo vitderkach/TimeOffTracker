@@ -19,7 +19,7 @@
 
 <div class="form-group row">
     <label asp-for="VacationType" class="control-label col-4"></label>
-    <select asp-for="VacationType" asp-items="@ViewBag.TimeOffTypeList" class="form-control col"></select>
+    <select asp-for="VacationType" asp-items="@ViewBag.TimeOffTypeList" class="form-control col selectpicker"></select>
     <span asp-validation-for="VacationType" class="text-danger"></span>
 </div>
 
@@ -32,7 +32,7 @@
         <input asp-for="EndDate" type="text" class="form-control col-auto mx-1" value=@endDate>
     </div>
     <span id="StartDateVal" asp-validation-for="StartDate" class="text-danger"></span>
-    <span id="StartDateVal" asp-validation-for="EndDate" class="text-danger"></span>
+    <span id="EndDateVal" asp-validation-for="EndDate" class="text-danger"></span>
 </div>
 
 <div class="form-group row">

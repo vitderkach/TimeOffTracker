@@ -1,0 +1,102 @@
+﻿@model TOT.Dto.ReportDto
+@{
+    ViewData["Title"] = "Report";
+    var teams = new SelectList(Model.AllTeams, "Id", "Name", selectedValue: Model.TeamId);
+}
+
+<h3>Report of used vacation days</h3>
+<hr />
+<div class="container">
+    <form method="post" asp-controller="Vacation" asp-action="VacationReport">
+        <div class="row">
+            <div class="row col col-7 form-group justify-content-between align-items-center">
+                <label class="control-label col col-1">Dates:</label>
+                <div class="row input-group input-daterange justify-content-between col col-11" id="datepicker">
+                    <div class="input-group-addon col col-auto">from</div>
+                    <input asp-for="StartDate" type="text" class="form-control col col-5">
+                    <div class="input-group-addon col col-auto">to</div>
+                    <input asp-for="EndDate" type="text" class="form-control col col-5">
+                </div>
+            </div>
+            <div class="row col col-5 justify-content-between form-group">
+                <div class="row col col-9 justify-content-around align-items-center">
+                    <label class="control-label col col-2">Team:</label>
+                    <select class="form-control selectpicker col col-7" asp-for="TeamId" asp-items=@teams>
+                        <option value="0">All</option>
+                    </select>
+                </div>
+                <button class="btn btn-sm btn-outline-dark col col-3" type="submit">Show</button>
+            </div>
+        </div>
+    </form>
+</div>
+<br />
+<div class="container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Paid Leave
+                </th>
+                <th>
+                    Sick Leave
+                </th>
+                <th>
+                    Study Leave
+                </th>
+                <th>
+                    Admin Leave
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ReportUsedDays)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserInformation.FullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(moelItem => item.UsedPaidLeaveDays)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(moelItem => item.UsedSickLeaveDays)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(moelItem => item.UsedStudyLeaveDays)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(moelItem => item.UsedAdministrativeLeaveDays)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section css{
+    <link rel="stylesheet" href="~/lib/bootstrap-select/css/bootstrap-select.min.css" />
+    <link rel="stylesheet" href="~/css/bootsrap-datepicker.css" />
+}
+
+@section Scripts{
+    <script src="~/lib/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="~/lib/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script>
+        window.onload = runDatePicker();
+
+        function runDatePicker() {
+            $('input-group, .input-daterange').datepicker({
+                weekStart: 1,
+                container: '#datepicker',
+                format: 'dd-mm-yyyy'
+            });
+
+            $('.input-group, .input-daterange').datepicker();
+
+        }
+    </script>
+}
