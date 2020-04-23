@@ -338,8 +338,8 @@ namespace TOT.Web.Controllers
             {
                 return View(importExcelFileDto);
             }
-            _excelMehtods.ImportExcelFile(importExcelFileDto);
-            return View("ImportExcelFile", new ImportExcelFileDto());
+            List<string> errors = _excelMehtods.ImportExcelFile(importExcelFileDto);
+            return Json(errors);
         }
 
         [HttpPost]
@@ -355,7 +355,6 @@ namespace TOT.Web.Controllers
                 Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic),
                 WriteIndented = true
             };
-            //string output = JsonSerializer.Serialize(_excelMehtods.GetSheetNames(excelFile), options);
             return Json(_excelMehtods.GetSheetNames(excelFile));
         }
 

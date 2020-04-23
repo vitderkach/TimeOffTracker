@@ -9,7 +9,7 @@ namespace TOT.DataImport.Interfaces
 {
     public interface IExcelMehtods
     {
-        void ImportExcelFile(ImportExcelFileDto importExcelFileDto);
+        List<string> ImportExcelFile(ImportExcelFileDto importExcelFileDto);
         string GetSheetAsHtml(IFormFile excelFile, string sheetName);
         List<string> GetSheetNames(IFormFile excelFile);
         HashSet<string> GetSheetColors(IFormFile excelFile, string sheetName);

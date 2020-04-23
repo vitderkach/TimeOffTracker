@@ -10,26 +10,6 @@ namespace TOT.DataImport.StorageProviders
     {
         public Employee SourceEmployee { get; set; }
 
-        public void AddGiftDays(int year, int giftDays)
-        {
-            SourceEmployee.GiftDays[year] = giftDays;
-        }
-
-        public void AddPaidDays(int year, int vacationDays)
-        {
-            SourceEmployee.VacationDays[year] = vacationDays;
-        }
-
-        public void AddVacation(DateTime from, DateTime to, TimeOffType type)
-        {
-            SourceEmployee.Vacations.Add(new Vacation
-                {
-                    From = from,
-                    To = to,
-                    Type = type
-                });
-        }
-
         public void AddVacationDays(int days, int year, TimeOffType type, bool rewritePreviousStatutoryDays)
         {
             throw new NotImplementedException();

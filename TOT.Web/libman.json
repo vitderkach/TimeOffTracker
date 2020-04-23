@@ -43,6 +43,11 @@
       "provider": "cdnjs",
       "library": "jScrollPane@2.2.1",
       "destination": "wwwroot/lib/jScrollPane/"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "jquery.form@4.2.2",
+      "destination": "wwwroot/lib/jquery.form/"
     }
   ]
 }

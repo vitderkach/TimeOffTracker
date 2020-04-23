@@ -51,7 +51,7 @@ namespace TOT.DataImport.StorageProviders
             }
             else
             {
-                throw new EmployeeNotFoundException(name, employmentDate.Value);
+                throw new EmployeeNotFoundException(name);
             }
 
             if (user is UserInformation)
@@ -87,7 +87,19 @@ namespace TOT.DataImport.StorageProviders
             }
             else
             {
-                throw new EmployeeNotFoundException(name, employmentDate.Value);
+                if (employmentDate != null)
+                {
+                    throw new EmployeeNotFoundException(name, employmentDate.Value);
+                }
+                else if (isFired != null)
+                {
+                    throw new EmployeeNotFoundException(name, isFired.Value);
+                }
+                else
+                {
+                    throw new EmployeeNotFoundException(name);
+                }
+
             }
         }
 
@@ -124,7 +136,7 @@ namespace TOT.DataImport.StorageProviders
             }
             else
             {
-                throw new EmployeeNotFoundException(name, employmentDate.Value);
+                throw new EmployeeNotFoundException(name);
             }
             if (user is UserInformation)
             {
@@ -133,7 +145,18 @@ namespace TOT.DataImport.StorageProviders
             }
             else
             {
-                throw new EmployeeNotFoundException(name, employmentDate.Value);
+                if (employmentDate != null)
+                {
+                    throw new EmployeeNotFoundException(name, employmentDate.Value);
+                }
+                else if (isFired != null)
+                {
+                    throw new EmployeeNotFoundException(name, isFired.Value);
+                }
+                else
+                {
+                    throw new EmployeeNotFoundException(name);
+                }
             }
         }
     }

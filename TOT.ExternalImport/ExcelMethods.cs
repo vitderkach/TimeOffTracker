@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
+using NPOI.SS.Util;
 using NPOI.XSSF.UserModel;
 using Spire.Xls;
 using System;
@@ -26,7 +27,8 @@ namespace TOT.DataImport
             _unitOfWork = unitOfWork;
             _sharedService = sharedService;
         }
-        public void ImportExcelFile(ImportExcelFileDto importExcelFileDto)
+
+        public List<string> ImportExcelFile(ImportExcelFileDto importExcelFileDto)
         {
             ExcelDataImporterConfiguration excelConfiguration = new ExcelDataImporterConfiguration();
             using (var excelStream = importExcelFileDto.ExcelFile.OpenReadStream())
@@ -41,18 +43,20 @@ namespace TOT.DataImport
                 excelConfiguration.EmploymentDateColumnStartCell = firstRowCellList.ElementAt(importExcelFileDto.EmploymentDateIndex).RangeGlobalAddressWithoutSheetName.Replace("$", "");
                 excelConfiguration.NameColumnStartCell = firstRowCellList.ElementAt(importExcelFileDto.EmployeeNameIndex).RangeGlobalAddressWithoutSheetName.Replace("$", "");
                 excelConfiguration.VacationDaysColumnsStartCell = outputSheet.Rows[0].CellList.Where(cr => cr.Value != null && cr.Value == "1").First().RangeGlobalAddressWithoutSheetName.Split('$')[1] + (importExcelFileDto.StartEmployeeIndex + 2 + 1).ToString();
-                if (importExcelFileDto.LocationIndex != 0)
+                excelConfiguration.StartDayInMonth = importExcelFileDto.StartDayInMonth -1;
+                excelConfiguration.EndDayInMonth = importExcelFileDto.EndDayInMonth - 1;
+                if (importExcelFileDto.LocationIndex != null)
                 {
                     excelConfiguration.OverwriteTeamAndLocation = true;
-                    excelConfiguration.LocationColumnStartCell = firstRowCellList.ElementAt(importExcelFileDto.LocationIndex).RangeGlobalAddressWithoutSheetName.Replace("$", "");
-                    excelConfiguration.TeamColumnStartCell = firstRowCellList.ElementAt(importExcelFileDto.TeamIndex).RangeGlobalAddressWithoutSheetName.Replace("$", "");
+                    excelConfiguration.LocationColumnStartCell = firstRowCellList.ElementAt(importExcelFileDto.LocationIndex.Value).RangeGlobalAddressWithoutSheetName.Replace("$", "");
+                    excelConfiguration.TeamColumnStartCell = firstRowCellList.ElementAt(importExcelFileDto.TeamIndex.Value).RangeGlobalAddressWithoutSheetName.Replace("$", "");
                 }
-                if (importExcelFileDto.GiftDaysIndex != 0)
+                if (importExcelFileDto.GiftDaysIndex != null)
                 {
                     excelConfiguration.OverwriteGiftAndPaidVacations = true;
                     excelConfiguration.PaidDaysDateColumnCells = new List<string>();
-                    excelConfiguration.GiftDaysColumnStartCell = firstRowCellList.ElementAt(importExcelFileDto.GiftDaysIndex).RangeGlobalAddressWithoutSheetName.Replace("$", "");
-                    for (int i = importExcelFileDto.StartPaidDaysIndex; i <= importExcelFileDto.EndPaidDaysIndex; i++)
+                    excelConfiguration.GiftDaysColumnStartCell = firstRowCellList.ElementAt(importExcelFileDto.GiftDaysIndex.Value).RangeGlobalAddressWithoutSheetName.Replace("$", "");
+                    for (int i = importExcelFileDto.StartPaidDaysIndex.Value; i <= importExcelFileDto.EndPaidDaysIndex.Value; i++)
                     {
                         excelConfiguration.PaidDaysDateColumnCells.Add(firstRowCellList.ElementAt(i).RangeGlobalAddressWithoutSheetName.Replace("$", ""));
                     }
@@ -68,7 +72,6 @@ namespace TOT.DataImport
                         excelConfiguration.WeekendsRGB[i] = byte.Parse(colors[i]);
                     }
                 }
-
                 string[] dateArray = importExcelFileDto.SheetName.Split(' ');
                 MonthIntConverter converter = new MonthIntConverter("ru");
                 excelConfiguration.Month = converter.ConvertFromString(dateArray[0]);
@@ -78,11 +81,12 @@ namespace TOT.DataImport
             using (var excelStream = importExcelFileDto.ExcelFile.OpenReadStream())
             {
                 IExcelDataImporter dataImporter = new ExcelDataImporter();
-                dataImporter
+                var result = dataImporter
                     .SetConfiguration(excelConfiguration, new AttendanceTableConfiguration())
                     .ImportFromStream(excelStream)
                     .SaveToStorage(new DbStorageProvider(_unitOfWork, _sharedService))
-                    .Start();
+                    .ExexuteImport();
+                return result;
             }
         }
 

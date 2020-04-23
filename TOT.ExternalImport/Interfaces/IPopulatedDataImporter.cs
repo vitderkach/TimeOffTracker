@@ -6,6 +6,6 @@ namespace TOT.DataImport.Interfaces
 {
     interface IPopulatedDataImporter
     {
-        void Start();
+        List<string> ExexuteImport();
     }
 }

@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using TOT.DataImport.Exceptions;
 using TOT.DataImport.Interfaces;
 using TOT.Entities;
 
@@ -56,8 +57,7 @@ namespace TOT.DataImport.Excel
 
         private void ParseEmployeeVacationDays(ISheet sheet, ICell vacationDaysCell, int month, IEmployeeStorageProvider employeeStorageProvider)
         {
-            int daysCount = DateTime.DaysInMonth(_excelConfiguration.Year, month);
-            for (int i = 0; i < daysCount; ++i)
+            for (int i = _excelConfiguration.StartDayInMonth; i <= _excelConfiguration.EndDayInMonth; ++i)
             {
                 string value = vacationDaysCell.StringCellValue;
                 if (_attendanceTableConfiguration.CellValueTimeOffTypePairs.ContainsKey(value))
@@ -65,7 +65,7 @@ namespace TOT.DataImport.Excel
                     TimeOffType type = _attendanceTableConfiguration.CellValueTimeOffTypePairs.GetValueOrDefault(value);
                     int from = i, to = i;
                     int takenDays = 1;
-                    for (; i < daysCount; ++i, ++takenDays)
+                    for (; i <= _excelConfiguration.EndDayInMonth; ++i, ++takenDays)
                     {
                         if (_excelConfiguration.UseWeekendColor == true)
                         {
@@ -93,11 +93,6 @@ namespace TOT.DataImport.Excel
                     }
                     employeeStorageProvider.AddVacation(new DateTime(_excelConfiguration.Year, month, from + 1), new DateTime(_excelConfiguration.Year, month, to + 1), type, takenDays, null);
                     employeeStorageProvider.AddVacationRequest(new DateTime(_excelConfiguration.Year, month, from + 1), new DateTime(_excelConfiguration.Year, month, to + 1), type, 4, true, takenDays, true);
-
-                    Console.WriteLine($"Vacation Type={type}" +
-                               $" From={from + 1}" +
-                               $" To={to + 1}" +
-                               $" Taken Days={takenDays}");
                 }
                 else
                 {
@@ -106,8 +101,9 @@ namespace TOT.DataImport.Excel
             }
         }
 
-        private void ParseSheet(ISheet sheet)
+        private List<string> ParseSheet(ISheet sheet)
         {
+            List<string> errors = new List<string>();
             ICell nameCell = GetCell(sheet, _excelConfiguration.NameColumnStartCell);
             ICell employmentDateCell = GetCell(sheet, _excelConfiguration.EmploymentDateColumnStartCell);
             ICell vacationDaysRowStartCell = GetCell(sheet, _excelConfiguration.VacationDaysColumnsStartCell);
@@ -137,8 +133,6 @@ namespace TOT.DataImport.Excel
                     : employmentDateCell.DateCellValue.ToString();
                 DateTime? employmentDate = null;
                 bool? isFired = null;
-                Console.WriteLine($"{i} Name={nameCell.StringCellValue}" +
-                    $" EmploymentDate={employmentDateString}");
                 if (employmentDateCell.CellType == CellType.String)
                 {
                     if (employmentDateCell.StringCellValue == "исп.")
@@ -151,18 +145,42 @@ namespace TOT.DataImport.Excel
                     employmentDate = DateTime.Parse(employmentDateString);
                 }
 
-
                 IEmployeeStorageProvider employeeStorageProvider;
-                if (_excelConfiguration.OverwriteTeamAndLocation == true)
+
+                try
                 {
-                    employeeStorageProvider = _storageProvider
-                        .AddEmployeeAndRewriteHimTeamAndWorkplace(nameCell.StringCellValue, employmentDate, isFired, teamCell.StringCellValue, locationCell.StringCellValue);
-                    locationCell = GetBottomCell(sheet, locationCell);
-                    teamCell = GetBottomCell(sheet, teamCell);
+                    if (_excelConfiguration.OverwriteTeamAndLocation == true)
+                    {
+                        employeeStorageProvider = _storageProvider
+                            .AddEmployeeAndRewriteHimTeamAndWorkplace(nameCell.StringCellValue, employmentDate, isFired, teamCell.StringCellValue, locationCell.StringCellValue);
+                        locationCell = GetBottomCell(sheet, locationCell);
+                        teamCell = GetBottomCell(sheet, teamCell);
+                    }
+                    else
+                    {
+                        employeeStorageProvider = _storageProvider.AddEmployee(nameCell.StringCellValue, employmentDate, isFired);
+                    }
                 }
-                else
+                catch (EmployeeNotFoundException ex)
                 {
-                    employeeStorageProvider = _storageProvider.AddEmployee(nameCell.StringCellValue, employmentDate, isFired);
+                    errors.Add(ex.Message);
+                    vacationDaysRowStartCell = GetBottomCell(sheet, vacationDaysRowStartCell);
+                    nameCell = GetBottomCell(sheet, nameCell);
+                    employmentDateCell = GetBottomCell(sheet, employmentDateCell);
+                    if (_excelConfiguration.OverwriteGiftAndPaidVacations)
+                    {
+                        giftDaysCell = GetBottomCell(sheet, giftDaysCell);
+                        for (int j = 0; j < paidDaysCell.Length; j++)
+                        {
+                            paidDaysCell[j] = GetBottomCell(sheet, paidDaysCell[j]);
+                        }
+                    }
+                    if (_excelConfiguration.OverwriteTeamAndLocation == true)
+                    {
+                        locationCell = GetBottomCell(sheet, locationCell);
+                        teamCell = GetBottomCell(sheet, teamCell);
+                    }
+                    continue;
                 }
 
                 if (_excelConfiguration.OverwriteGiftAndPaidVacations)
@@ -189,14 +207,63 @@ namespace TOT.DataImport.Excel
                 nameCell = GetBottomCell(sheet, nameCell);
                 employmentDateCell = GetBottomCell(sheet, employmentDateCell);
             }
+
+            return errors;
         }
 
-        public void Start()
+        public List<string> ExexuteImport()
         {
             IWorkbook workbook = new XSSFWorkbook(input);
             string month = new DateTime(_excelConfiguration.Year, _excelConfiguration.Month, 1).ToString("MMMM", CultureInfo.CreateSpecificCulture("ru"));
             ISheet sheet = workbook.GetSheet($"{month} {_excelConfiguration.Year}");
-            ParseSheet(sheet);
+            List<string> errors = new List<string>();
+            if (GetCell(sheet, _excelConfiguration.NameColumnStartCell).CellType != CellType.String)
+            {
+                errors.Add("Column name input is invalid.");
+            }
+            if (GetCell(sheet, _excelConfiguration.EmploymentDateColumnStartCell).CellType != CellType.Numeric)
+            {
+                errors.Add("Column date employment input is invalid.");
+            }
+            if (_excelConfiguration.OverwriteGiftAndPaidVacations == true)
+            {
+                var giftDaysCellType = GetCell(sheet, _excelConfiguration.GiftDaysColumnStartCell).CellType;
+                if (giftDaysCellType != CellType.Numeric)
+                {
+                    if (giftDaysCellType != CellType.Formula)
+                    {
+                        errors.Add("Column gift days input is invalid.");
+                    }                  
+                }
+                for (int i = 0; i < _excelConfiguration.PaidDaysDateColumnCells.Count; i++)
+                {
+                    if (GetCell(sheet, _excelConfiguration.PaidDaysDateColumnCells[i]).CellType != CellType.Numeric)
+                    {
+                        errors.Add("Columns paid days inputs are invalid.");
+                        break;
+                    }
+                }
+            }
+            if (_excelConfiguration.OverwriteTeamAndLocation == true)
+            {
+                if (GetCell(sheet, _excelConfiguration.TeamColumnStartCell).CellType != CellType.String)
+                {
+                    errors.Add("Column team input is invalid.");
+                }
+                if (GetCell(sheet, _excelConfiguration.LocationColumnStartCell).CellType != CellType.String)
+                {
+                    errors.Add("Column location input is invalid.");
+                }
+            }
+            if (errors.Count != 0)
+            {
+                errors.Insert(0, "InputException");
+                return errors;
+            }
+            errors = ParseSheet(sheet);
+            errors.Insert(0, (errors.Count == 0) ? "The import was executed successfully." : "The import was executed, but with some errors.");
+            errors.Insert(0, "EmployeeNotFoundException");
+            return errors;
         }
     }
 }

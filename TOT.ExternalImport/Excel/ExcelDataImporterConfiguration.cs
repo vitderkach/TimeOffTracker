@@ -8,6 +8,8 @@ namespace TOT.DataImport.Excel
     {
         public int Year { get; set; }
         public int Month { get; set; }
+        public int StartDayInMonth { get; set; }
+        public int EndDayInMonth { get; set; }
         public int StartColumnIndex { get; set; }
         public int EndColumnIndex { get; set; }
         public byte[] WeekendsRGB { get; set; }
