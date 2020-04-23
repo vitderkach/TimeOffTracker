@@ -29,8 +29,8 @@ namespace TOT.Business.Services
             if (id == null)
                 throw new NullReferenceException("id = null");
             var user = _userManager.FindByIdAsync(id.ToString()).Result;
-            var userInfo = _unitOfWork.UserInformationRepository.GetOne(id.Value);
-
+            var userInfo = _unitOfWork.UserInformationRepository.GetOneWithAllProperties(id.Value);
+            
             if (userInfo == null)
                 throw new NullReferenceException("userInfo not found");
 
@@ -40,7 +40,8 @@ namespace TOT.Business.Services
         public IEnumerable<UserInformationDto> GetUsersInfo()
         {
             var users = _userManager.Users.ToList();
-            var usersInfo = _unitOfWork.UserInformationRepository.GetAll();
+            var usersInfo = _unitOfWork.UserInformationRepository.GetAll(null, ui => ui.Team, ui => ui.Location);
+
             return _mapper.MergeInto<IEnumerable<UserInformationDto>>(users, usersInfo);
         }
 

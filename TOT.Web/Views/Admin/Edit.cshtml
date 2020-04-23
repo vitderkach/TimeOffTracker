@@ -5,6 +5,8 @@
     ViewData["Title"] = "Edit";
 
     var roleList = new SelectList(Model.AllRoles, "Id", "Name", selectedValue: Model.RoleId);
+    var locationList = new SelectList(Model.AllLocations, "Id", "Name", selectedValue: Model.LocationId);
+    var teamList = new SelectList(Model.AllTeams, "Id", "Name", selectedValue: Model.TeamId);
     var userId = Model.Id;
 }
 
@@ -39,6 +41,18 @@
                     <select asp-for="RoleId" class="form-control" name="currentRoleId" asp-items=@roleList>
                     </select>
                     <span asp-validation-for="RoleId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LocationId" class="control-label"></label>
+                    <select asp-for="LocationId" class="form-control" name="currentLocationId" asp-items=@locationList>
+                    </select>
+                    <span asp-validation-for="LocationId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TeamId" class="control-label"></label>
+                    <select asp-for="TeamId" class="form-control" name="currentTeamId" asp-items=@teamList>
+                    </select>
+                    <span asp-validation-for="TeamId" class="text-danger"></span>
                 </div>
                 <div class="form-group mt-3">
                     <input type="submit" value=@Localizer["Save changes"] class="btn btn-outline-dark" />

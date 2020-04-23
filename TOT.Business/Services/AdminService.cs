@@ -164,7 +164,11 @@ namespace TOT.Business.Services
                     Email = user.Email,
                     UserName = user.UserName,
                     RoleId = GetRoleIdByUserId(userId),
-                    AllRoles = GetApplicationRoles()
+                    AllRoles = GetApplicationRoles(),
+                    TeamId = userInfo.Team.Id,
+                    AllTeams = _unitOfWork.TeamRepository.GetAll(),
+                    LocationId = userInfo.Location.Id,
+                    AllLocations = _unitOfWork.LocationRepository.GetAll()
                 };
             }
             else
@@ -176,13 +180,14 @@ namespace TOT.Business.Services
         }
 
         // [HttpPost] Edit/{id} Изменение данных пользователя (роли)
-        public async Task<IdentityResult> UserDataManipulation(int userId, int newRoleId)
+        public async Task<IdentityResult> UserDataManipulation(int userId, int newRoleId, int newTeamId, int newLocationId)
         {
             IdentityResult result = null;
             var user = _userManager.FindByIdAsync(userId.ToString()).Result;
             var currentRoleName = _userManager.GetRolesAsync(user)
                 .Result.FirstOrDefault();
             var newRoleName = _roleManager.FindByIdAsync(newRoleId.ToString()).Result.Name;
+            EditUserTeamAndLocation(userId, newTeamId, newLocationId);
 
             if (!currentRoleName.Equals(newRoleName))
             {
@@ -209,6 +214,15 @@ namespace TOT.Business.Services
                 result = IdentityResult.Success;
             }
             return result;
+        }
+
+        public void EditUserTeamAndLocation(int userId, int newTeamId, int newLocationId)
+        {
+            var userInfo = _unitOfWork.UserInformationRepository.GetOne(userId);
+            userInfo.TeamId = newTeamId;
+            userInfo.LocationId = newLocationId;
+            _unitOfWork.UserInformationRepository.Update(userInfo, ui => ui.TeamId, ui => ui.LocationId);
+            _unitOfWork.Save();
         }
 
         // [HttpGet] Edit/{id} Вывод данных о днях отпусков пользователя
@@ -240,7 +254,7 @@ namespace TOT.Business.Services
             var editSickVacation = _unitOfWork.VacationTypeRepository.GetOne(vt => vt.UserInformationId == userId && vt.TimeOffType == TimeOffType.ConfirmedSickLeave);
             editSickVacation.StatutoryDays = editUsersVacationDays.SickLeave.StatutoryDays;
             _unitOfWork.VacationTypeRepository.Update(editSickVacation, sv => sv.StatutoryDays);
-            
+
             var editStudyVacation = _unitOfWork.VacationTypeRepository.GetOne(vt => vt.UserInformationId == userId && vt.TimeOffType == TimeOffType.StudyLeave);
             editStudyVacation.StatutoryDays = editUsersVacationDays.StudyLeave.StatutoryDays;
             _unitOfWork.VacationTypeRepository.Update(editStudyVacation, stv => stv.StatutoryDays);

@@ -35,6 +35,12 @@
                 @Html.DisplayNameFor(model => users.RecruitmentDate)
             </th>
             <th>
+                @Html.DisplayNameFor(model => users.Location)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => users.Team)
+            </th>
+            <th>
                 @Localizer["Action"]
             </th>
         </tr>
@@ -52,6 +58,12 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.RecruitmentDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Location.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Team.Name)
                 </td>
                 <td>
                     <form asp-action="Delete" asp-route-id="@item.Id" method="post">

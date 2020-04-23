@@ -179,11 +179,11 @@ namespace TOT.Web.Controllers
 
         [HttpPost]
         [ExportModelState]
-        public async Task<IActionResult> Edit(int id, int currentRoleId)
+        public async Task<IActionResult> Edit(int id, int currentRoleId, int currentTeamId, int currentLocationId)
         {
             if (ModelState.IsValid)
             {
-                var result = await _adminService.UserDataManipulation(id, currentRoleId);
+                var result = await _adminService.UserDataManipulation(id, currentRoleId, currentTeamId, currentLocationId);
 
                 if (!result.Succeeded)
                 {

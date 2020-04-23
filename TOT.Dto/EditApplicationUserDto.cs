@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using TOT.Entities;
 
 namespace TOT.Dto
 {
@@ -32,6 +33,18 @@ namespace TOT.Dto
         [Display(Name = "Role")]
         public int RoleId { get; set; }
 
+        [Required]
+        [Display(Name = "Location")]
+        public int LocationId { get; set; }
+
+        [Required]
+        [Display(Name = "Team")]
+        public int TeamId { get; set; }
+
         public List<IdentityRole<int>> AllRoles { get; set; }
+
+        public ICollection<Location> AllLocations { get; set; }
+
+        public ICollection<Team> AllTeams { get; set; }
     }
 }
