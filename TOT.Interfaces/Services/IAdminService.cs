@@ -12,7 +12,7 @@ namespace TOT.Interfaces.Services
         List<IdentityRole<int>> GetApplicationRoles();
         Task<IdentityResult> RegistrationNewUser(RegistrationUserDto registrationForm);
         EditApplicationUserDto EditUserData(int userId);
-        Task<IdentityResult> UserDataManipulation(int userId, int userRoleId);
+        Task<IdentityResult> UserDataManipulation(int userId, int userRoleId, int newTeamId, int newLocationId);
         EditVacationDaysDto GetUsersVacationDays(int id);
         void EditUsersVacationDays(int id, EditVacationDaysDto editUsersVacationDays);
         bool FireEmployee(int userId);

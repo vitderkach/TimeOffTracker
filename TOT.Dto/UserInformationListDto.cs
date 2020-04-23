@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using TOT.Entities;
 
 namespace TOT.Dto
 {
@@ -21,6 +22,10 @@ namespace TOT.Dto
         public string LastName { get; set; }
 
         public string Email { get; set; }
+
+        public Location Location { get; set; }
+
+        public Team Team { get; set; }
 
         [Display(Name = "Full Name")]
         public string FullName => FirstName + " " + LastName;
