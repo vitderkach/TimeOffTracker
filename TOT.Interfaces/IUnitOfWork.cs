@@ -6,7 +6,7 @@ using TOT.Interfaces.Repositories;
 
 namespace TOT.Interfaces
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork: IDisposable
     {
         IVacationRequestRepository<BaseVacationRequest, VacationRequest, VacationRequestHistory> VacationRequestRepository { get; }
 
@@ -21,8 +21,6 @@ namespace TOT.Interfaces
         ITeamRepository<Team> TeamRepository { get; }
 
         IAuxiliaryRepository AuxiliaryRepository { get; }
-
-        void Dispose();
 
         void Save();
     }

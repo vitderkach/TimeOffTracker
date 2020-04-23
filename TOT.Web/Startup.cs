@@ -1,22 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TOT.Data;
 using TOT.Utility.DI;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc.Razor;
-using TOT.Dto;
-using System.Reflection;
 using TOT.Web.Middlewares;
 
 namespace TOT.Web
@@ -35,6 +25,7 @@ namespace TOT.Web
         {
             services.ConfigureDatabase(Configuration);
             services.RegisterRepositoriesAndServices();
+            services.AddExcelExtensions();
             services.RegisterEmailSender(Configuration);
             services.AddAutoMapper();
             services.AddTempDataProvider();

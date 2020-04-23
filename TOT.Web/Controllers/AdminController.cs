@@ -13,6 +13,14 @@ using System.Security.Claims;
 using TOT.Interfaces;
 using System.Collections.Generic;
 using TOT.Entities;
+using Microsoft.AspNetCore.Http;
+using TOT.DataImport.Interfaces;
+using System.IO;
+using System.Text.Json;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
+using System.Drawing;
+using System.Net.Http.Headers;
 
 namespace TOT.Web.Controllers
 {
@@ -22,11 +30,13 @@ namespace TOT.Web.Controllers
         private readonly IAdminService _adminService;
         private readonly IVacationService _vacationService;
         private readonly IMapper _mapper;
-        public AdminController(IAdminService adminService, IMapper mapper, IVacationService vacationService)
+        private readonly IExcelMehtods _excelMehtods;
+        public AdminController(IAdminService adminService, IMapper mapper, IVacationService vacationService, IExcelMehtods excelMehtods)
         {
             _adminService = adminService;
             _mapper = mapper;
             _vacationService = vacationService;
+            _excelMehtods = excelMehtods;
         }
 
         public async Task<IActionResult> VacationList(
@@ -293,7 +303,7 @@ namespace TOT.Web.Controllers
                 {
                     return BadRequest();
                 }
-                
+
             }
 
             return RedirectToAction("VacationList");
@@ -313,6 +323,62 @@ namespace TOT.Web.Controllers
             }
 
             return RedirectToAction("VacationList");
+        }
+
+        [HttpGet]
+        public IActionResult ImportExcelFile()
+        {
+            return View("ImportExcelFile", new ImportExcelFileDto());
+        }
+
+        [HttpPost]
+        public IActionResult ImportExcelFile(ImportExcelFileDto importExcelFileDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(importExcelFileDto);
+            }
+            List<string> errors = _excelMehtods.ImportExcelFile(importExcelFileDto);
+            return Json(errors);
+        }
+
+        [HttpPost]
+        public IActionResult GetExcelSheetNames()
+        {
+            IFormFile excelFile = HttpContext.Request.Form.Files[0];
+            if (excelFile == null)
+            {
+                return StatusCode(400, "The input value is invalid");
+            }
+            var options = new JsonSerializerOptions
+            {
+                Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic),
+                WriteIndented = true
+            };
+            return Json(_excelMehtods.GetSheetNames(excelFile));
+        }
+
+        [HttpPost]
+        public IActionResult GetSheetColors(string sheetName)
+        {
+            IFormFile excelFile = HttpContext.Request.Form.Files[0];
+            if (excelFile == null)
+            {
+                return StatusCode(400, "The input values are invalid");
+            }
+            return Json(_excelMehtods.GetSheetColors(excelFile, sheetName));
+        }
+
+        [HttpPost]
+        public IActionResult GetSheetAsHtml(string sheetName)
+        {
+            IFormFile excelFile = HttpContext.Request.Form.Files[0];
+            if (excelFile == null)
+            {
+                return StatusCode(400, "The input values are invalid");
+            }
+            string sheetImageUrl = _excelMehtods.GetSheetAsHtml(excelFile, sheetName);
+            return Content(sheetImageUrl, "text/html; charset=UTF-8");
         }
     }
 }

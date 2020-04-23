@@ -9,6 +9,8 @@ using TOT.Business.Services;
 using TOT.Data;
 using TOT.Data.Repositories;
 using TOT.Data.UnitOfWork;
+using TOT.DataImport;
+using TOT.DataImport.Interfaces;
 using TOT.Entities;
 using TOT.Interfaces;
 using TOT.Interfaces.Repositories;
@@ -27,14 +29,18 @@ namespace TOT.Utility.DI
         }
         public static void RegisterRepositoriesAndServices(this IServiceCollection services)
         {
-            services.AddTransient<IUserInfoService, UserInformationService>();
-            services.AddTransient<IVacationService, VacationService>();
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IManagerService, ManagerService>();
-            services.AddTransient<IVacationEmailSender, VacationEmailSender>();
-            services.AddTransient<IAdminService, AdminService>();
-
+            services.AddScoped<IUserInfoService, UserInformationService>();
+            services.AddScoped<IVacationService, VacationService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IManagerService, ManagerService>();
+            services.AddScoped<IVacationEmailSender, VacationEmailSender>();
+            services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<ISharedService, SharedService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+        }
+        public static void AddExcelExtensions(this IServiceCollection services)
+        {
+            services.AddScoped<IExcelMehtods, ExcelMethods>();
         }
         public static void RegisterEmailSender(this IServiceCollection services, IConfiguration configuration)
         {

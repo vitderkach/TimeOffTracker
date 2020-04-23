@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
     <ProjectReference Include="..\TOT.Business\TOT.Business.csproj" />
     <ProjectReference Include="..\TOT.Data\TOT.Data.csproj" />
+    <ProjectReference Include="..\TOT.ExternalImport\TOT.DataImport.csproj" />
     <ProjectReference Include="..\TOT.Interfaces\TOT.Interfaces.csproj" />
   </ItemGroup>
 
