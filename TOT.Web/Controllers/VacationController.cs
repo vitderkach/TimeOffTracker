@@ -178,9 +178,10 @@ namespace TOT.Web.Controllers
             return View(reportInfo);
         }
 
-        public IActionResult VacationReport(DateTime startDate, DateTime endDate, int teamId)
+        [HttpPost]
+        public IActionResult VacationReport(ReportDto report)
         {
-            var reportInfo = _vacationService.GetReportInfo(startDate, endDate, teamId);
+            var reportInfo = _vacationService.GetReportInfo(report.StartDate, report.EndDate, report.TeamId);
             return View("Report", reportInfo);
         }
 
@@ -188,7 +189,6 @@ namespace TOT.Web.Controllers
         public IActionResult VacationTimeline(int id)
         {
             var vacationTimelineDto = _vacationService.GetVacationTimeline(id);
-            var d = JsonSerializer.Serialize(vacationTimelineDto.TemporalVacationRequests);
             return View("VacationTimeline", vacationTimelineDto);
         }
 

@@ -8,10 +8,13 @@ namespace TOT.Dto
 {
     public class ReportDto
     {
+
         [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd-MM-yyyy}")]
         public DateTime StartDate { get; set; }
 
         [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd-MM-yyyy}")]
         public DateTime EndDate { get; set; }
 
         public ICollection<ReportUsedDaysDto> ReportUsedDays { get; set; }
