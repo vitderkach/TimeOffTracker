@@ -32,6 +32,10 @@ namespace TOT.Web
                 {
                     throw new Exception("An error occurred while executing the sql query", ex);
                 }
+                catch(ArgumentNullException ex)
+                {
+                    throw new Exception("An initialization of provider servises was failed", ex);
+                }
                 catch (Exception ex)
                 {
                     throw new DatabaseSeedingFailedException("An error occurred while seeding the database", ex);
