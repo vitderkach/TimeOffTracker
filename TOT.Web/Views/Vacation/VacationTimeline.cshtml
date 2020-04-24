@@ -80,122 +80,66 @@
         <h2>@Localizer["The history of vacation approving"]</h2>
     </div>
     <ul class="timeline">
-        <li class="@invert()">
-            <div class="timeline-badge primary"><div class="bi bi-clipboard"></div></div>
-            <div class="timeline-panel">
-                <div class="timeline-heading">
-                    <h4 class="timeline-title">@Localizer["Your application has been filed"]</h4>
-                    <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
-                </div>
-                <div class="timeline-body">
-                    <p>@Localizer["Your appication has been succesfully filed and transferred for admins for review. Wait the answer from admin"].</p>
-                    <div class="timeline-details">
-                        <button class="btn btn-info" onclick="showVacationRequestTable(@currentRequestIndex)">@Localizer["Show details"]</button>
-                    </div>
-                </div>
-            </div>
-        </li>
-
-        @while (true)
+        @if (request.ExcelFormat == true)
         {
-            if (!(request.StageOfApproving == 1 && request.Approval == null && nextRequestExists != false))
-            {
-                break;
-            }
-            getNextRequest();
-            if (request.StageOfApproving == 2 || request.Approval == false)
-            {
-                break;
-            }
             <li class="@invert()">
-                <div class="timeline-badge warning"><div class="bi bi-warning"></div></div>
+                <div class="timeline-badge success"><div class="bi bi-success"></div></div>
                 <div class="timeline-panel">
                     <div class="timeline-heading">
-                        <h4 class="timeline-title">@Localizer["Your details about application has been changed"]</h4>
-                        <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
+                        <h4 class="timeline-title">@Localizer["Your application has been approved"]</h4>
                     </div>
                     <div class="timeline-body">
-                        <p>@Localizer["Your details about application has been changed"].</p>
-                        <div class="timeline-details">
-                            <button class="btn btn-info" onclick="showComparisonTable(@currentRequestIndex-1,@currentRequestIndex)">@Localizer["Show details"]</button>
-                        </div>
+                        <p>@Localizer["The application has been approved by admin and all needed stages have passed."]</p>
                     </div>
                 </div>
             </li>
         }
-        @if (request.SelfCancelled == true)
+        else
         {
             <li class="@invert()">
-                <div class="timeline-badge danger"><div class="bi bi-cancelling"></div></div>
+                <div class="timeline-badge primary"><div class="bi bi-clipboard"></div></div>
                 <div class="timeline-panel">
                     <div class="timeline-heading">
-                        <h4 class="timeline-title">@Localizer["The request has been cancelled"]</h4>
+                        <h4 class="timeline-title">@Localizer["Your application has been filed"]</h4>
                         <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
                     </div>
                     <div class="timeline-body">
-                        <p>@Localizer["The appication has been cancelled by you"].</p>
-                    </div>
-                </div>
-            </li>
-        }
-        @if (request.StageOfApproving == 1 && request.Approval == false)
-        {
-            <li class="@invert()">
-                <div class="timeline-badge danger"><div class="bi bi-decliying"></div></div>
-                <div class="timeline-panel">
-                    <div class="timeline-heading">
-                        <h4 class="timeline-title">@Localizer["The request has been declined"]</h4>
-                        <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@response.DateResponse</small></p>
-                    </div>
-                    <div class="timeline-body">
-                        <p>@Localizer["Your request has been declined by admin during accepting"].</p>
+                        <p>@Localizer["Your appication has been succesfully filed and transferred for admins for review. Wait the answer from admin"].</p>
                         <div class="timeline-details">
-                            <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">@Localizer["Show details"]</button>
-                        </div>
-                    </div>
-                </div>
-            </li>
-        }
-        else if (request.StageOfApproving == 2)
-        {
-            <li class="@invert()">
-                <div class="timeline-badge primary"><div class="bi bi-next-stage"></div></div>
-                <div class="timeline-panel">
-                    <div class="timeline-heading">
-                        <h4 class="timeline-title">@Localizer["The application has been accepted"]</h4>
-                        <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
-                    </div>
-                    <div class="timeline-body">
-                        <p>@Localizer["The application has been accepted by admin for further review"].</p>
-                        <div class="timeline-details">
-                            <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">@Localizer["Show details"]</button>
+                            <button class="btn btn-info" onclick="showVacationRequestTable(@currentRequestIndex)">@Localizer["Show details"]</button>
                         </div>
                     </div>
                 </div>
             </li>
 
-            getNextResponse();
-            while (response.ForStageOfApproving == 2 && response.Approval == true && nextResponseExists != false)
+            @while (true)
             {
+                if (!(request.StageOfApproving == 1 && request.Approval == null && nextRequestExists != false))
+                {
+                    break;
+                }
+                getNextRequest();
+                if (request.StageOfApproving == 2 || request.Approval == false)
+                {
+                    break;
+                }
                 <li class="@invert()">
-                    <div class="timeline-badge info"><div class="bi bi-accepting"></div></div>
+                    <div class="timeline-badge warning"><div class="bi bi-warning"></div></div>
                     <div class="timeline-panel">
                         <div class="timeline-heading">
-                            <h4 class="timeline-title">@Localizer["Manager accepting"]</h4>
-                            <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@response.DateResponse</small></p>
+                            <h4 class="timeline-title">@Localizer["Your details about application has been changed"]</h4>
+                            <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
                         </div>
                         <div class="timeline-body">
-                            <p>@Localizer["The manager"] @response.Manager.FullName @Localizer["has approved your request"].</p>
+                            <p>@Localizer["Your details about application has been changed"].</p>
                             <div class="timeline-details">
-                                <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">@Localizer["Show details"]</button>
+                                <button class="btn btn-info" onclick="showComparisonTable(@currentRequestIndex-1,@currentRequestIndex)">@Localizer["Show details"]</button>
                             </div>
                         </div>
                     </div>
                 </li>
-                getNextResponse();
             }
-            getNextRequest();
-            if (request.SelfCancelled == true)
+            @if (request.SelfCancelled == true)
             {
                 <li class="@invert()">
                     <div class="timeline-badge danger"><div class="bi bi-cancelling"></div></div>
@@ -210,32 +154,17 @@
                     </div>
                 </li>
             }
-            else if (response.ForStageOfApproving == 2 && response.Approval == null)
-            {
-                <li class="@invert()">
-                    <div class="timeline-badge primary"><div class="bi bi-waiting"></div></div>
-                    <div class="timeline-panel">
-                        <div class="timeline-heading">
-                            <h4 class="timeline-title">@Localizer["Waiting for responses from others managers"]</h4>
-                            <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@DateTime.Now</small></p>
-                        </div>
-                        <div class="timeline-body">
-                            <p>@Localizer["Other managers have not answered yet. Please, wait"].</p>
-                        </div>
-                    </div>
-                </li>
-            }
-            else if (response.ForStageOfApproving == 2 && response.Approval == false)
+            @if (request.StageOfApproving == 1 && request.Approval == false)
             {
                 <li class="@invert()">
                     <div class="timeline-badge danger"><div class="bi bi-decliying"></div></div>
                     <div class="timeline-panel">
                         <div class="timeline-heading">
-                            <h4 class="timeline-title">@Localizer["Manager decliying"]</h4>
+                            <h4 class="timeline-title">@Localizer["The request has been declined"]</h4>
                             <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@response.DateResponse</small></p>
                         </div>
                         <div class="timeline-body">
-                            <p>@Localizer["The manager"] @response.Manager.FullName @Localizer["has declined your request. The application has been declined properly"].</p>
+                            <p>@Localizer["Your request has been declined by admin during accepting"].</p>
                             <div class="timeline-details">
                                 <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">@Localizer["Show details"]</button>
                             </div>
@@ -243,52 +172,45 @@
                     </div>
                 </li>
             }
-            else
+            else if (request.StageOfApproving == 2)
             {
                 <li class="@invert()">
                     <div class="timeline-badge primary"><div class="bi bi-next-stage"></div></div>
                     <div class="timeline-panel">
                         <div class="timeline-heading">
-                            <h4 class="timeline-title">@Localizer["The application has been accepted by managers"]</h4>
-                            <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@oldResponse.DateResponse</small></p>
+                            <h4 class="timeline-title">@Localizer["The application has been accepted"]</h4>
+                            <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
                         </div>
                         <div class="timeline-body">
-                            <p>@Localizer["The application has been accepted by all managers and has been tranferred for final admin review"].</p>
+                            <p>@Localizer["The application has been accepted by admin for further review"].</p>
                             <div class="timeline-details">
+                                <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">@Localizer["Show details"]</button>
                             </div>
                         </div>
                     </div>
                 </li>
-                //getNextResponse();
-                @while (true)
-                {
 
-                    if (!(request.StageOfApproving == 3 && request.Approval == null && nextRequestExists != false))
-                    {
-                        break;
-                    }
-                    getNextRequest();
-                    if (request.StageOfApproving == 4 || request.Approval == false)
-                    {
-                        break;
-                    }
+                getNextResponse();
+                while (response.ForStageOfApproving == 2 && response.Approval == true && nextResponseExists != false)
+                {
                     <li class="@invert()">
-                        <div class="timeline-badge warning"><div class="bi bi-warning"></div></div>
+                        <div class="timeline-badge info"><div class="bi bi-accepting"></div></div>
                         <div class="timeline-panel">
                             <div class="timeline-heading">
-                                <h4 class="timeline-title">@Localizer["Your details about application has been changed"].</h4>
-                                <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
+                                <h4 class="timeline-title">@Localizer["Manager accepting"]</h4>
+                                <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@response.DateResponse</small></p>
                             </div>
                             <div class="timeline-body">
-                                <p>@Localizer["Your details about application has been changed by admin"].</p>
+                                <p>@Localizer["The manager"] @response.Manager.FullName @Localizer["has approved your request"].</p>
                                 <div class="timeline-details">
-                                    <button class="btn btn-info" onclick="showComparisonTable(@currentRequestIndex-1,@currentRequestIndex)">@Localizer["Show details"]</button>
+                                    <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">@Localizer["Show details"]</button>
                                 </div>
                             </div>
                         </div>
                     </li>
-
+                    getNextResponse();
                 }
+                getNextRequest();
                 if (request.SelfCancelled == true)
                 {
                     <li class="@invert()">
@@ -304,17 +226,32 @@
                         </div>
                     </li>
                 }
-                else if (response.Approval == false && response.ForStageOfApproving == 3)
+                else if (response.ForStageOfApproving == 2 && response.Approval == null)
+                {
+                    <li class="@invert()">
+                        <div class="timeline-badge primary"><div class="bi bi-waiting"></div></div>
+                        <div class="timeline-panel">
+                            <div class="timeline-heading">
+                                <h4 class="timeline-title">@Localizer["Waiting for responses from others managers"]</h4>
+                                <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@DateTime.Now</small></p>
+                            </div>
+                            <div class="timeline-body">
+                                <p>@Localizer["Other managers have not answered yet. Please, wait"].</p>
+                            </div>
+                        </div>
+                    </li>
+                }
+                else if (response.ForStageOfApproving == 2 && response.Approval == false)
                 {
                     <li class="@invert()">
                         <div class="timeline-badge danger"><div class="bi bi-decliying"></div></div>
                         <div class="timeline-panel">
                             <div class="timeline-heading">
-                                <h4 class="timeline-title">@Localizer["Admin declying"]</h4>
+                                <h4 class="timeline-title">@Localizer["Manager decliying"]</h4>
                                 <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@response.DateResponse</small></p>
                             </div>
                             <div class="timeline-body">
-                                <p>@Localizer["The manager"] @response.Manager.FullName @Localizer["has declined your request with answer"]: "@response.Notes". @Localizer["The application has been declined properly"].</p>
+                                <p>@Localizer["The manager"] @response.Manager.FullName @Localizer["has declined your request. The application has been declined properly"].</p>
                                 <div class="timeline-details">
                                     <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">@Localizer["Show details"]</button>
                                 </div>
@@ -322,23 +259,103 @@
                         </div>
                     </li>
                 }
-                else if (request.Approval == true)
+                else
                 {
                     <li class="@invert()">
-                        <div class="timeline-badge success"><div class="bi bi-success"></div></div>
+                        <div class="timeline-badge primary"><div class="bi bi-next-stage"></div></div>
                         <div class="timeline-panel">
                             <div class="timeline-heading">
-                                <h4 class="timeline-title">@Localizer["Your application has been approved"]</h4>
-                                <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
+                                <h4 class="timeline-title">@Localizer["The application has been accepted by managers"]</h4>
+                                <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@oldResponse.DateResponse</small></p>
                             </div>
                             <div class="timeline-body">
-                                <p>@Localizer["The application has been approved by admin and all needed stages have passed."]</p>
-                            </div>
-                            <div class="timeline-details">
-                                <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">@Localizer["Show details"]</button>
+                                <p>@Localizer["The application has been accepted by all managers and has been tranferred for final admin review"].</p>
+                                <div class="timeline-details">
+                                </div>
                             </div>
                         </div>
                     </li>
+                    //getNextResponse();
+                    @while (true)
+                    {
+
+                        if (!(request.StageOfApproving == 3 && request.Approval == null && nextRequestExists != false))
+                        {
+                            break;
+                        }
+                        getNextRequest();
+                        if (request.StageOfApproving == 4 || request.Approval == false)
+                        {
+                            break;
+                        }
+                        <li class="@invert()">
+                            <div class="timeline-badge warning"><div class="bi bi-warning"></div></div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4 class="timeline-title">@Localizer["Your details about application has been changed"].</h4>
+                                    <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
+                                </div>
+                                <div class="timeline-body">
+                                    <p>@Localizer["Your details about application has been changed by admin"].</p>
+                                    <div class="timeline-details">
+                                        <button class="btn btn-info" onclick="showComparisonTable(@currentRequestIndex-1,@currentRequestIndex)">@Localizer["Show details"]</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                    }
+                    if (request.SelfCancelled == true)
+                    {
+                        <li class="@invert()">
+                            <div class="timeline-badge danger"><div class="bi bi-cancelling"></div></div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4 class="timeline-title">@Localizer["The request has been cancelled"]</h4>
+                                    <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
+                                </div>
+                                <div class="timeline-body">
+                                    <p>@Localizer["The appication has been cancelled by you"].</p>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                    else if (response.Approval == false && response.ForStageOfApproving == 3)
+                    {
+                        <li class="@invert()">
+                            <div class="timeline-badge danger"><div class="bi bi-decliying"></div></div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4 class="timeline-title">@Localizer["Admin declying"]</h4>
+                                    <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@response.DateResponse</small></p>
+                                </div>
+                                <div class="timeline-body">
+                                    <p>@Localizer["The manager"] @response.Manager.FullName @Localizer["has declined your request with answer"]: "@response.Notes". @Localizer["The application has been declined properly"].</p>
+                                    <div class="timeline-details">
+                                        <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">@Localizer["Show details"]</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                    else if (request.Approval == true)
+                    {
+                        <li class="@invert()">
+                            <div class="timeline-badge success"><div class="bi bi-success"></div></div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4 class="timeline-title">@Localizer["Your application has been approved"]</h4>
+                                    <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i>@request.ActionTime</small></p>
+                                </div>
+                                <div class="timeline-body">
+                                    <p>@Localizer["The application has been approved by admin and all needed stages have passed."]</p>
+                                </div>
+                                <div class="timeline-details">
+                                    <button class="btn btn-info" onclick="showManagerResponseTable(@currentResponseIndex)">@Localizer["Show details"]</button>
+                                </div>
+                            </div>
+                        </li>
+                    }
                 }
             }
         }

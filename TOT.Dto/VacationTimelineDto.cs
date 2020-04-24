@@ -37,6 +37,7 @@ namespace TOT.Dto
         public string Notes { get; set; }
 
         public bool? Approval { get; set; }
+        public bool? ExcelFormat { get; set; }
 
         [JsonIgnore]
         public int StageOfApproving { get; set; }
