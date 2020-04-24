@@ -5,12 +5,8 @@
 }
 
 #vacation-details {
-    max-height: calc(100% - 100px);
+    max-height: 60vh;
     overflow-y: auto;
-}
-
-#vacation-container {
-    height: 550px;
 }
 
 .scrollbar::-webkit-scrollbar-track {
