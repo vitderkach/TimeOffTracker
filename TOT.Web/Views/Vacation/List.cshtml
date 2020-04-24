@@ -75,11 +75,11 @@
                         @{
                             if (item.SelfCancelled != true && item.StageOfApproving == 1 && item.Approval == null)
                             {
-                                <a class="btn btn-outline-dark form-control col-5 m-1" asp-action="Edit" asp-route-id="@item.VacationRequestId">Edit</a>
+                                <a class="btn btn-outline-dark form-control col-5 m-1" asp-action="Edit" asp-route-id="@item.VacationRequestId">@Localizer["Edit"]</a>
                             }
                             else
                             {
-                                <a class="btn btn-outline-dark form-control col-5 m-1 disabled">Edit</a>
+                                <a class="btn btn-outline-dark form-control col-5 m-1 disabled">@Localizer["Edit"]</a>
                             }
                             if (item.Approval == null && item.SelfCancelled != true)
                             {
@@ -102,9 +102,9 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     <p>
-                                                        Do you really want to delete the vacation request for the following dates? <br />
-                                                        <span><b>From:</b></span> @item.StartDate.ToShortDateString() &nbsp; <span><b>To:</b></span> @item.EndDate.ToShortDateString() <br />
-                                                        <br />This process cannot be undone.
+                                                        @Localizer["Do you really want to delete the vacation request for the following dates?"] <br />
+                                                        <span><b>@Localizer["From"]:</b></span> @item.StartDate.ToShortDateString() &nbsp; <span><b>@Localizer["To"]:</b></span> @item.EndDate.ToShortDateString() <br />
+                                                        <br />@Localizer["This process cannot be undone"].
                                                     </p>
                                                 </div>
                                                 <div class="modal-footer">

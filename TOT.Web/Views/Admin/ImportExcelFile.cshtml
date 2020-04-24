@@ -6,7 +6,7 @@
 
 }
 
-<h1>ImportExcelFile</h1>
+<h1>@Localizer["Import excel file"]</h1>
 
 
 <div class="row justify-content-center mt-5 col-12">
@@ -22,17 +22,17 @@
             <span asp-validation-for="ExcelFile" class="text-danger"></span>
         </div>
         <div class="form-group row justify-content-between mr-0" id="selectSheetDiv" hidden>
-            <label class="col col-3">Select sheet</label>
+            <label class="col col-3">@Localizer["Select sheet"]</label>
             <select class="selectpicker col col-6" data-live-search="true" id="sheetNameSelect" asp-for="SheetName"></select>
-            <button class="col col-2 btn btn-success" onclick="showSheet()" type="button">Show</button>
+            <button class="col col-2 btn btn-success" onclick="showSheet()" type="button">@Localizer["Show"]</button>
             <span asp-validation-for="SheetName" class="text-danger"></span>
         </div>
         <div class="flex-column justify-content-center align-items-center" style="width:100%; height:600px; display:flex" id="excelSpinner" hidden>
             <div class="spinner-border" role="status">
-                <span class="sr-only">Loading...</span>
+                <span class="sr-only">@Localizer["Loading"]...</span>
             </div>
             <div>
-                <h3>Please, wait...</h3>
+                <h3>@Localizer["Please, wait"]...</h3>
             </div>
 
         </div>
@@ -79,7 +79,7 @@
 
             <div class="form-check row ml-0">
                 <input type="checkbox" class="form-check-input" id="weekendColorCheck" onchange="ToggleDiv(this, 'weekendColorDiv')">
-                <label class="form-check-label">Select the color for weekends</label>
+                <label class="form-check-label">@Localizer["Select the weekends` color"]</label>
             </div>
 
             <div class="form-group row" id="weekendColorDiv" hidden>
@@ -90,7 +90,7 @@
 
             <div class="form-check row ml-0">
                 <input type="checkbox" class="form-check-input" id="teamAndLocationCheck" onchange="ToggleDiv(this, 'teamAndLocationDiv')">
-                <label class="form-check-label">Include team and location columns</label>
+                <label class="form-check-label">@Localizer["Include team and location columns"]</label>
             </div>
 
             <div id="teamAndLocationDiv" hidden>
@@ -108,7 +108,7 @@
 
             <div class="form-check row ml-0">
                 <input type="checkbox" class="form-check-input" id="paidAndGiftDaysCheck" onchange="ToggleDiv(this, 'paidAndGiftDaysDiv')">
-                <label class="form-check-label" for="exampleCheck1">Include paid and gift days columns</label>
+                <label class="form-check-label" for="exampleCheck1">@Localizer["Include paid and gift days columns"]</label>
             </div>
 
             <div id="paidAndGiftDaysDiv" hidden>
@@ -131,7 +131,7 @@
                 </div>
             </div>
             <div class="form-group row col col-8">
-                <input class="btn btn-success" type="submit" value="Import sheet" />
+                <input class="btn btn-success" type="submit" value=@Localizer["Import sheet"] />
             </div>
         </div>
     </form>

@@ -1,31 +1,32 @@
-﻿@model TOT.Dto.ReportDto
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
+@model TOT.Dto.ReportDto
 @{
     ViewData["Title"] = "Report";
     var teams = new SelectList(Model.AllTeams, "Id", "Name", selectedValue: Model.TeamId);
 }
 
-<h3>Report of used vacation days</h3>
+<h3>@Localizer["Report of used vacation days"]</h3>
 <hr />
 <div class="container">
     <form method="post" asp-controller="Admin" asp-action="VacationReport">
         <div class="row">
             <div class="row col col-7 form-group justify-content-between align-items-center">
-                <label class="control-label col col-1">Dates:</label>
+                <label class="control-label col col-1">@Localizer["Dates"]:</label>
                 <div class="row input-group input-daterange justify-content-between col col-11" id="datepicker">
-                    <div class="input-group-addon col col-auto">from</div>
                     <input asp-for="StartDate" type="text" class="form-control col col-5">
-                    <div class="input-group-addon col col-auto">to</div>
+                    <div class="input-group-addon col col-auto">@Localizer["To"]</div>
                     <input asp-for="EndDate" type="text" class="form-control col col-5">
                 </div>
             </div>
             <div class="row col col-5 justify-content-between form-group">
                 <div class="row col col-9 justify-content-around align-items-center">
-                    <label class="control-label col col-2">Team:</label>
+                    <label class="control-label col col-2">@Localizer["Team"]:</label>
                     <select class="form-control selectpicker col col-7" asp-for="TeamId" asp-items=@teams>
                         <option value="0">All</option>
                     </select>
                 </div>
-                <button class="btn btn-sm btn-outline-dark col col-3" type="submit">Show</button>
+                <button class="btn btn-sm btn-outline-dark col col-3" type="submit">@Localizer["Show"]</button>
             </div>
         </div>
     </form>
@@ -36,19 +37,19 @@
         <thead>
             <tr>
                 <th>
-                    Name
+                    @Localizer["Name"]
                 </th>
                 <th>
-                    Paid Leave
+                    @Localizer["Paid Leave"]
                 </th>
                 <th>
-                    Sick Leave
+                    @Localizer["Sick Leave"]
                 </th>
                 <th>
-                    Study Leave
+                    @Localizer["Study Leave"]
                 </th>
                 <th>
-                    Admin Leave
+                    @Localizer["Administrative Leave"]
                 </th>
             </tr>
         </thead>

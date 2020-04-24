@@ -25,17 +25,17 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Confirm changes</h5>
+                <h5 class="modal-title">@Localizer["Confirm changes"]</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p>Are you sure? The changes cannot to rollback after.</p>
+                <p>@Localizer["Are you sure?"] @Localizer["This process cannot be undone"].</p>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-info" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-success" onclick="send()">Save changes</button>
+                <button class="btn btn-info" data-dismiss="modal">@Localizer["Cancel"]</button>
+                <button type="button" class="btn btn-success" onclick="send()">@Localizer["Save changes"]</button>
             </div>
         </div>
     </div>

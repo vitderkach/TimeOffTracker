@@ -23,8 +23,10 @@ namespace TOT.Dto
 
         public string Email { get; set; }
 
+        [Display(Name ="Location")]
         public Location Location { get; set; }
 
+        [Display(Name = "Team")]
         public Team Team { get; set; }
 
         [Display(Name = "Full Name")]
