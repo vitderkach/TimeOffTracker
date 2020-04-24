@@ -15,7 +15,7 @@ using System;
 
 namespace TOT.Web.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Manager,Employee")]
     public class VacationController : Controller
     {
         private readonly IMapper _mapper;
@@ -168,21 +168,6 @@ namespace TOT.Web.Controllers
                 return BadRequest();
             }
 
-        }
-
-        public IActionResult Report()
-        {
-            var endDate = DateTime.Today;
-            var startDate = endDate.AddMonths(-1);
-            var reportInfo = _vacationService.GetReportInfo(startDate, endDate, 0);
-            return View(reportInfo);
-        }
-
-        [HttpPost]
-        public IActionResult VacationReport(ReportDto report)
-        {
-            var reportInfo = _vacationService.GetReportInfo(report.StartDate, report.EndDate, report.TeamId);
-            return View("Report", reportInfo);
         }
 
         [HttpGet]

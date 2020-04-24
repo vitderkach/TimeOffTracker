@@ -3,21 +3,24 @@
 @using Microsoft.AspNetCore.Mvc.Localization
 
 @inject IHtmlLocalizer<TOT.Resources.Resources> Localizer
-
 @{
-    var permission = User.IsInRole("Manager");
+    var permission = User.IsInRole("Manager") || User.IsInRole("Employee");
 }
 
 @inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 @if (SignInManager.IsSignedIn(User) && permission)
 {
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            @Localizer["Manager"]
+            @Localizer["Vacation"]
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" asp-controller="Manager" asp-action="VacationList">@Localizer["Vacation requests"]</a>
+            <a class="dropdown-item" asp-area="" asp-controller="Vacation" asp-action="Apply">
+                @Localizer["Apply"]
+            </a>
+            <a class="dropdown-item" asp-area="" asp-controller="Vacation" asp-action="List">@Localizer["My Requests"]</a>
         </div>
     </li>
 }

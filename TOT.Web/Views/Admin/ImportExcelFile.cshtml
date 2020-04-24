@@ -36,7 +36,7 @@
             </div>
 
         </div>
-        <iframe id="excelFrame" src="about:blank" style="width:100%; height:600px" hidden scrolling="yes"></iframe>
+        <iframe id="excelFrame" src="about:blank" hidden scrolling="yes"></iframe>
 
         <div id="excelColumnsData" hidden>
             <div class="form-group row">
@@ -159,6 +159,15 @@
 @section css{
     <link rel="stylesheet" href="~/lib/bootstrap-select/css/bootstrap-select.min.css" />
     <link rel="stylesheet" href="~/css/excel/import_excel_file.css" />
+<style>
+    #excelFrame {
+        position: relative;
+        width: 98vw;
+        height: 75vh;
+        margin-left: -50vw;
+        left: 55%;
+    }
+</style>
 }
 
 @section Scripts{
@@ -232,6 +241,7 @@
                     excelFrame.contentWindow.document.close();
                     getSheetColors();
                     setMonthDaysRange();
+                    deleteEmptyRowsInFrame();
                     excelFrame.hidden = false;
                     excelColumnsData.hidden = false;
                 }
@@ -308,7 +318,6 @@
             let selectedMonth = sheetNameArray[0];
             let selectedYear = sheetNameArray[1];
             let monthIndex = monthNames.findIndex(m => m == selectedMonth);
-            console.log(monthIndex);
             let maxDaysInMonth = new Date(selectedYear, monthIndex + 1, 0).getDate();
             inputsArray.forEach(i => { i.max = maxDaysInMonth; i.value = 1; });
         }
@@ -320,6 +329,19 @@
             let selectedColor = weekendColorSelect.options[weekendColorSelect.selectedIndex].value;
             colorButton.style.color = selectedColor;
             colorButton.style.backgroundColor = selectedColor;
+        }
+
+        function deleteEmptyRowsInFrame() {
+            let frameDocument = document.getElementById("excelFrame").contentWindow.document;
+            let frameTableBody = frameDocument.querySelector("tbody");
+            Array.from(frameTableBody.children).forEach(function (tableRow) {
+                if (Array.from(tableRow.children).every(tableData => {
+                    return (tableData.children[0].innerHTML.trim() == "") && tableData.style.backgroundColor == "" &&
+                        (($(tableData).outerWidth() - $(tableData).innerWidth() == 0) || ($(tableData).outerHeight() - $(tableData).innerHeight() == 0))
+                })) {
+                    tableRow.remove();
+                }
+            }); 
         }
 
         document.querySelector('#excelForm').addEventListener('submit', function (e) {
@@ -347,8 +369,6 @@
                     excelErrors.innerHTML = "";
                 },
                 success: function (answersArray) {
-                    console.log(typeof (answersArray));
-                    console.log(answersArray);
                     if (typeof (answersArray) == "object") {
                         if (answersArray[0] == "InputException") {
                             let excelErrors = document.getElementById("excelErrors");
