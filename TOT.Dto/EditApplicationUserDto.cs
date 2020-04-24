@@ -35,11 +35,11 @@ namespace TOT.Dto
 
         [Required]
         [Display(Name = "Location")]
-        public int LocationId { get; set; }
+        public int? LocationId { get; set; }
 
         [Required]
         [Display(Name = "Team")]
-        public int TeamId { get; set; }
+        public int? TeamId { get; set; }
 
         public List<IdentityRole<int>> AllRoles { get; set; }
 

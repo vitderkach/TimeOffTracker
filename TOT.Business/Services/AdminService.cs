@@ -165,9 +165,9 @@ namespace TOT.Business.Services
                     UserName = user.UserName,
                     RoleId = GetRoleIdByUserId(userId),
                     AllRoles = GetApplicationRoles(),
-                    TeamId = userInfo.Team.Id,
+                    TeamId = userInfo.Team?.Id,
                     AllTeams = _unitOfWork.TeamRepository.GetAll(),
-                    LocationId = userInfo.Location.Id,
+                    LocationId = userInfo.Location?.Id,
                     AllLocations = _unitOfWork.LocationRepository.GetAll()
                 };
             }
