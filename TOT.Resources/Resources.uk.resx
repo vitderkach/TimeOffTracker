@@ -249,8 +249,26 @@
   <data name="Employee" xml:space="preserve">
     <value>Робітник</value>
   </data>
+  <data name="Employee name index" xml:space="preserve">
+    <value>Індекс колонки імені робітника</value>
+  </data>
+  <data name="Employment date index" xml:space="preserve">
+    <value>Індекс колонки дати прийняття на роботу</value>
+  </data>
   <data name="End date must be later than start date" xml:space="preserve">
     <value>Кінцева дата має бути пізніше початкової дати</value>
+  </data>
+  <data name="End day for calculation" xml:space="preserve">
+    <value>Кінцевий день для підрахунку</value>
+  </data>
+  <data name="End employee index" xml:space="preserve">
+    <value>Кінцевий індекс робітника</value>
+  </data>
+  <data name="End paid days index" xml:space="preserve">
+    <value>Кінцевий індекс колонок оплачуваних днів</value>
+  </data>
+  <data name="Excel file" xml:space="preserve">
+    <value>Файл Excel</value>
   </data>
   <data name="Find by name" xml:space="preserve">
     <value>Зайти за ім'ям</value>
@@ -263,6 +281,9 @@
   </data>
   <data name="Full Name" xml:space="preserve">
     <value>Повне ім'я</value>
+  </data>
+  <data name="Gift days index" xml:space="preserve">
+    <value>Індекс колонки бонусних днів</value>
   </data>
   <data name="Gift Leave" xml:space="preserve">
     <value>Бонусна</value>
@@ -282,8 +303,20 @@
   <data name="If you didn't find the message, try checking &quot;Spam&quot; or contact administrator for help." xml:space="preserve">
     <value>Якщо Ви не знайшли лист, перевірте папку "Спам" або зверніться до адміністратора за допомогою.</value>
   </data>
+  <data name="Import excel file" xml:space="preserve">
+    <value>Імпорт файлу Excel</value>
+  </data>
+  <data name="Import sheet" xml:space="preserve">
+    <value>Імпортувати сторінку</value>
+  </data>
   <data name="In Proccess" xml:space="preserve">
     <value>В процесі</value>
+  </data>
+  <data name="Include paid and gift days columns" xml:space="preserve">
+    <value>Включити колонки оплачуваних і бонусних днів</value>
+  </data>
+  <data name="Include team and location columns" xml:space="preserve">
+    <value>Включити колонки команди і місцезнаходження</value>
   </data>
   <data name="Invalid login attempt." xml:space="preserve">
     <value>Недійсна спроба входу.</value>
@@ -296,6 +329,15 @@
   </data>
   <data name="List of users" xml:space="preserve">
     <value>Список користувачів</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Завантаження</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>Місцеположення</value>
+  </data>
+  <data name="Location index" xml:space="preserve">
+    <value>Індекс колонки місцеположення</value>
   </data>
   <data name="Log in" xml:space="preserve">
     <value>Вхід</value>
@@ -381,6 +423,9 @@
   <data name="Please check your email to reset your password." xml:space="preserve">
     <value>Будь ласка, перевірте свій E-mail, щоб зкинути свій пароль.</value>
   </data>
+  <data name="Please, wait" xml:space="preserve">
+    <value>Будь ласка, почекайте</value>
+  </data>
   <data name="Previous" xml:space="preserve">
     <value>Попередня</value>
   </data>
@@ -441,6 +486,12 @@
   <data name="Search" xml:space="preserve">
     <value>Пошук</value>
   </data>
+  <data name="Select sheet" xml:space="preserve">
+    <value>Оберіть сторінку</value>
+  </data>
+  <data name="Select the weekends` color" xml:space="preserve">
+    <value>Обрати колір вихидних днів</value>
+  </data>
   <data name="Self-cancelled" xml:space="preserve">
     <value>Відмінено користувачем</value>
   </data>
@@ -450,6 +501,9 @@
   <data name="Send verification email" xml:space="preserve">
     <value>Надіслати електронний лист для підтвердження</value>
   </data>
+  <data name="Sheet name" xml:space="preserve">
+    <value>Назва сторінки</value>
+  </data>
   <data name="Show" xml:space="preserve">
     <value>Показати</value>
   </data>
@@ -458,6 +512,18 @@
   </data>
   <data name="Sick Leave" xml:space="preserve">
     <value>Лікарняна</value>
+  </data>
+  <data name="Stage" xml:space="preserve">
+    <value>Стадія</value>
+  </data>
+  <data name="Start day for calculation" xml:space="preserve">
+    <value>Початковий день для підрахунку</value>
+  </data>
+  <data name="Start employee index" xml:space="preserve">
+    <value>Початковий індекс робітника</value>
+  </data>
+  <data name="Start paid days index" xml:space="preserve">
+    <value>Початковий індекс колонок оплачуваних днів</value>
   </data>
   <data name="Status" xml:space="preserve">
     <value>Статус</value>
@@ -473,6 +539,9 @@
   </data>
   <data name="Team" xml:space="preserve">
     <value>Команда</value>
+  </data>
+  <data name="Team index" xml:space="preserve">
+    <value>Індекс колонки команди</value>
   </data>
   <data name="Thank you for confirming your email." xml:space="preserve">
     <value>Дякуюємо, що підтвердили свій E-mail.</value>
@@ -602,6 +671,9 @@
   </data>
   <data name="Waiting for responses from others managers" xml:space="preserve">
     <value>Очікує на відповіді від інших менеджерів</value>
+  </data>
+  <data name="Weekend color" xml:space="preserve">
+    <value>Колір вихідних днів</value>
   </data>
   <data name="You do not have access to this resource." xml:space="preserve">
     <value>У Вас нема доступу до цього ресурсу.</value>
