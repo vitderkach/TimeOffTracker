@@ -117,7 +117,21 @@ namespace TOT.DataImport.Excel
             return cellType;
         }
 
-        private List<string> ParseSheet(ISheet sheet)
+        private CellType GetCellType(ISheet sheet, ICell cell, IFormulaEvaluator evaluator)
+        {
+            CellType cellType = CellType.Unknown;
+            if (cell.CellType == CellType.Formula)
+            {
+                cellType = evaluator.EvaluateFormulaCell(cell);
+            }
+            else
+            {
+                cellType = cell.CellType;
+            }
+            return cellType;
+        }
+
+        private List<string> ParseSheet(ISheet sheet, IFormulaEvaluator evaluator)
         {
             List<string> errors = new List<string>();
             ICell nameCell = GetCell(sheet, _excelConfiguration.NameColumnStartCell);
@@ -144,12 +158,13 @@ namespace TOT.DataImport.Excel
 
             for (int i = _excelConfiguration.StartColumnIndex; i <= _excelConfiguration.EndColumnIndex; i++)
             {
-                string employmentDateString = employmentDateCell.CellType == CellType.String
+                var employmentDateType = GetCellType(sheet, employmentDateCell, evaluator);
+                string employmentDateString = (employmentDateType == CellType.String)
                     ? employmentDateCell.StringCellValue
                     : employmentDateCell.DateCellValue.ToString();
                 DateTime? employmentDate = null;
                 bool? isFired = null;
-                if (employmentDateCell.CellType == CellType.String)
+                if (employmentDateType == CellType.String)
                 {
                     if (employmentDateCell.StringCellValue == "исп.")
                     {
@@ -252,9 +267,13 @@ namespace TOT.DataImport.Excel
             {
                 errors.Add("Column name input is invalid.");
             }
-            if (GetCellType(sheet, _excelConfiguration.EmploymentDateColumnStartCell, evaluator) != CellType.Numeric)
+            var employmentDateType = GetCellType(sheet, _excelConfiguration.EmploymentDateColumnStartCell, evaluator);
+            if (employmentDateType != CellType.Numeric)
             {
-                errors.Add("Column date employment input is invalid.");
+                if (employmentDateType != CellType.String)
+                {
+                    errors.Add("Column date employment input is invalid.");
+                }          
             }
             if (_excelConfiguration.OverwriteGiftAndPaidVacations == true)
             {
@@ -287,7 +306,7 @@ namespace TOT.DataImport.Excel
                 errors.Insert(0, "InputException");
                 return errors;
             }
-            errors = ParseSheet(sheet);
+            errors = ParseSheet(sheet, evaluator);
             errors.Insert(0, (errors.Count == 0) ? "The import was executed successfully." : "The import was executed, but with some errors.");
             errors.Insert(0, "EmployeeNotFoundException");
             return errors;
