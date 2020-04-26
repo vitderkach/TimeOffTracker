@@ -1,4 +1,5 @@
-﻿using NPOI.SS.Formula;
+﻿using NPOI.HSSF.UserModel;
+using NPOI.SS.Formula;
 using NPOI.SS.UserModel;
 using NPOI.SS.Util;
 using NPOI.XSSF.UserModel;
@@ -99,6 +100,21 @@ namespace TOT.DataImport.Excel
                     vacationDaysCell = GetRightCell(sheet, vacationDaysCell);
                 }
             }
+        }
+
+        private CellType GetCellType(ISheet sheet, string excelAdrress, IFormulaEvaluator evaluator)
+        {
+            CellType cellType = CellType.Unknown;
+            ICell cell = GetCell(sheet, excelAdrress);
+            if (cell.CellType == CellType.Formula)
+            {
+                cellType = evaluator.EvaluateFormulaCell(cell);
+            }
+            else
+            {
+                cellType = cell.CellType;
+            }
+            return cellType;
         }
 
         private List<string> ParseSheet(ISheet sheet)
@@ -213,31 +229,42 @@ namespace TOT.DataImport.Excel
 
         public List<string> ExexuteImport()
         {
-            IWorkbook workbook = new XSSFWorkbook(input);
+            IWorkbook workbook = null;
+            IFormulaEvaluator evaluator = null;
+            if (_excelConfiguration.ExcelExtension == ".xlsx")
+            {
+                workbook = new XSSFWorkbook(input);
+                evaluator = new XSSFFormulaEvaluator(workbook);
+            }
+            else if (_excelConfiguration.ExcelExtension == ".xls")
+            {
+                workbook = new HSSFWorkbook(input);
+                evaluator = new HSSFFormulaEvaluator(workbook);
+            }
+            else
+            {
+                throw new ArgumentException("Incompatible file extension");
+            }
             string month = new DateTime(_excelConfiguration.Year, _excelConfiguration.Month, 1).ToString("MMMM", CultureInfo.CreateSpecificCulture("ru"));
             ISheet sheet = workbook.GetSheet($"{month} {_excelConfiguration.Year}");
             List<string> errors = new List<string>();
-            if (GetCell(sheet, _excelConfiguration.NameColumnStartCell).CellType != CellType.String)
+            if (GetCellType(sheet, _excelConfiguration.NameColumnStartCell, evaluator) != CellType.String)
             {
                 errors.Add("Column name input is invalid.");
             }
-            if (GetCell(sheet, _excelConfiguration.EmploymentDateColumnStartCell).CellType != CellType.Numeric)
+            if (GetCellType(sheet, _excelConfiguration.EmploymentDateColumnStartCell, evaluator) != CellType.Numeric)
             {
                 errors.Add("Column date employment input is invalid.");
             }
             if (_excelConfiguration.OverwriteGiftAndPaidVacations == true)
             {
-                var giftDaysCellType = GetCell(sheet, _excelConfiguration.GiftDaysColumnStartCell).CellType;
-                if (giftDaysCellType != CellType.Numeric)
+                if (GetCellType(sheet, _excelConfiguration.GiftDaysColumnStartCell, evaluator) != CellType.Numeric)
                 {
-                    if (giftDaysCellType != CellType.Formula)
-                    {
-                        errors.Add("Column gift days input is invalid.");
-                    }                  
+                    errors.Add("Column gift days input is invalid.");
                 }
                 for (int i = 0; i < _excelConfiguration.PaidDaysDateColumnCells.Count; i++)
                 {
-                    if (GetCell(sheet, _excelConfiguration.PaidDaysDateColumnCells[i]).CellType != CellType.Numeric)
+                    if (GetCellType(sheet, _excelConfiguration.PaidDaysDateColumnCells[i], evaluator) != CellType.Numeric)
                     {
                         errors.Add("Columns paid days inputs are invalid.");
                         break;
@@ -246,11 +273,11 @@ namespace TOT.DataImport.Excel
             }
             if (_excelConfiguration.OverwriteTeamAndLocation == true)
             {
-                if (GetCell(sheet, _excelConfiguration.TeamColumnStartCell).CellType != CellType.String)
+                if (GetCellType(sheet, _excelConfiguration.TeamColumnStartCell, evaluator) != CellType.String)
                 {
                     errors.Add("Column team input is invalid.");
                 }
-                if (GetCell(sheet, _excelConfiguration.LocationColumnStartCell).CellType != CellType.String)
+                if (GetCellType(sheet, _excelConfiguration.LocationColumnStartCell, evaluator) != CellType.String)
                 {
                     errors.Add("Column location input is invalid.");
                 }

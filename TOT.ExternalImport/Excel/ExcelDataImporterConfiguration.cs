@@ -22,6 +22,7 @@ namespace TOT.DataImport.Excel
         public string VacationDaysColumnsStartCell { get; set; }
         public string TeamColumnStartCell { get; set; }
         public string LocationColumnStartCell { get; set; }
+        public string ExcelExtension { get; set; }
         public List<string> PaidDaysDateColumnCells { get; set; }
     }
 }

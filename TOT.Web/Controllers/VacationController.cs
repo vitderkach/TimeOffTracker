@@ -15,7 +15,7 @@ using System;
 
 namespace TOT.Web.Controllers
 {
-    [Authorize(Roles = "Manager,Employee")]
+    [Authorize]
     public class VacationController : Controller
     {
         private readonly IMapper _mapper;
@@ -33,6 +33,7 @@ namespace TOT.Web.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Manager,Employee")]
         public IActionResult Delete(int vacationRequestId)
         {
             if (_vacationService.CancelVacation(vacationRequestId))
@@ -42,6 +43,7 @@ namespace TOT.Web.Controllers
             return BadRequest();
         }
 
+        [Authorize(Roles = "Manager,Employee")]
         [HttpGet]
         public ActionResult Apply()
         {
@@ -52,6 +54,8 @@ namespace TOT.Web.Controllers
             ViewBag.AvailableManagers = _vacationService.GetManagersForVacationApply(userId);
             return View(apply);
         }
+
+        [Authorize(Roles = "Manager,Employee")]
         [HttpPost]
         public ActionResult Apply(ApplicationDto applyForRequestGetDto)
         {
@@ -75,6 +79,8 @@ namespace TOT.Web.Controllers
                 return View(applyForRequestGetDto);
             }
         }
+
+        [Authorize(Roles = "Manager,Employee")]
         [HttpGet]
         public async Task<IActionResult> List(
             string sortOrder,
@@ -135,6 +141,8 @@ namespace TOT.Web.Controllers
             var vacationDays = _vacationService.GetVacationDays(id);
             return PartialView("_VacationDaysPartial", vacationDays);
         }
+
+        [Authorize(Roles = "Manager,Employee")]
         [HttpGet]
         public IActionResult Edit(int id)
         {
@@ -143,6 +151,8 @@ namespace TOT.Web.Controllers
             ViewBag.AvailableManagers = _vacationService.GetManagersForVacationApply(vacationDto.User.Id);
             return View(vacationDto);
         }
+
+        [Authorize(Roles = "Manager,Employee")]
         [HttpPost]
         public IActionResult Edit(ApplicationDto applicationDto)
         {
@@ -169,7 +179,7 @@ namespace TOT.Web.Controllers
             }
 
         }
-
+        [Authorize(Roles = "Manager,Employee")]
         [HttpGet]
         public IActionResult VacationTimeline(int id)
         {
@@ -177,12 +187,14 @@ namespace TOT.Web.Controllers
             return View("VacationTimeline", vacationTimelineDto);
         }
 
+        [Authorize(Roles = "Manager,Employee")]
         [HttpPost]
         [Route("[controller]/VacationTimeline/VacationRequestTable")]
         public IActionResult VacationRequestTable([FromBody] TemporalVacationRequestDto temporalVacationRequest) {
             return PartialView("_VacationRequestTablePartial", temporalVacationRequest);
         }
 
+        [Authorize(Roles = "Manager,Employee")]
         [HttpPost]
         [Route("[controller]/VacationTimeline/ComparisonTable")]
         public IActionResult ComparisonTable([FromBody] TemporalVacationRequestDto[] temporalVacationRequests)
@@ -190,6 +202,7 @@ namespace TOT.Web.Controllers
             return PartialView("_ComparisonTablePartial", new ComparisonTableDto { OldVacationRequest = temporalVacationRequests[0], NewVacationRequest = temporalVacationRequests[1] });
         }
 
+        [Authorize(Roles = "Manager,Employee")]
         [HttpPost]
         [Route("[controller]/VacationTimeline/ManagerResponseTable")]
         public IActionResult ManagerResponseTable([FromBody] ManagerResponseForTimelineDto managerResponse)

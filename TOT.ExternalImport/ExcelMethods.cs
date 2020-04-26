@@ -76,7 +76,7 @@ namespace TOT.DataImport
                 MonthIntConverter converter = new MonthIntConverter("ru");
                 excelConfiguration.Month = converter.ConvertFromString(dateArray[0]);
                 excelConfiguration.Year = int.Parse(dateArray[1]);
-
+                excelConfiguration.ExcelExtension = Path.GetExtension(importExcelFileDto.ExcelFile.FileName);
             }
             using (var excelStream = importExcelFileDto.ExcelFile.OpenReadStream())
             {
@@ -192,7 +192,6 @@ namespace TOT.DataImport
 
                 workbook.Write(tempExcelStream);
             }
-
             using (tempExcelStream)
             {
                 Workbook outputWorkbook = new Workbook();

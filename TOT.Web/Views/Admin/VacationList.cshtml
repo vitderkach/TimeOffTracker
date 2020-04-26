@@ -58,13 +58,25 @@
                 {
                     <text>@Localizer["Self-cancelled"].Value</text>
                 }
+                else if (item.Approval != null && item.Approval == false)
+                {
+                    <text>@Localizer["Declined"].Value</text>
+                }
                 else if (item.StageOfApproving == 1)
                 {
                     <text>@Localizer["Just registered"].Value</text>
                 }
+                else if (item.StageOfApproving == 2)
+                {
+                    <text>@Localizer["Accepted"].Value</text>
+                }
                 else if (item.StageOfApproving == 3)
                 {
                     <text>@Localizer["Need a final approval"].Value</text>
+                }
+                else if (item.StageOfApproving == 4)
+                {
+                    <text>@Localizer["Approved"].Value</text>
                 }
             </td>
             <td>
