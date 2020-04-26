@@ -19,6 +19,7 @@ namespace TOT.Dto
         public TimeOffType VacationType { get; set; }
         [Display(Name = "Stage")]
         public int StageOfApproving { get; set; }
+        public bool? Approval { get; set; }
         public int UserInformationId { get; set; }
         [Display(Name = "Full Name")]
         public string FullName { get; set; }

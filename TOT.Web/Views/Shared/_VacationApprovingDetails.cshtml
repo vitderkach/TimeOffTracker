@@ -15,7 +15,7 @@
     var userId = int.Parse(claim.Value);
     int counter = 0;
     int takenDays = (Model.VacationRequestDto.EndDate.Date - Model.VacationRequestDto.StartDate.Date).Days + 1;
-    int firstDayEquivalenceСlass = (int)Model.VacationRequestDto.StartDate.DayOfWeek;
+    int firstDayEquivalenceСlass = (int)Model.VacationRequestDto.StartDate.DayOfWeek-1;
     int weekdayCount = takenDays / 6 + takenDays / 7 + ((takenDays % 6 + firstDayEquivalenceСlass) / 6) + ((takenDays % 7 + firstDayEquivalenceСlass) / 7);
 }
 

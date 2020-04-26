@@ -307,7 +307,7 @@
         }
 
         function setMonthDaysRange() {
-            const monthNames = ["Январь", "Февраль", "Март", "Aпрель", "Май", "Июнь",
+            const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
                 "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
             ];
             let monthDaysDiv = document.getElementById("monthDaysDiv");
@@ -319,6 +319,9 @@
             let selectedYear = sheetNameArray[1];
             let monthIndex = monthNames.findIndex(m => m == selectedMonth);
             let maxDaysInMonth = new Date(selectedYear, monthIndex + 1, 0).getDate();
+            console.log(selectedMonth);
+            console.log(monthIndex);
+            console.log(maxDaysInMonth);
             inputsArray.forEach(i => { i.max = maxDaysInMonth; i.value = 1; });
         }
 
