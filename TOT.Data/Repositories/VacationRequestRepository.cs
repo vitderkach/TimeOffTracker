@@ -98,7 +98,7 @@ namespace TOT.Data.Repositories
 
         public ICollection<VacationRequestHistory> GetHistoryForOne(int id)
            => _context.VacationRequestHistories.FromSql(
-               $@"SELECT VacationRequestId, StartDate, EndDate, VacationType, Notes, Approval, 
+               $@"SELECT VacationRequestId, StartDate, EndDate, VacationType, ExcelFormat, Notes, Approval, 
                 SystemStart, SystemEnd, UserInformationId, StageOfApproving, SelfCancelled, TakenDays
                 FROM dbo.VacationRequests
                 FOR SYSTEM_TIME ALL
@@ -107,7 +107,7 @@ namespace TOT.Data.Repositories
 
         public ICollection<VacationRequestHistory> GetHistoryForAll()
            => _context.VacationRequestHistories.FromSql(
-               $@"SELECT VacationRequestId, StartDate, EndDate, VacationType, Notes, Approval, 
+               $@"SELECT VacationRequestId, StartDate, EndDate, VacationType, ExcelFormat, Notes, Approval, 
                 SystemStart, SystemEnd, UserInformationId, StageOfApproving, SelfCancelled, TakenDays
                 FROM dbo.VacationRequests
                 FOR SYSTEM_TIME ALL;").ToList();
